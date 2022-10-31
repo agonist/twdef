@@ -33,7 +33,7 @@ export class MainScene extends Scene {
   create() {
     this.graphics = this.add.graphics();
 
-    for (var i = 0; i < 2000; i++) {
+    for (var i = 0; i < 1000; i++) {
       this.balls.push({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
