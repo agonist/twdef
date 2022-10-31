@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useGame } from "../helpers/useGame";
 import { Types } from "phaser";
-import { MainScene } from "./mainScene";
+import { MainScene } from "./scenes/mainScene";
 
 const gameConfig: Types.Core.GameConfig = {
   width: "100%",
