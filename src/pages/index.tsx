@@ -2,7 +2,6 @@ import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
 
 const PhaserGameNoSSR = dynamic(() => import("../game/game"), {
   ssr: false,

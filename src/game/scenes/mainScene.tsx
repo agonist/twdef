@@ -1,4 +1,5 @@
 import { Scene, GameObjects, Cameras } from "phaser";
+import { gameState } from "../state/game-state";
 
 type ball = {
   x: number;
@@ -12,13 +13,19 @@ export class MainScene extends Scene {
   private camera!: Cameras.Scene2D.Camera;
 
   private graphics!: GameObjects.Graphics;
+  private text!: GameObjects.Text;
+
   private balls: ball[] = [];
 
   init() {}
 
   update() {
     this.graphics.clear();
-    this.graphics.fillStyle(0x9966ff, 1);
+
+    const color = gameState.getState().color;
+
+    this.text.text = gameState.getState().txt;
+    this.graphics.fillStyle(color, 1);
 
     for (let b in this.balls) {
       var ball = this.balls[b];
@@ -32,6 +39,9 @@ export class MainScene extends Scene {
 
   create() {
     this.graphics = this.add.graphics();
+
+    this.text = this.add.text(200, 200, "");
+    this.text.setTint(0xff00ff, 0xffff00, 0x0000ff, 0xff0000);
 
     for (var i = 0; i < 500; i++) {
       this.balls.push({
