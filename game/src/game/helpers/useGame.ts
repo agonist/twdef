@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { Game, Types } from "phaser";
 
+// magic hook to make it work. thank you guy on github.
 export function useGame(
   config: Types.Core.GameConfig,
   containerRef: React.RefObject<HTMLDivElement>
 ): Game | undefined {
   const [game, setGame] = useState<Game>();
+
   useEffect(() => {
     if (!game && containerRef.current) {
       const newGame = new Game({ ...config, parent: containerRef.current });
