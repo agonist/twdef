@@ -3,27 +3,26 @@ import {devtools} from "zustand/middleware";
 import { Constants } from "../Constants";
 import { LoaderScene } from "../scenes/loader-scene";
 
-type Land = {x:number, y:number, id: number, minted: boolean}
+export type Land = {x:number, y:number, id: number, minted: boolean}
 
 interface GameState {
-  pos : {x: number, y:number}
+  currentLand : Land | undefined
   lands : Land[]
 
   selectHoverLand: (x: number, y: number) => void
-  selectLand: () => void
+  selectLand: (x: number, y: number) => void
   init: (game: Phaser.Game) => void
 }
 
 export const gameState = create<GameState>()(
   devtools(
       (set, get) => ({
-        pos: {x: 0, y: 0},
+        currentLand: undefined,
         lands: [],
 
         async init(game: Phaser.Game){
             let response = await fetch("/api/hello");
             let json = await response!!.json()
-
 
               // quick test land init
               const lands: Land[] =  []
@@ -38,11 +37,13 @@ export const gameState = create<GameState>()(
               const s = game.scene.getScene(Constants.SCENE_LOADER) as LoaderScene
               s.launchMainScene()
         },
-        selectLand() {
-
+        selectLand(x: number, y: number) {
+            const curr = get().lands.find((l) => l.x === x && l.y === y);
+            set({currentLand: curr} )
         },
         selectHoverLand(x: number, y: number) {
-            set({ pos: {x: x, y: y}})
+           const curr = get().lands.find((l) => l.x === x && l.y === y);
+            //set({currentLand: curr} )
         },
 
       }),

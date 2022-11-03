@@ -39,8 +39,8 @@ export class MainScene extends Phaser.Scene {
     this.initGrid();
     this.initCamera();
 
-    this.tmpTower = new RoundTower(this, 32, 32, 4, 0xff0000, 1);
-    const t2 = new SimpleTower(this, 10, 10);
+    // this.tmpTower = new RoundTower(this, 32, 32, 4, 0xff0000, 1);
+    // const t2 = new SimpleTower(this, 10, 10);
   }
 
   update(time: any, delta: number) {
@@ -119,7 +119,8 @@ export class MainScene extends Phaser.Scene {
       })
       .on("tileover", function (pointer: any, tileXY: TileXYType) {
         console.log("over " + tileXY.x + "," + tileXY.y);
-        gameState.setState({ pos: { x: tileXY.x, y: tileXY.y } });
+        gameState.getState().selectHoverLand(tileXY.x, tileXY.y);
+        // gameState.setState({ pos: { x: tileXY.x, y: tileXY.y } });
         //const scene = board.scene as MainScene;
         //scene.tmpTower?.setPosition(tileXY.x * 10, tileXY.y * 10);
       })
@@ -159,8 +160,9 @@ export class MainScene extends Phaser.Scene {
       .on("tile1tap", function (tap: any, tileXY: TileXYType) {
         // element on grid clicked
         console.log("1 tap " + tileXY.x + "," + tileXY.y);
-        const scene = board.scene as MainScene;
-        new RoundTower(scene, tileXY.x * 10, tileXY.y * 10, 4, 0xff0000, 1);
+        gameState.getState().selectLand(tileXY.x, tileXY.y);
+        // const scene = board.scene as MainScene;
+        // new RoundTower(scene, tileXY.x * 10, tileXY.y * 10, 4, 0xff0000, 1);
       });
 
     this.grid = board;
