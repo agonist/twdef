@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import { gameState } from "../state/game-state";
-import { Land } from "./land/Land";
+import { LandSection } from "./land/LandSection";
 
 export const SidePanel = () => {
   return (
@@ -25,7 +24,7 @@ export const FirstSection = () => {
   }
 
   if (_gameState.currentLand) {
-    return <Land land={_gameState.currentLand} />;
+    return <LandSection land={_gameState.currentLand} />;
   }
 
   return <></>;
