@@ -3,10 +3,16 @@ import type { AppProps } from "next/app";
 
 import "@rainbow-me/rainbowkit/styles.css";
 
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import {
+  darkTheme,
+  getDefaultWallets,
+  RainbowKitProvider,
+} from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const { chains, provider } = configureChains(
   [chain.polygon, chain.polygonMumbai, chain.hardhat],
@@ -27,8 +33,27 @@ const wagmiClient = createClient({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains}>
+      <RainbowKitProvider
+        modalSize="compact"
+        chains={chains}
+        theme={darkTheme({
+          accentColor: "#a24cc2",
+          borderRadius: "none",
+        })}
+      >
+        <html data-theme="synthwave"></html>
         <Component {...pageProps} />
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </RainbowKitProvider>
     </WagmiConfig>
   );

@@ -32,6 +32,8 @@ contract Land is ERC721URIStorage, Ownable {
     function mint(uint256 landId) external payable {
         if (lands[landId].minted) revert AlreadyMinted();
         if (msg.value != landPrice) revert ValueIncorrect();
+
+        lands[landId].minted = true;
         _mint(msg.sender, landId);
     }
 

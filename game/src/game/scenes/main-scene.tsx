@@ -24,6 +24,9 @@ function getCellType(x: number, y: number): CellType {
   } else return CellType.EMPTY;
 }
 
+const defautlBg = 0x22244e;
+const defaultLand = 0x1d5543;
+
 export class MainScene extends Phaser.Scene {
   private rexBoard!: BoardPlugin;
   private grid!: BoardPlugin.Board;
@@ -91,7 +94,7 @@ export class MainScene extends Phaser.Scene {
             tileXY.x,
             tileXY.y,
             0,
-            0x00ff00,
+            defaultLand,
             0.9
           );
         } else {
@@ -100,7 +103,7 @@ export class MainScene extends Phaser.Scene {
             tileXY.x,
             tileXY.y,
             0,
-            0x25262a,
+            defautlBg,
             0.9
           );
         }
@@ -130,7 +133,7 @@ export class MainScene extends Phaser.Scene {
       .on("gameobjectdown", function (pointer: any, gameObject: Shape) {
         switch (getCellType(gameObject.x, gameObject.y)) {
           case CellType.LAND:
-            gameObject.setFillStyle(0x00ff00, 0.7);
+            gameObject.setFillStyle(defaultLand, 0.7);
             break;
           case CellType.EMPTY:
             gameObject.setFillStyle(0xffffff, 0.7);
@@ -140,7 +143,7 @@ export class MainScene extends Phaser.Scene {
       .on("gameobjectover", function (pointer: any, gameObject: Shape) {
         switch (getCellType(gameObject.x, gameObject.y)) {
           case CellType.LAND:
-            gameObject.setFillStyle(0x00ff00, 0.5);
+            gameObject.setFillStyle(defaultLand, 1);
             break;
           case CellType.EMPTY:
             gameObject.setFillStyle(0xffffff, 0.2);
@@ -150,10 +153,10 @@ export class MainScene extends Phaser.Scene {
       .on("gameobjectout", function (pointer: any, gameObject: Shape) {
         switch (getCellType(gameObject.x, gameObject.y)) {
           case CellType.LAND:
-            gameObject.setFillStyle(0x00ff00, 0.9);
+            gameObject.setFillStyle(defaultLand, 0.9);
             break;
           case CellType.EMPTY:
-            gameObject.setFillStyle(0x25262a, 0.9);
+            gameObject.setFillStyle(defautlBg, 0.9);
             break;
         }
       })

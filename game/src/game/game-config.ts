@@ -10,6 +10,7 @@ export const gameConfig: Types.Core.GameConfig = {
   scale: {
     mode: Phaser.Scale.RESIZE,
   },
+  backgroundColor: "#2D2367",
   render: {
     antialias: false,
   },
