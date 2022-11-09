@@ -18,7 +18,7 @@ const PhaserGame = () => {
   }, [game]);
 
   return (
-    <div className="flex min-h-screen min-w-screen">
+    <div className="relative flex min-w-screen  h-screen overflow-hidden">
       <SidePanel />
 
       <div className="flex-1" ref={parentEl} />

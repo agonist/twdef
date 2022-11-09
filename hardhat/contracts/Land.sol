@@ -2,12 +2,12 @@
 
 pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Land is ERC721URIStorage, Ownable {
+contract Land is ERC721Enumerable, Ownable {
     struct LandCoord {
         uint256 id;
         uint128 x;
@@ -52,6 +52,30 @@ contract Land is ERC721URIStorage, Ownable {
         for (uint i = 0; i < landsToMint.length; i++) {
             lands[landsToMint[i].id] = landsToMint[i];
         }
+    }
+
+    function _balanceByIdOf(address _address)
+        internal
+        view
+        returns (uint256[] memory)
+    {
+        uint256 balance = balanceOf(_address);
+
+        uint256[] memory ids = new uint256[](balance);
+
+        for (uint256 i = 0; i < balance; i++) {
+            uint256 tokenId = tokenOfOwnerByIndex(_address, i);
+            ids[i] = tokenId;
+        }
+        return ids;
+    }
+
+    function balanceByIdOf(address _address)
+        external
+        view
+        returns (uint256[] memory)
+    {
+        return _balanceByIdOf(_address);
     }
 
     function isMinted(uint256 landId) external view returns (bool) {

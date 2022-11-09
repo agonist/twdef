@@ -8,6 +8,12 @@ import Group = Phaser.Physics.Arcade.Group;
 import { SimpleTower } from "../entities/tower/SimpleTower";
 import { Constants } from "../Constants";
 import Shape from "phaser3-rex-plugins/plugins/board/shape/Shape";
+import { Client, Room } from "colyseus.js";
+import { World } from "../../schema/World";
+import { GameState } from "../../schema/GameState";
+import { DataChange } from "@colyseus/schema";
+import { Data } from "@wagmi/core/dist/declarations/src/client";
+import { Wave } from "../../schema/Wave";
 
 enum CellType {
   LAND,
@@ -15,11 +21,9 @@ enum CellType {
 }
 
 function getCellType(x: number, y: number): CellType {
-  const land = gameState
-    .getState()
-    .lands.find((l) => l.x * 10 === x && l.y * 10 === y);
+  const land = gameState.getState().world[y / 10][x / 10];
 
-  if (land != undefined) {
+  if (land > 0) {
     return CellType.LAND;
   } else return CellType.EMPTY;
 }
@@ -34,28 +38,75 @@ export class MainScene extends Phaser.Scene {
 
   private tmpTower?: RoundTower;
 
+  client = new Client("ws://localhost:2567");
+  room!: Room<GameState>;
+
+  enemies: SimpleTower[] = [];
+
   constructor() {
     super(Constants.SCENE_MAIN);
   }
 
-  create() {
-    this.initGrid();
-    this.initCamera();
+  async create() {
+    try {
+      this.room = await this.client.joinOrCreate("my_room");
+      console.log("Joined successfully!");
+
+      this.room.onStateChange((state: GameState) => {
+        // console.log("the world state has been updated:", state.world);
+        // console.log("the wave state has been updated:", state.waves);
+      });
+
+      this.room.state.enemies.onAdd = (enemy, key: number) => {
+        console.log("enemy ADDED ");
+
+        const entity = new SimpleTower(this, 10, 10);
+        this.enemies.push(entity);
+
+        enemy.onChange = () => {
+          entity.setX(enemy.x);
+          entity.setY(enemy.y);
+        };
+      };
+
+      this.room.state.onChange = (changes) => {
+        changes.forEach((change) => {
+          switch (change.field) {
+            case "world": {
+              const world = (change as DataChange<World>).value;
+              this.handleWorldUpdate(world);
+              break;
+            }
+          }
+        });
+      };
+    } catch (e) {
+      console.error(e);
+    }
 
     // this.tmpTower = new RoundTower(this, 32, 32, 4, 0xff0000, 1);
     // const t2 = new SimpleTower(this, 10, 10);
   }
 
+  handleWorldUpdate(world: World) {
+    const lands: number[][] = [];
+    while (world.cells.length) lands.push(world.cells.splice(0, world.width));
+    gameState.getState().setWorld(lands);
+
+    this.initGrid(world);
+    this.initCamera();
+  }
+
   update(time: any, delta: number) {
-    this.cameraController.update(delta);
+    this.cameraController?.update(delta);
 
     var pointer = this.input.activePointer;
-    var out = this.grid.worldXYToTileXY(pointer.worldX, pointer.worldY, true);
+    var out = this.grid?.worldXYToTileXY(pointer.worldX, pointer.worldY, true);
   }
 
   //  INIT STUFF
 
-  private initGrid() {
+  private initGrid(world: World) {
     var graphics = this.add.graphics({
       lineStyle: {
         width: 0.2,
@@ -69,26 +120,26 @@ export class MainScene extends Phaser.Scene {
         gridType: "quadGrid",
         x: 0,
         y: 0,
-        cellWidth: 10,
-        cellHeight: 10,
+        cellWidth: world.cellSize,
+        cellHeight: world.cellSize,
         type: "orthogonal",
       },
-      width: 100,
-      height: 100,
+      width: world.width,
+      height: world.height,
     };
 
-    const lands = gameState.getState().lands;
+    const lands = gameState.getState().world;
 
     const board = this.rexBoard.add
       .board(quadGridCfg)
       .forEachTileXY(function (tileXY, board) {
-        const land = lands.find((l) => l.x === tileXY.x && l.y === tileXY.y);
+        const land = lands[tileXY.y][tileXY.x];
 
         const points = board.getGridPoints(tileXY.x, tileXY.y, true);
         graphics.strokePoints(points, true);
         const scene = board.scene as MainScene;
 
-        if (land) {
+        if (land > 0) {
           const gridElem = scene.rexBoard.add.shape(
             board,
             tileXY.x,
@@ -151,6 +202,7 @@ export class MainScene extends Phaser.Scene {
         }
       })
       .on("gameobjectout", function (pointer: any, gameObject: Shape) {
+        console.log("game out");
         switch (getCellType(gameObject.x, gameObject.y)) {
           case CellType.LAND:
             gameObject.setFillStyle(defaultLand, 0.9);
