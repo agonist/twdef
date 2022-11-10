@@ -1,12 +1,25 @@
 import { Schema, Context, type,ArraySchema } from "@colyseus/schema";
 
-export class Enemy extends Schema {
+
+// enemy type
+// 0 => simple
+// 1 => fast
+// 2 => armored
+// 3 => healer
+// 4 => boss
+
+export class EnemyS extends Schema {
     @type("number") x: number;
     @type("number") y: number;
+    @type("number") t: number // type
+    @type("number") life: number
+    @type("number") speed: number
+    @type("number") radius: number
+    @type("number") cash: number
 }
 
 export class Wave extends Schema {
-    @type([ Enemy ]) enemies = new ArraySchema<Enemy>();
+    @type([ EnemyS ]) enemies = new ArraySchema<EnemyS>();
 }
 
 class World extends Schema {
@@ -24,7 +37,7 @@ export class GameState extends Schema {
 
     @type(World) world: World = new World()
 
-    @type([ Enemy ]) enemies = new ArraySchema<Enemy>();
+    @type([ EnemyS ]) enemies = new ArraySchema<EnemyS>();
 
 
 }

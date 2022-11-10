@@ -6,8 +6,8 @@
 // 
 
 import { Schema, type, ArraySchema, MapSchema, SetSchema, DataChange } from '@colyseus/schema';
-import { Enemy } from './Enemy'
+import { EnemyS } from './EnemyS'
 
 export class Wave extends Schema {
-    @type([ Enemy ]) public enemies: ArraySchema<Enemy> = new ArraySchema<Enemy>();
+    @type([ EnemyS ]) public enemies: ArraySchema<EnemyS> = new ArraySchema<EnemyS>();
 }

@@ -3,46 +3,28 @@ import e from "express";
 import { Enemy, GameState, Wave } from "./schema/GameState";
 import { Dispatcher } from "@colyseus/command";
 import { InitialiseCmd } from "./commands/InitialiseCmd";
+import { StartWaveCmd } from "./commands/StartWaveCmd";
+import { EnemiesRenderer } from "../logic/renderer/EnemiesRenderer";
 
 export class GameRoom extends Room<GameState> {
   dispatcher = new Dispatcher(this);
 
+  enemiesRenderer: EnemiesRenderer
+
   onCreate (options: any) {
     this.setState(new GameState());
+    this.enemiesRenderer = new EnemiesRenderer(this.state.enemies)
 
-    this.onMessage("type", (client, message) => {
-      //
-      // handle "type" message
-      //
-    });
+    this.onMessage("type", (client, message) => {});
+
     this.dispatcher.dispatch(new InitialiseCmd())
-
-    const e1 = new Enemy()
-    e1.x = 10
-    e1.y = 10
-
-const e2 = new Enemy()
-    e2.x = 20
-    e2.y = 10
-
-    const e3 = new Enemy()
-    e3.x = 30
-    e3.y = 10
-
-    this.state.enemies.push(e1)
-    this.state.enemies.push(e2)
-    this.state.enemies.push(e3)
+    this.dispatcher.dispatch(new StartWaveCmd(this.enemiesRenderer))
 
     this.setSimulationInterval((deltaTime) => this.update(deltaTime));
   }
 
   update (deltaTime: number) {
-    // implement your physics or world updates here!
-    // this is a good place to update the room state
-    this.state.enemies.forEach(e => {
-      if (e.x === 200) e.x = 0
-      e.x += 1
-    })
+    this.enemiesRenderer.update()
 }
 
   onJoin (client: Client, options: any) {

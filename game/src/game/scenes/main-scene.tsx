@@ -12,8 +12,9 @@ import { Client, Room } from "colyseus.js";
 import { World } from "../../schema/World";
 import { GameState } from "../../schema/GameState";
 import { DataChange } from "@colyseus/schema";
-import { Data } from "@wagmi/core/dist/declarations/src/client";
-import { Wave } from "../../schema/Wave";
+import { Enemy } from "../entities/enemy/Enemy";
+import { SimpleEnemy } from "../entities/enemy/SimpleEnemy";
+import { FastEnemy } from "../entities/enemy/FastEnemy";
 
 enum CellType {
   LAND,
@@ -41,7 +42,7 @@ export class MainScene extends Phaser.Scene {
   client = new Client("ws://localhost:2567");
   room!: Room<GameState>;
 
-  enemies: SimpleTower[] = [];
+  enemies: Enemy[] = [];
 
   constructor() {
     super(Constants.SCENE_MAIN);
@@ -58,9 +59,16 @@ export class MainScene extends Phaser.Scene {
       });
 
       this.room.state.enemies.onAdd = (enemy, key: number) => {
-        console.log("enemy ADDED ");
+        let entity: Enemy;
 
-        const entity = new SimpleTower(this, 10, 10);
+        if (enemy.t === 0) {
+          entity = new SimpleEnemy(this, 10, 10);
+        } else if (enemy.t === 1) {
+          entity = new FastEnemy(this, 10, 10);
+        } else {
+          entity = new SimpleEnemy(this, 10, 10);
+        }
+
         this.enemies.push(entity);
 
         enemy.onChange = () => {

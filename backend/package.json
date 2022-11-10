@@ -35,8 +35,10 @@
     "@colyseus/arena": "^0.14.22",
     "@colyseus/command": "^0.2.1",
     "@colyseus/monitor": "^0.14.20",
+    "@reactivex/rxjs": "^6.6.7",
     "colyseus": "^0.14.20",
     "cors": "^2.8.5",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "rxjs": "^7.5.7"
   }
 }
