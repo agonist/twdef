@@ -1,6 +1,6 @@
 import { Room, Client } from "colyseus";
 import e from "express";
-import { Enemy, GameState, Wave } from "./schema/GameState";
+import {  GameState } from "./schema/GameState";
 import { Dispatcher } from "@colyseus/command";
 import { InitialiseCmd } from "./commands/InitialiseCmd";
 import { StartWaveCmd } from "./commands/StartWaveCmd";
@@ -12,6 +12,7 @@ export class GameRoom extends Room<GameState> {
   enemiesRenderer: EnemiesRenderer
 
   onCreate (options: any) {
+    this.autoDispose = false
     this.setState(new GameState());
     this.enemiesRenderer = new EnemiesRenderer(this.state.enemies)
 
@@ -19,6 +20,8 @@ export class GameRoom extends Room<GameState> {
 
     this.dispatcher.dispatch(new InitialiseCmd())
     this.dispatcher.dispatch(new StartWaveCmd(this.enemiesRenderer))
+
+    console.log("Game created")
 
     this.setSimulationInterval((deltaTime) => this.update(deltaTime));
   }

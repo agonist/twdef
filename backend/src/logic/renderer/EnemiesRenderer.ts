@@ -7,7 +7,6 @@ export class EnemiesRenderer extends EntityRenderer<Enemy> {
 
     enemies: ArraySchema<EnemyS>
 
-
     constructor(enemies: ArraySchema<EnemyS>) {
         super()
         this.enemies = enemies
