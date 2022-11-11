@@ -10,10 +10,14 @@ export class GameRoom extends Room<GameState> {
   dispatcher = new Dispatcher(this);
 
   enemiesRenderer: EnemiesRenderer
+  // map: Map
 
   onCreate (options: any) {
     this.autoDispose = false
     this.setState(new GameState());
+
+    // this.map = new Map()
+
     this.enemiesRenderer = new EnemiesRenderer(this.state.enemies)
 
     this.onMessage("type", (client, message) => {});

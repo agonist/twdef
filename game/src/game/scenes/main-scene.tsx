@@ -52,6 +52,7 @@ export class MainScene extends Phaser.Scene {
   handleWorldUpdate(world: World) {
     const lands: number[][] = [];
     while (world.cells.length) lands.push(world.cells.splice(0, world.width));
+    console.log(lands);
     gameState.getState().setWorld(lands);
 
     this.worldManager?.initGrid(world, this, this.rexBoard, this.grid);

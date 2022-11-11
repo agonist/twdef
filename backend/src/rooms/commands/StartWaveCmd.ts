@@ -30,9 +30,9 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
         .pipe(take(5))
         .subscribe(x => {
             if (Math.random() > 0.7) {
-                this.enemiesRenderer.add(new FastEnemy(10, 10))
+                this.enemiesRenderer.add(new FastEnemy(0, 10))
             } else {
-                this.enemiesRenderer.add(new SimpleEnemy(10, 10))
+                this.enemiesRenderer.add(new SimpleEnemy(0, 10))
             }
         })
     }
