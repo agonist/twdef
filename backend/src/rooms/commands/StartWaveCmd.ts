@@ -1,7 +1,10 @@
 import { Command } from "@colyseus/command";
 
 import { debounce, interval, Subscription, take } from "rxjs";
+import { ArmoredEnemy } from "../../logic/entity/enemy/ArmoredEnemy";
+import { BossEnemy } from "../../logic/entity/enemy/BossEnemy";
 import { FastEnemy } from "../../logic/entity/enemy/FastEnemy";
+import { HealerEnemy } from "../../logic/entity/enemy/HealerEnemy";
 import { SimpleEnemy } from "../../logic/entity/enemy/SimpleEnemy";
 import { Entity } from "../../logic/entity/Entity";
 import { EnemiesRenderer } from "../../logic/renderer/EnemiesRenderer";
@@ -18,7 +21,7 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
     }
 
     execute() {
-         interval(10000)
+         interval(5000)
         .subscribe( x => {
             this.sub?.unsubscribe()
             this.generateWave()
@@ -29,10 +32,17 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
         this.sub = interval(200)
         .pipe(take(5))
         .subscribe(x => {
-            if (Math.random() > 0.7) {
+            const r = Math.random()
+            if (r > 0.9) {
+                this.enemiesRenderer.add(new BossEnemy(0, 10))
+            } else if (r > 0.8) {
+               this.enemiesRenderer.add(new HealerEnemy(0, 10))
+            } else if (r > 0.7) {
+                this.enemiesRenderer.add(new ArmoredEnemy(0, 10))
+            }else if (r > 0.3) {
                 this.enemiesRenderer.add(new FastEnemy(0, 10))
             } else {
-                this.enemiesRenderer.add(new SimpleEnemy(0, 10))
+               this.enemiesRenderer.add(new SimpleEnemy(0, 10))
             }
         })
     }

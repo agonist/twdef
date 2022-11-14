@@ -8,8 +8,12 @@
 import { Schema, type, ArraySchema, MapSchema, SetSchema, DataChange } from '@colyseus/schema';
 import { World } from './World'
 import { EnemyS } from './EnemyS'
+import { TowerS } from './TowerS'
+import { BulletS } from './BulletS'
 
 export class GameState extends Schema {
     @type(World) public world: World = new World();
     @type([ EnemyS ]) public enemies: ArraySchema<EnemyS> = new ArraySchema<EnemyS>();
+    @type([ TowerS ]) public towers: ArraySchema<TowerS> = new ArraySchema<TowerS>();
+    @type([ BulletS ]) public bullets: ArraySchema<BulletS> = new ArraySchema<BulletS>();
 }

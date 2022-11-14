@@ -1,9 +1,8 @@
 import { Scene } from "phaser";
+import { Tower } from "./Tower";
 
-export class RoundTower extends  Phaser.GameObjects.Arc {
-    constructor(scene: Scene, x: number, y: number, radius: number, fillColor: number, fillAlpha: number) {
-        super(scene, x, y, radius, 0, 360, false, fillColor, fillAlpha);
-
-        scene.add.existing(this);
+export class RoundTower extends  Tower {
+    constructor(scene: Scene, x: number, y: number) {
+        super(scene, x, y, 5 , 0xffff00)
     }
 }

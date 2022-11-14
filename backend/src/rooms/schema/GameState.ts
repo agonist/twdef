@@ -18,6 +18,19 @@ export class EnemyS extends Schema {
     @type("number") cash: number
 }
 
+export class TowerS extends Schema {
+     @type("number") x: number;
+     @type("number") y: number;
+      @type("number") t: number;
+}
+
+export class BulletS extends Schema {
+     @type("number") x: number;
+     @type("number") y: number;
+     @type("number") t: number;
+}
+
+
 export class Wave extends Schema {
     @type([ EnemyS ]) enemies = new ArraySchema<EnemyS>();
 }
@@ -38,6 +51,8 @@ export class GameState extends Schema {
     @type(World) world: World = new World()
 
     @type([ EnemyS ]) enemies = new ArraySchema<EnemyS>();
+    @type([TowerS]) towers= new ArraySchema<TowerS>();
+    @type([BulletS]) bullets = new ArraySchema<BulletS>();
 
 
 }

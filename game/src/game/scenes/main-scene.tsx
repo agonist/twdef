@@ -7,6 +7,9 @@ import { GameState } from "../../schema/GameState";
 import { DataChange } from "@colyseus/schema";
 import { EnemyManager } from "../manager/EnemyManager";
 import { WorldManager } from "../manager/WorldManager";
+import { TowerManger } from "../manager/TowerManager";
+import { ThemeConsumer } from "styled-components";
+import { BulletManager } from "../manager/BulletManager";
 
 export class MainScene extends Phaser.Scene {
   private rexBoard!: BoardPlugin;
@@ -15,6 +18,8 @@ export class MainScene extends Phaser.Scene {
 
   private enemyManager?: EnemyManager;
   private worldManager?: WorldManager;
+  private towerManager?: TowerManger;
+  private bulletManager?: BulletManager;
 
   client = new Client("ws://localhost:2567");
   room!: Room<GameState>;
@@ -30,6 +35,12 @@ export class MainScene extends Phaser.Scene {
 
       this.enemyManager = new EnemyManager();
       this.enemyManager.init(this.room, this);
+
+      this.towerManager = new TowerManger();
+      this.towerManager.init(this.room, this);
+
+      this.bulletManager = new BulletManager();
+      this.bulletManager.init(this.room, this);
 
       this.worldManager = new WorldManager();
 
@@ -52,7 +63,6 @@ export class MainScene extends Phaser.Scene {
   handleWorldUpdate(world: World) {
     const lands: number[][] = [];
     while (world.cells.length) lands.push(world.cells.splice(0, world.width));
-    console.log(lands);
     gameState.getState().setWorld(lands);
 
     this.worldManager?.initGrid(world, this, this.rexBoard, this.grid);
@@ -62,6 +72,8 @@ export class MainScene extends Phaser.Scene {
   update(time: any, delta: number) {
     this.cameraController?.update(delta);
     this.enemyManager?.update();
+    this.towerManager?.update();
+    this.bulletManager?.update();
 
     var pointer = this.input.activePointer;
     var out = this.grid?.worldXYToTileXY(pointer.worldX, pointer.worldY, true);
@@ -79,11 +91,11 @@ export class MainScene extends Phaser.Scene {
       zoomIn: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
       zoomOut: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
 
-      acceleration: 0.06,
+      acceleration: 0.12,
       drag: 0.003,
-      maxSpeed: 0.3,
+      maxSpeed: 1,
     });
-    this.cameras.main.centerOn(100, 80);
+    this.cameras.main.centerOn(500, 350);
     this.cameras.main.zoom = 1;
   }
 }

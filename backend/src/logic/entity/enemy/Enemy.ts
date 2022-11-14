@@ -10,6 +10,7 @@ export abstract class Enemy extends Entity {
     abstract type: number;
     protected damage: number = 10;
     public alive = true;
+    damageTaken: number = 0;
 
     private path: Point[] | false = false;
     private targetIndex: number = 1;
@@ -54,6 +55,20 @@ export abstract class Enemy extends Entity {
             }
         }
     }
+
+     takeDamage(damage: number) {
+        this.damageTaken += damage;
+
+        if (this.damageTaken >= this.life && this.alive) {
+            this.alive = false;
+            this.onDie();
+        }
+    }
+
+      private onDie() {
+        // cashManager.add(this.cash);
+    }
+
 
      public getPath() {
         return map.getPathFromGridCell(
