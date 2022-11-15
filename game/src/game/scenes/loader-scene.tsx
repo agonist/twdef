@@ -6,7 +6,9 @@ export class LoaderScene extends Phaser.Scene {
     super(Constants.SCENE_LOADER);
   }
 
-  create() {}
+  create() {
+    this.scene.start(Constants.SCENE_MAIN);
+  }
 
   launchMainScene() {
     this.scene.start(Constants.SCENE_MAIN);
