@@ -1,4 +1,5 @@
 
+import { cellSize } from "../../../rooms/GameRoom";
 import { euclideanDistanceSquared } from "../../../tools/helpers";
 import { EnemiesRenderer } from "../../renderer/EnemiesRenderer";
 import { Enemy } from "../enemy/Enemy";
@@ -23,7 +24,6 @@ export abstract class Tower extends Entity {
     abstract name: string;
     abstract description: string;
 
-    cellSize = 10
     enemyRenderer : EnemiesRenderer
 
     constructor(enemyRenderer: EnemiesRenderer, x: number, y: number, width: number) {
@@ -44,7 +44,7 @@ export abstract class Tower extends Entity {
             // Target died
             this.target = undefined;
             this.targetInRange = false;
-        } else if (this.target && euclideanDistanceSquared(this.x + (this.cellSize / 2), this.y  + (this.cellSize / 2), this.target.x, this.target.y) < this.aimRadius * this.aimRadius) {
+        } else if (this.target && euclideanDistanceSquared(this.x + (cellSize / 2), this.y  + (cellSize / 2), this.target.x, this.target.y) < this.aimRadius * this.aimRadius) {
             // Target in range
             if (!this.targetInRange) {
                 this.onNewTargetInRange();
@@ -57,7 +57,7 @@ export abstract class Tower extends Entity {
             }
         } else {
             // No target or target no more in range
-            this.target = this.enemyRenderer.getClosestPointInRadius(this.x + (this.cellSize / 2), this.y  + (this.cellSize / 2), this.aimRadius);
+            this.target = this.enemyRenderer.getClosestPointInRadius(this.x + (cellSize / 2), this.y  + (cellSize / 2), this.aimRadius);
             this.targetInRange = false;
         }
 

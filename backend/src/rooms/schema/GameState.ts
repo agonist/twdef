@@ -9,9 +9,9 @@ import { Schema, Context, type,ArraySchema } from "@colyseus/schema";
 // 4 => boss
 
 export class EnemyS extends Schema {
-    @type("number") x: number;
-    @type("number") y: number;
-    @type("number") t: number // type
+    @type("uint32") x: number;
+    @type("uint32") y: number;
+    @type("uint8") t: number // type
     @type("number") life: number
     @type("number") speed: number
     @type("number") radius: number
@@ -19,15 +19,15 @@ export class EnemyS extends Schema {
 }
 
 export class TowerS extends Schema {
-     @type("number") x: number;
-     @type("number") y: number;
-      @type("number") t: number;
+     @type("uint32") x: number;
+     @type("uint32") y: number;
+      @type("uint8") t: number;
 }
 
 export class BulletS extends Schema {
-     @type("number") x: number;
-     @type("number") y: number;
-     @type("number") t: number;
+     @type("uint32") x: number;
+     @type("uint32") y: number;
+     @type("uint8") t: number;
 }
 
 
@@ -37,11 +37,11 @@ export class Wave extends Schema {
 
 class World extends Schema {
    // in cells
-    @type("number") width: number;
-    @type("number") height: number;
+    @type("uint16") width: number;
+    @type("uint16") height: number;
     // in pixels, so a 10 x 10 map would be 100 x 100
-    @type("number") cellSize: number = 10;
-    @type( [ "number" ] ) cells = new ArraySchema<number>();
+    @type("uint8") cellSize: number;
+    @type( [ "uint16" ] ) cells = new ArraySchema<number>();
 
 
 }

@@ -9,8 +9,8 @@ import { Schema, type, ArraySchema, MapSchema, SetSchema, DataChange } from '@co
 
 
 export class World extends Schema {
-    @type("number") public width!: number;
-    @type("number") public height!: number;
-    @type("number") public cellSize!: number;
-    @type([ "number" ]) public cells: ArraySchema<number> = new ArraySchema<number>();
+    @type("uint16") public width!: number;
+    @type("uint16") public height!: number;
+    @type("uint8") public cellSize!: number;
+    @type([ "uint16" ]) public cells: ArraySchema<number> = new ArraySchema<number>();
 }

@@ -9,6 +9,8 @@ import { BulletRenderer } from "../logic/renderer/BulletRenderer";
 import { TowerRenderer } from "../logic/renderer/TowerRenderer";
 import { CanonTower } from "../logic/entity/Tower/CanonTower";
 
+export const cellSize = 40
+
 export class GameRoom extends Room<GameState> {
   dispatcher = new Dispatcher(this);
 
@@ -16,7 +18,8 @@ export class GameRoom extends Room<GameState> {
   towerRenderer: TowerRenderer
   bulletRenderer: BulletRenderer
   // map: Map
-
+  fixedTimeStep = 1000 / 60;
+  
   onCreate (options: any) {
     this.autoDispose = false
     this.setState(new GameState());
@@ -27,14 +30,12 @@ export class GameRoom extends Room<GameState> {
     this.bulletRenderer = new BulletRenderer(this.state.bullets)
     this.towerRenderer = new TowerRenderer(this.state.towers)
 
-    // for (let i = 1; i < 50; i++) {
-    //   const t1 = new CanonTower(this.enemiesRenderer, this.bulletRenderer, i, i * 2, 10)
-    //   this.towerRenderer.add(t1)
-    // }
-
-    const t1 = new CanonTower(this.enemiesRenderer, this.bulletRenderer, 10, 2, 10)
-
-    this.towerRenderer.add(t1)
+  for (let y = 0; y < 100; y+=4) {
+      for (let x = 5; x < 100; x+=5) {
+        const t1 = new CanonTower(this.enemiesRenderer, this.bulletRenderer, x , y, cellSize)
+        this.towerRenderer.add(t1)
+      }
+    }
 
     this.onMessage("type", (client, message) => {});
 
@@ -43,13 +44,26 @@ export class GameRoom extends Room<GameState> {
 
     console.log("Game created")
 
-    this.setSimulationInterval((deltaTime) => this.update(deltaTime));
+    let elapsedTime = 0;
+    this.setSimulationInterval((deltaTime) => {this.update(1)})
+    // this.setSimulationInterval((deltaTime) => {
+    //     elapsedTime += deltaTime;
+
+    //     while (elapsedTime >= this.fixedTimeStep) {
+    //         elapsedTime -= this.fixedTimeStep;
+    //         this.fixedTick(this.fixedTimeStep);
+    //     }
+    // });
+  }
+
+  fixedTick(deltaTime: number){
+      this.update(deltaTime)
   }
 
   update (deltaTime: number) {
+    this.bulletRenderer.update()
     this.enemiesRenderer.update()
     this.towerRenderer.update()
-    this.bulletRenderer.update()
 }
 
   onJoin (client: Client, options: any) {

@@ -2,7 +2,7 @@ import { PI2 } from "../../../tools/constants";
 import { Bullet } from "./Bullet";
 
 export class BasicBulletMunition extends Bullet {
-    speed: number = 6;
+    speed: number = 5;
     protected radius = 5
     protected angle: number = 0;
 

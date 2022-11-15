@@ -14,7 +14,7 @@ enum CellType {
 }
 
 function getCellType(x: number, y: number): CellType {
-  const land = gameState.getState().world[y / 10][x / 10];
+  const land = gameState.getState().world[y / 40][x / 40];
 
   if (land > 0) {
     return CellType.LAND;
@@ -57,7 +57,7 @@ public initGrid(world: World, scene: Scene, rexBoard: BoardPlugin, grid: BoardPl
         const land = lands[tileXY.y][tileXY.x];
 
         const points = board.getGridPoints(tileXY.x, tileXY.y, true);
-        graphics.strokePoints(points, true);
+        // graphics.strokePoints(points, false);
         const scene = board.scene as MainScene;
 
         if (land > 0) {
@@ -67,7 +67,7 @@ public initGrid(world: World, scene: Scene, rexBoard: BoardPlugin, grid: BoardPl
             tileXY.y,
             0,
             defaultLand,
-            0.9
+            0.2
           );
         } else {
           const gridElem = rexBoard.add.shape(
@@ -105,20 +105,20 @@ public initGrid(world: World, scene: Scene, rexBoard: BoardPlugin, grid: BoardPl
       .on("gameobjectdown", function (pointer: any, gameObject: Shape) {
         switch (getCellType(gameObject.x, gameObject.y)) {
           case CellType.LAND:
-            gameObject.setFillStyle(defaultLand, 0.7);
+            gameObject.setFillStyle(defaultLand, 0.3);
             break;
           case CellType.EMPTY:
-            gameObject.setFillStyle(0xffffff, 0.7);
+            gameObject.setFillStyle(defautlBg, 0.8);
             break;
         }
       })
       .on("gameobjectover", function (pointer: any, gameObject: Shape) {
         switch (getCellType(gameObject.x, gameObject.y)) {
           case CellType.LAND:
-            gameObject.setFillStyle(defaultLand, 1);
+            gameObject.setFillStyle(defaultLand, 0.3);
             break;
           case CellType.EMPTY:
-            gameObject.setFillStyle(0xffffff, 0.2);
+            gameObject.setFillStyle(defautlBg, 0.8);
             break;
         }
       })
@@ -126,7 +126,7 @@ public initGrid(world: World, scene: Scene, rexBoard: BoardPlugin, grid: BoardPl
         console.log("game out");
         switch (getCellType(gameObject.x, gameObject.y)) {
           case CellType.LAND:
-            gameObject.setFillStyle(defaultLand, 0.9);
+            gameObject.setFillStyle(defaultLand, 0.2);
             break;
           case CellType.EMPTY:
             gameObject.setFillStyle(defautlBg, 0.9);

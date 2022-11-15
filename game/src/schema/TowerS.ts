@@ -9,7 +9,7 @@ import { Schema, type, ArraySchema, MapSchema, SetSchema, DataChange } from '@co
 
 
 export class TowerS extends Schema {
-    @type("number") public x!: number;
-    @type("number") public y!: number;
-    @type("number") public t!: number;
+    @type("uint32") public x!: number;
+    @type("uint32") public y!: number;
+    @type("uint8") public t!: number;
 }

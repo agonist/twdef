@@ -1,3 +1,4 @@
+import { cellSize } from "../../../rooms/GameRoom";
 import { Point } from "../../../tools/Point";
 import { map } from "../../Map";
 import { Entity } from "../Entity";
@@ -72,8 +73,8 @@ export abstract class Enemy extends Entity {
 
      public getPath() {
         return map.getPathFromGridCell(
-            Math.floor(this.x / 10),
-            Math.floor(this.y / 10)
+            Math.floor(this.x / cellSize),
+            Math.floor(this.y / cellSize)
         )
     }
 

@@ -1,3 +1,4 @@
+import { cellSize } from "../rooms/GameRoom"
 import { easyAStar } from "../tools/astar"
 import { Point } from "../tools/Point"
 
@@ -9,8 +10,6 @@ import { Point } from "../tools/Point"
       spawn: Point
       base: Point
       private pathsCache: { [k: string]: Point[] | false } = {}
-
-      cellSize: number = 10
 
     constructor(){
         this.spawn = {x: 0, y: 1}
@@ -49,8 +48,8 @@ import { Point } from "../tools/Point"
 
             if (path) {
                 path = path.map(value => ({
-                    x: value.x * this.cellSize,
-                    y: value.y * this.cellSize
+                    x: value.x * cellSize,
+                    y: value.y * cellSize
                 }));
             }
             return this.pathsCache[key] = path;

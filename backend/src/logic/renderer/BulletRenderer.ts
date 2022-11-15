@@ -13,8 +13,8 @@ export class BulletRenderer extends EntityRenderer<Bullet> {
     }
 
     public add(entity: Bullet) {
-        this.entities.push(entity);
         this.bullets.push(new BulletS({x: entity.x, y: entity.y}))
+        this.entities.push(entity);
     }
 
     update() {
@@ -30,8 +30,8 @@ export class BulletRenderer extends EntityRenderer<Bullet> {
         })
 
          this.entities.forEach((bullet, i) => {
-            this.bullets[i].x = bullet.x
-            this.bullets[i].y = bullet.y
+            this.bullets[i].x = Number.parseFloat(bullet.x.toFixed(2))
+            this.bullets[i].y =Number.parseFloat(bullet.y.toFixed(2))
         })
     }
 }

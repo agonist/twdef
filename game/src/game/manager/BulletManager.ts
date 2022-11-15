@@ -5,40 +5,33 @@ import { Bullet } from "../entities/bullet/Bullet";
 import { SimpleBullet } from "../entities/bullet/SimpleBullet";
 
 export class BulletManager {
-    bullets: Bullet[] = []
+
+    simpleBulletGroup?: Phaser.GameObjects.Group
 
     constructor(){}
 
     init(room: Room<GameState>, scene: Scene){
+    this.simpleBulletGroup = scene.add.group({
+        classType: SimpleBullet,
+        runChildUpdate: true
+    });
+
         room.state.bullets.onAdd = (bullet, key)=> {
             let entity: Bullet
 
-            entity = new SimpleBullet(scene, bullet.x, bullet.y)
-
-            console.log(entity)
-            this.bullets.push(entity)
+            entity = this.simpleBulletGroup?.get(bullet.x, bullet.y)
+            entity.visible = true
+            entity.active = true
 
             bullet.onChange = () => {
+                console.log(bullet.x + " " + bullet.y)
                 entity.setData("serverX", bullet.x);
-                entity.setData("serverY", bullet.y);  
+                entity.setData("serverY", bullet.y);
             }
 
             bullet.onRemove = () => {
-                entity.destroy()
+                this.simpleBulletGroup?.killAndHide(entity)
             }
         }
     }
-
-  update() {
-    this.bullets.forEach((bullet) => {
-        if (bullet.data !== undefined) {
-            const { serverX, serverY } = bullet?.data?.values;
-
-            bullet.x = Phaser.Math.Linear(bullet.x, serverX, 0.1);
-            bullet.y = Phaser.Math.Linear(bullet.y, serverY, 0.1);
-        }
-
-
-    });
-  }
 }

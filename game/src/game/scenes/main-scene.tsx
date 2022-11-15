@@ -11,6 +11,8 @@ import { TowerManger } from "../manager/TowerManager";
 import { ThemeConsumer } from "styled-components";
 import { BulletManager } from "../manager/BulletManager";
 
+export const cellSize = 40
+
 export class MainScene extends Phaser.Scene {
   private rexBoard!: BoardPlugin;
   private grid!: BoardPlugin.Board;
@@ -60,6 +62,9 @@ export class MainScene extends Phaser.Scene {
     }
   }
 
+  elapsedTime = 0;
+  fixedTimeStep = 1000 / 60;
+
   handleWorldUpdate(world: World) {
     const lands: number[][] = [];
     while (world.cells.length) lands.push(world.cells.splice(0, world.width));
@@ -70,10 +75,16 @@ export class MainScene extends Phaser.Scene {
   }
 
   update(time: any, delta: number) {
+    this.elapsedTime += delta;
+    while (this.elapsedTime >= this.fixedTimeStep) {
+      this.elapsedTime -= this.fixedTimeStep;
+      this.fixedTick(time, this.fixedTimeStep);
+    }
+  }
+
+  fixedTick(time: any, delta: number) {
     this.cameraController?.update(delta);
-    this.enemyManager?.update();
     this.towerManager?.update();
-    this.bulletManager?.update();
 
     var pointer = this.input.activePointer;
     var out = this.grid?.worldXYToTileXY(pointer.worldX, pointer.worldY, true);

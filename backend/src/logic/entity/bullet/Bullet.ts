@@ -11,8 +11,6 @@ export abstract class Bullet extends Entity {
         super(emitter.x, emitter.y, 1); // center
         this.target = target;
         this.emitter = emitter
-        console.log("SPAWN BULLET " + this.x + " . " + this.y)
-
     }
 
 }

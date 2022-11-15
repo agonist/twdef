@@ -9,50 +9,81 @@ import { HealerEnemy } from "../entities/enemy/HealerEnemy";
 import { SimpleEnemy } from "../entities/enemy/SimpleEnemy";
 
 export class EnemyManager {
-  enemies: Enemy[] = [];
 
-  constructor() {}
+  simpleEnemyGroup?: Phaser.GameObjects.Group
+  fastEnemyGroup?: Phaser.GameObjects.Group
+  armoredEnemyGroup?: Phaser.GameObjects.Group
+  healerEnemyGroup?: Phaser.GameObjects.Group
+  bossEnemyGroup?: Phaser.GameObjects.Group
 
   init(room: Room<GameState>, scene: Scene) {
+    this.simpleEnemyGroup = scene.add.group({
+        classType: SimpleEnemy,
+        runChildUpdate: true,
+        maxSize: 500
+    });
+
+    this.fastEnemyGroup = scene.add.group({
+        classType: FastEnemy,
+        runChildUpdate: true,
+        maxSize: 500
+    });
+
+    this.armoredEnemyGroup = scene.add.group({
+        classType: ArmoredEnemy,
+        maxSize: 100,
+        runChildUpdate: true
+    });
+
+    this.healerEnemyGroup = scene.add.group({
+        classType: HealerEnemy,
+        maxSize: 250,
+        runChildUpdate: true
+    });
+
+    this.bossEnemyGroup = scene.add.group({
+        classType: BossEnemy,
+        maxSize: 20,
+        runChildUpdate: true
+    });
+
+
     room.state.enemies.onAdd = (enemy, key: number) => {
       let entity: Enemy;
 
       if (enemy.t === 0) {
-        entity = new SimpleEnemy(scene, 10, 10);
+        entity = this.simpleEnemyGroup?.get(enemy.x, enemy.y)
       } else if (enemy.t === 1) {
-        entity = new FastEnemy(scene, 10, 10);
+        entity = this.fastEnemyGroup?.get(enemy.x, enemy.y)
       }  else if (enemy.t === 2) {
-        entity = new ArmoredEnemy(scene, 10, 10);
+        entity = this.armoredEnemyGroup?.get(enemy.x, enemy.y)
       }  else if (enemy.t === 3) {
-        entity = new HealerEnemy(scene, 10, 10);
+        entity = this.healerEnemyGroup?.get(enemy.x, enemy.y)
       }  else if (enemy.t === 4) {
-        entity = new BossEnemy(scene, 10, 10);
+        entity = this.bossEnemyGroup?.get(enemy.x, enemy.y)
       } else {
-        entity = new SimpleEnemy(scene, 10, 10);
+        entity = this.simpleEnemyGroup?.get(enemy.x, enemy.y)
       }
-
-      this.enemies.push(entity);
+      entity.visible = true
+      entity.active = true
 
       enemy.onChange = () => {
-        entity.setData("serverX", enemy.x);
-        entity.setData("serverY", enemy.y);
+         entity.setData("serverX", enemy.x);
+         entity.setData("serverY", enemy.y);
       };
-
-
-            enemy.onRemove = () => {
-                entity.destroy()
-            }
+      enemy.onRemove = () => {
+          if (enemy.t === 0) {
+                this.simpleEnemyGroup?.killAndHide(entity)
+              } else if (enemy.t === 1) {
+                this.fastEnemyGroup?.killAndHide(entity)
+              }  else if (enemy.t === 2) {
+                this.armoredEnemyGroup?.killAndHide(entity)
+              }  else if (enemy.t === 3) {
+                this.healerEnemyGroup?.killAndHide(entity)
+              }  else if (enemy.t === 4) {
+                this.bossEnemyGroup?.killAndHide(entity)
+              } 
+        }
     };
-  }
-
-  update() {
-    this.enemies.forEach((enemy) => {
-      if (enemy.data !== undefined) {
-      const { serverX, serverY } = enemy.data.values;
-
-       enemy.x = Phaser.Math.Linear(enemy.x, serverX, 0.2);
-       enemy.y = Phaser.Math.Linear(enemy.y, serverY, 0.2);
-      }
-    });
   }
 }
