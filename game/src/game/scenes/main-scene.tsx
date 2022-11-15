@@ -22,7 +22,7 @@ export class MainScene extends Phaser.Scene {
   private towerManager?: TowerManger;
   private bulletManager?: BulletManager;
 
-  client = new Client("wss://updeon.colyseus.de:2567");
+  client = new Client("wss://updeon.colyseus.de");
   room!: Room<GameState>;
 
   constructor() {
