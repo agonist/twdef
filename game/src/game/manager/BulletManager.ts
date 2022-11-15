@@ -24,7 +24,6 @@ export class BulletManager {
             entity.active = true
 
             bullet.onChange = () => {
-                console.log(bullet.x + " " + bullet.y)
                 entity.setData("serverX", bullet.x);
                 entity.setData("serverY", bullet.y);
             }
