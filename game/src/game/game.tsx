@@ -13,13 +13,13 @@ const PhaserGame = () => {
   useEffect(() => {
     if (game !== undefined) {
       console.log(game);
-      init(game);
+      // init(game);
     }
   }, [game]);
 
   return (
     <div className="relative flex min-w-screen  h-screen overflow-hidden">
-      <SidePanel />
+      {/* <SidePanel /> */}
 
       <div className="flex-1" ref={parentEl} />
     </div>

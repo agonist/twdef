@@ -11,7 +11,7 @@ import { TowerManger } from "../manager/TowerManager";
 import { ThemeConsumer } from "styled-components";
 import { BulletManager } from "../manager/BulletManager";
 
-export const cellSize = 40
+export const cellSize = 40;
 
 export class MainScene extends Phaser.Scene {
   private rexBoard!: BoardPlugin;
@@ -23,7 +23,7 @@ export class MainScene extends Phaser.Scene {
   private towerManager?: TowerManger;
   private bulletManager?: BulletManager;
 
-  client = new Client("ws://localhost:2567");
+  client = new Client("ws://updeon.colyseus.de:2567");
   room!: Room<GameState>;
 
   constructor() {
