@@ -8,7 +8,6 @@ import { DataChange } from "@colyseus/schema";
 import { EnemyManager } from "../manager/EnemyManager";
 import { WorldManager } from "../manager/WorldManager";
 import { TowerManger } from "../manager/TowerManager";
-import { ThemeConsumer } from "styled-components";
 import { BulletManager } from "../manager/BulletManager";
 
 export const cellSize = 40;
