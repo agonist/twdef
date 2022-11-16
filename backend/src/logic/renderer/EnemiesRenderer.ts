@@ -14,8 +14,9 @@ export class EnemiesRenderer extends EntityRenderer<Enemy> {
     }
 
     public add(entity: Enemy) {
-        this.entities.push(entity);
+        console.log("ADD E  "+  entity.x + "  " + entity.y)
         this.enemies.push(new EnemyS({x: entity.x, y: entity.y, t: entity.type}))
+        this.entities.push(entity);
     }
 
 

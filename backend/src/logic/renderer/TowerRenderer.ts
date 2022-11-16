@@ -21,7 +21,6 @@ export class TowerRenderer extends EntityRenderer<Tower> {
     update(): void {
         this.entities.forEach((tower, i) => {
             // manage destruction
-
             tower.update()
         })
 

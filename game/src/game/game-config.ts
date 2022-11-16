@@ -6,7 +6,10 @@ import { LoaderScene } from "./scenes/loader-scene";
 export const gameConfig: Types.Core.GameConfig = {
   width: "100%",
   height: "100%",
-  type: Phaser.AUTO,
+  type: Phaser.WEBGL,
+  fps: {
+    target: 30
+  },
   scale: {
     mode: Phaser.Scale.RESIZE,
   },
@@ -14,6 +17,7 @@ export const gameConfig: Types.Core.GameConfig = {
   render: {
     antialias: false,
   },
+  
   scene: [LoaderScene, MainScene],
   plugins: {
     scene: [

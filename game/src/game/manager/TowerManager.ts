@@ -6,17 +6,23 @@ import { SimpleTower } from "../entities/tower/SimpleTower";
 import { Tower } from "../entities/tower/Tower";
 
 export class TowerManger {
-    towers: Tower[] = []
+    towersGroup?: Phaser.GameObjects.Group
 
     constructor(){}
 
     init(room: Room<GameState>, scene: Scene){
+    this.towersGroup = scene.add.group({
+        classType: SimpleTower,
+        runChildUpdate: true,
+    });
+
         room.state.towers.onAdd = (tower, key: number) => {
             let entity: Tower
 
             switch(tower.t) {
                 case 0: {
-                    entity = new SimpleTower(scene, tower.x, tower.y)
+                    entity = this.towersGroup?.get(tower.x, tower.y)
+                    // entity = new SimpleTower(scene, tower.x, tower.y)
                     break;
                 }
                 case 1: {
@@ -29,7 +35,7 @@ export class TowerManger {
                 }
             }
 
-            this.towers.push(entity)
+            //this.towers.push(entity)
 
             tower.onChange = () => {
                  entity.setData("serverX", tower.x);
@@ -38,12 +44,4 @@ export class TowerManger {
 
         }
     }
-
- update() {
-    this.towers.forEach((tower) => {
-      const { serverX, serverY } = tower.data.values;
-      tower.x =  serverX;
-      tower.y =  serverY;
-    });
-  }
 }

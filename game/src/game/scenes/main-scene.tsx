@@ -22,7 +22,9 @@ export class MainScene extends Phaser.Scene {
   private towerManager?: TowerManger;
   private bulletManager?: BulletManager;
 
-  client = new Client("wss://updeon.colyseus.de");
+  // client = new Client("ws://updeon.colyseus.de");
+  client = new Client("ws://localhost:2567");
+
   room!: Room<GameState>;
 
   constructor() {
@@ -83,7 +85,7 @@ export class MainScene extends Phaser.Scene {
 
   fixedTick(time: any, delta: number) {
     this.cameraController?.update(delta);
-    this.towerManager?.update();
+    // this.towerManager?.update();
 
     var pointer = this.input.activePointer;
     var out = this.grid?.worldXYToTileXY(pointer.worldX, pointer.worldY, true);

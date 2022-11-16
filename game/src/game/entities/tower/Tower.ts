@@ -9,4 +9,11 @@ export abstract class Tower extends Phaser.GameObjects.Arc {
 
         scene.add.existing(this);
     }
+
+    update(){
+        const { serverX, serverY } = this.data.values;
+
+       this.x = serverX
+       this.y = serverY
+    }
 }

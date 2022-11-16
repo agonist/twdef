@@ -16,9 +16,11 @@ export abstract class Enemy extends Entity {
     private path: Point[] | false = false;
     private targetIndex: number = 1;
 
+    protected multiplier = 1
 
-    constructor(x: number, y: number){
-        super(x, y)
+    constructor(x: number, y: number, mult: number, width = cellSize){
+        super(x, y, cellSize)
+        this.multiplier = mult
         this.updatePath();
     }
 

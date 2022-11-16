@@ -8,6 +8,7 @@ import { EnemiesRenderer } from "../logic/renderer/EnemiesRenderer";
 import { BulletRenderer } from "../logic/renderer/BulletRenderer";
 import { TowerRenderer } from "../logic/renderer/TowerRenderer";
 import { CanonTower } from "../logic/entity/Tower/CanonTower";
+import { MAP_HEIGHT, MAP_WIDTH } from "../logic/Map";
 
 export const cellSize = 40
 
@@ -18,8 +19,7 @@ export class GameRoom extends Room<GameState> {
   towerRenderer: TowerRenderer
   bulletRenderer: BulletRenderer
   // map: Map
-  fixedTimeStep = 1000 / 60;
-  
+
   onCreate (options: any) {
     this.autoDispose = false
     this.setState(new GameState());
@@ -30,8 +30,8 @@ export class GameRoom extends Room<GameState> {
     this.bulletRenderer = new BulletRenderer(this.state.bullets)
     this.towerRenderer = new TowerRenderer(this.state.towers)
 
-  for (let y = 0; y < 100; y+=4) {
-      for (let x = 5; x < 100; x+=5) {
+  for (let y = 0; y < MAP_HEIGHT; y+=2) {
+      for (let x = 0; x < MAP_WIDTH; x+=3) {
         const t1 = new CanonTower(this.enemiesRenderer, this.bulletRenderer, x , y, cellSize)
         this.towerRenderer.add(t1)
       }
@@ -44,20 +44,7 @@ export class GameRoom extends Room<GameState> {
 
     console.log("Game created")
 
-    let elapsedTime = 0;
-    this.setSimulationInterval((deltaTime) => {this.update(1)})
-    // this.setSimulationInterval((deltaTime) => {
-    //     elapsedTime += deltaTime;
-
-    //     while (elapsedTime >= this.fixedTimeStep) {
-    //         elapsedTime -= this.fixedTimeStep;
-    //         this.fixedTick(this.fixedTimeStep);
-    //     }
-    // });
-  }
-
-  fixedTick(deltaTime: number){
-      this.update(deltaTime)
+    this.setSimulationInterval((deltaTime) => {this.update(deltaTime)})
   }
 
   update (deltaTime: number) {

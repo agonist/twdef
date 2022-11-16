@@ -18,8 +18,6 @@ export class BulletRenderer extends EntityRenderer<Bullet> {
     }
 
     update() {
-        super.update();
-
         this.entities.forEach((bullet, i) =>{
             if (bullet.alive) {
                 bullet.update();

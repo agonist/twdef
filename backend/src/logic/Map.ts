@@ -2,6 +2,9 @@ import { cellSize } from "../rooms/GameRoom"
 import { easyAStar } from "../tools/astar"
 import { Point } from "../tools/Point"
 
+  export const MAP_WIDTH: number = 50
+  export const MAP_HEIGHT: number = 50
+
  class Map {
 
       map: number[]
@@ -11,9 +14,10 @@ import { Point } from "../tools/Point"
       base: Point
       private pathsCache: { [k: string]: Point[] | false } = {}
 
+
     constructor(){
         this.spawn = {x: 0, y: 1}
-        this.base = {x: 99, y: 99}
+        this.base = {x: MAP_WIDTH - 1, y: MAP_HEIGHT - 1}
 
         this.map = this.makeMap()
 
@@ -21,7 +25,7 @@ import { Point } from "../tools/Point"
 
         let tmp: number[] = [...this.map]
 
-        while (tmp.length) this.grid.push(tmp.splice(0, 100));
+        while (tmp.length) this.grid.push(tmp.splice(0, MAP_WIDTH));
     }
 
     pathFind(i: number, j: number) {
@@ -67,10 +71,10 @@ import { Point } from "../tools/Point"
     let ground = false
     let paddRight = true
 
-    for (let y = 0; y < 100; y++){
-        for (let x = 0; x < 100; x++) {
+    for (let y = 0; y <  MAP_HEIGHT; y++){
+        for (let x = 0; x <  MAP_WIDTH; x++) {
 
-            if (y === 0 || y === 100){
+            if (y === 0 || y ===  MAP_WIDTH){
                 map.push(id)
                 id++
                 ground = true
@@ -78,10 +82,10 @@ import { Point } from "../tools/Point"
 
             if (ground){
                 map.push(0)
-                if (x === 99) ground = false
+                if (x ===  MAP_WIDTH - 1) ground = false
             } else {
                 if (paddRight) {
-                    if (x === 99) {
+                    if (x ===  MAP_WIDTH - 1) {
                         map.push(0)
                         paddRight = false
                         ground = true
@@ -96,7 +100,7 @@ import { Point } from "../tools/Point"
                         map.push(id)
                         id++
                     }
-                    if (x === 99) {
+                    if (x ===  MAP_WIDTH - 1) {
                         paddRight = true
                         ground = true
                     }

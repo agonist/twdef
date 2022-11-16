@@ -23,7 +23,7 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
     execute() {
         this.generateWave()
 
-         interval(30000)
+         interval(10000)
         .subscribe( x => {
             this.sub?.unsubscribe()
             this.generateWave()
@@ -31,20 +31,22 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
     }
 
     generateWave() {
-        this.sub = interval(500)
+        this.sub = interval(200)
         .pipe(take(5))
         .subscribe(x => {
             const r = Math.random()
+
+            const mult =  Math.floor(1 + Math.random()*(100 - 1 + 1))
             if (r > 0.9) {
-                this.enemiesRenderer.add(new BossEnemy(0, 40))
+                this.enemiesRenderer.add(new BossEnemy(1, 1, mult))
             } else if (r > 0.8) {
-               this.enemiesRenderer.add(new HealerEnemy(0, 40))
+               this.enemiesRenderer.add(new HealerEnemy(1, 1, mult))
             } else if (r > 0.7) {
-                this.enemiesRenderer.add(new ArmoredEnemy(0, 40))
+                this.enemiesRenderer.add(new ArmoredEnemy(1, 1, mult))
             }else if (r > 0.5) {
-                this.enemiesRenderer.add(new FastEnemy(0, 40))
+                this.enemiesRenderer.add(new FastEnemy(1, 1, mult))
             } else {
-               this.enemiesRenderer.add(new SimpleEnemy(0, 40))
+               this.enemiesRenderer.add(new SimpleEnemy(1, 1, mult))
             }
         })
     }
