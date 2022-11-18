@@ -64,7 +64,7 @@ import { Point } from "../tools/Point"
         this.pathsCache = {};
     }
 
-    makeMap(): number[] {
+makeMap(): number[] {
     let map: number[] = []
 
     let id = 1

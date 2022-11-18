@@ -8,7 +8,7 @@ import { EnemiesRenderer } from "../logic/renderer/EnemiesRenderer";
 import { BulletRenderer } from "../logic/renderer/BulletRenderer";
 import { TowerRenderer } from "../logic/renderer/TowerRenderer";
 import { CanonTower } from "../logic/entity/Tower/CanonTower";
-import { MAP_HEIGHT, MAP_WIDTH } from "../logic/Map";
+import { map, MAP_HEIGHT, MAP_WIDTH } from "../logic/Map";
 
 export const cellSize = 40
 
@@ -31,12 +31,13 @@ export class GameRoom extends Room<GameState> {
     this.towerRenderer = new TowerRenderer(this.state.towers)
 
   for (let y = 0; y < MAP_HEIGHT; y+=2) {
-      for (let x = 0; x < MAP_WIDTH; x+=1) {
+      for (let x = 0; x < MAP_WIDTH; x+=2) {
+        if (map.grid[y][x] > 0) {
         const t1 = new CanonTower(this.enemiesRenderer, this.bulletRenderer, x , y, cellSize)
         this.towerRenderer.add(t1)
+        }
       }
     }
-    console.log(this.towerRenderer.towers.length)
 
     this.onMessage("type", (client, message) => {});
 

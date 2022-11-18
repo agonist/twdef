@@ -20,30 +20,25 @@ export class EnemyManager {
     this.simpleEnemyGroup = scene.add.group({
         classType: SimpleEnemy,
         runChildUpdate: true,
-        maxSize: 500
     });
 
     this.fastEnemyGroup = scene.add.group({
         classType: FastEnemy,
         runChildUpdate: true,
-        maxSize: 500
     });
 
     this.armoredEnemyGroup = scene.add.group({
         classType: ArmoredEnemy,
-        maxSize: 100,
         runChildUpdate: true
     });
 
     this.healerEnemyGroup = scene.add.group({
         classType: HealerEnemy,
-        maxSize: 250,
         runChildUpdate: true
     });
 
     this.bossEnemyGroup = scene.add.group({
         classType: BossEnemy,
-        maxSize: 20,
         runChildUpdate: true
     });
 

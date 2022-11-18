@@ -58,9 +58,17 @@ public initGrid(world: World, scene: Scene, rexBoard: BoardPlugin, grid: BoardPl
 
         const points = board.getGridPoints(tileXY.x, tileXY.y, true);
         // graphics.strokePoints(points, false);
-        const scene = board.scene as MainScene;
 
-        if (land > 0) {
+        if (tileXY.y === 1 && tileXY.x === 0) {
+          const gridElem = rexBoard.add.shape(
+            board,
+            tileXY.x,
+            tileXY.y,
+            0,
+            0xff0000,
+            0.5
+          );
+        } else if (land > 0) {
           const gridElem = rexBoard.add.shape(
             board,
             tileXY.x,
@@ -83,15 +91,6 @@ public initGrid(world: World, scene: Scene, rexBoard: BoardPlugin, grid: BoardPl
 
     board
       .setInteractive()
-      .on("tiledown", function (_: any, tileXY: TileXYType) {
-        console.log("down " + tileXY.x + "," + tileXY.y);
-      })
-      .on("tileup", function (_pointer: any, tileXY: TileXYType) {
-        console.log("up " + tileXY.x + "," + tileXY.y);
-      })
-      .on("tilemove", function (pointer: any, tileXY: TileXYType) {
-        console.log("move " + tileXY.x + "," + tileXY.y);
-      })
       .on("tileover", function (pointer: any, tileXY: TileXYType) {
         console.log("over " + tileXY.x + "," + tileXY.y);
         gameState.getState().selectHoverLand(tileXY.x, tileXY.y);
