@@ -2,8 +2,8 @@ import { cellSize } from "../rooms/GameRoom"
 import { easyAStar } from "../tools/astar"
 import { Point } from "../tools/Point"
 
-  export const MAP_WIDTH: number = 50
-  export const MAP_HEIGHT: number = 50
+  export const MAP_WIDTH: number = 75
+  export const MAP_HEIGHT: number = 75
 
  class Map {
 

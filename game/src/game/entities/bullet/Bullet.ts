@@ -1,10 +1,10 @@
 import { Scene } from "phaser";
 import { cellSize } from "../../scenes/main-scene";
 
-export abstract class Bullet extends Phaser.GameObjects.Arc {
+export abstract class Bullet extends Phaser.GameObjects.Image {
 
-    constructor(scene: Scene, x: number, y: number, radius: number, fillColor: number) {
-        super(scene, x, y, 4 , 0, 360, false, fillColor, 1);
+    constructor(scene: Scene, x: number, y: number, key: string) {
+        super(scene, x, y, key);
         scene.add.existing(this);
     }
 

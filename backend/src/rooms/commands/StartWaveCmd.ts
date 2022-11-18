@@ -36,7 +36,9 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
         .subscribe(x => {
             const r = Math.random()
 
-            const mult =  Math.floor(1 + Math.random()*(100 - 1 + 1))
+            let mult =  Math.floor(1 + Math.random()*(100 - 1 + 1))
+
+            mult = 999999
             if (r > 0.9) {
                 this.enemiesRenderer.add(new BossEnemy(1, 1, mult))
             } else if (r > 0.8) {

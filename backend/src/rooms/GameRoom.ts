@@ -31,11 +31,12 @@ export class GameRoom extends Room<GameState> {
     this.towerRenderer = new TowerRenderer(this.state.towers)
 
   for (let y = 0; y < MAP_HEIGHT; y+=2) {
-      for (let x = 0; x < MAP_WIDTH; x+=3) {
+      for (let x = 0; x < MAP_WIDTH; x+=1) {
         const t1 = new CanonTower(this.enemiesRenderer, this.bulletRenderer, x , y, cellSize)
         this.towerRenderer.add(t1)
       }
     }
+    console.log(this.towerRenderer.towers.length)
 
     this.onMessage("type", (client, message) => {});
 
