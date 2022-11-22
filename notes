@@ -1,0 +1,6 @@
+
+
+Lands specs
+- A map have a Land ids range i.e [1-100] and a size 15x25
+- As the game grow and have multiple map, ids will follow the previous map [1-100] -> [101-200] ...
+- Game server should have an init phase where loading basic lands spec and current state (which one is minted or not)

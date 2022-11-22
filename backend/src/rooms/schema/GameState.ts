@@ -54,5 +54,4 @@ export class GameState extends Schema {
     @type([TowerS]) towers= new ArraySchema<TowerS>();
     @type([BulletS]) bullets = new ArraySchema<BulletS>();
 
-
 }

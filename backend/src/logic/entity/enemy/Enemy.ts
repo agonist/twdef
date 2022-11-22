@@ -1,6 +1,5 @@
 import { cellSize } from "../../../rooms/GameRoom";
 import { Point } from "../../../tools/Point";
-import { map } from "../../Map";
 import { Entity } from "../Entity";
 
 export abstract class Enemy extends Entity {
@@ -18,8 +17,11 @@ export abstract class Enemy extends Entity {
 
     protected multiplier = 1
 
-    constructor(x: number, y: number, mult: number, width = cellSize){
+    pathUpdate: (i: number, j: number) => any
+
+    constructor(x: number, y: number, mult: number, pathUpdate: (i: number, j: number) => any, width = cellSize){
         super(x, y, cellSize)
+        this.pathUpdate = pathUpdate
         this.multiplier = mult
         this.updatePath();
     }
@@ -74,10 +76,9 @@ export abstract class Enemy extends Entity {
 
 
      public getPath() {
-        return map.getPathFromGridCell(
+        return this.pathUpdate(
             Math.floor(this.x / cellSize),
             Math.floor(this.y / cellSize)
         )
     }
-
 }

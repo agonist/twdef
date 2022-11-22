@@ -40,8 +40,6 @@ export const gameState = create<GameState>()(
            const curr = get().lands.find((l) => l.x === x && l.y === y);
             //set({currentLand: curr} )
         },
-
-
       }),
   )
 )

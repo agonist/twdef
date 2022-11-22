@@ -2,10 +2,7 @@ import { cellSize } from "../rooms/GameRoom"
 import { easyAStar } from "../tools/astar"
 import { Point } from "../tools/Point"
 
-  export const MAP_WIDTH: number = 75
-  export const MAP_HEIGHT: number = 75
-
- class Map {
+ export class Map {
 
       map: number[]
       grid: number[][] = []
@@ -14,10 +11,14 @@ import { Point } from "../tools/Point"
       base: Point
       private pathsCache: { [k: string]: Point[] | false } = {}
 
+      width = 0
+      height = 0
 
-    constructor(){
+    constructor(width: number, height: number){
+        this.width = width
+        this.height = height
         this.spawn = {x: 0, y: 1}
-        this.base = {x: MAP_WIDTH - 1, y: MAP_HEIGHT - 1}
+        this.base = {x: this.width - 1, y: this.height - 1}
 
         this.map = this.makeMap()
 
@@ -25,7 +26,7 @@ import { Point } from "../tools/Point"
 
         let tmp: number[] = [...this.map]
 
-        while (tmp.length) this.grid.push(tmp.splice(0, MAP_WIDTH));
+        while (tmp.length) this.grid.push(tmp.splice(0, this.width));
     }
 
     pathFind(i: number, j: number) {
@@ -71,10 +72,10 @@ makeMap(): number[] {
     let ground = false
     let paddRight = true
 
-    for (let y = 0; y <  MAP_HEIGHT; y++){
-        for (let x = 0; x <  MAP_WIDTH; x++) {
+    for (let y = 0; y <  this.height; y++){
+        for (let x = 0; x <  this.width; x++) {
 
-            if (y === 0 || y ===  MAP_WIDTH){
+            if (y === 0 || y ===  this.width){
                 map.push(id)
                 id++
                 ground = true
@@ -82,10 +83,10 @@ makeMap(): number[] {
 
             if (ground){
                 map.push(0)
-                if (x ===  MAP_WIDTH - 1) ground = false
+                if (x ===  this.width - 1) ground = false
             } else {
                 if (paddRight) {
-                    if (x ===  MAP_WIDTH - 1) {
+                    if (x ===  this.width - 1) {
                         map.push(0)
                         paddRight = false
                         ground = true
@@ -100,7 +101,7 @@ makeMap(): number[] {
                         map.push(id)
                         id++
                     }
-                    if (x ===  MAP_WIDTH - 1) {
+                    if (x ===  this.width - 1) {
                         paddRight = true
                         ground = true
                     }
@@ -111,11 +112,4 @@ makeMap(): number[] {
     }
     return map
 }
-
-}
-
-const map = new Map();
-export {
-    map,
-    Map
 }
