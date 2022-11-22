@@ -91,13 +91,6 @@ public initGrid(world: World, scene: Scene, rexBoard: BoardPlugin, grid: BoardPl
 
     board
       .setInteractive()
-      .on("tileover", function (pointer: any, tileXY: TileXYType) {
-        console.log("over " + tileXY.x + "," + tileXY.y);
-        gameState.getState().selectHoverLand(tileXY.x, tileXY.y);
-        // gameState.setState({ pos: { x: tileXY.x, y: tileXY.y } });
-        //const scene = board.scene as MainScene;
-        //scene.tmpTower?.setPosition(tileXY.x * 10, tileXY.y * 10);
-      })
       .on("tileout", function (pointer: any, tileXY: TileXYType) {
         console.log("out " + tileXY.x + "," + tileXY.y);
       })

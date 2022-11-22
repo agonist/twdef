@@ -21,7 +21,7 @@ export abstract class GameRoom extends Room<GameState> {
   onCreate (options: any) {
     this.autoDispose = false
     this.setState(new GameState());
-    this.map = new Map(25, 15)
+    this.map = this.createMap()
 
     this.state.world.width = this.map.width
     this.state.world.height = this.map.height
@@ -33,7 +33,7 @@ export abstract class GameRoom extends Room<GameState> {
     this.towerRenderer = new TowerRenderer(this.state.towers)
 
   for (let y = 0; y < this.map.height; y+=2) {
-      for (let x = 0; x < this.map.width; x+=2) {
+      for (let x = 0; x < this.map.width; x+=1) {
         if (this.map.grid[y][x] > 0) {
         const t1 = new CanonTower(this.enemiesRenderer, this.bulletRenderer, x , y, cellSize)
         this.towerRenderer.add(t1)
@@ -68,5 +68,7 @@ export abstract class GameRoom extends Room<GameState> {
     console.log("room", this.roomId, "disposing...");
     this.dispatcher.stop();
   }
+
+  abstract createMap() : Map
 
 }

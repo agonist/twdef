@@ -6,12 +6,12 @@ import { Land } from "../../state/game-state";
 import { LandProps } from "./LandProps";
 import { toast } from "react-toastify";
 
-export const MintLand = ({ land, mintCallback }: LandProps) => {
+export const MintLand = ({ landId, mintCallback }: LandProps) => {
   const { config } = usePrepareContractWrite({
     address: Contracts.LAND,
     abi: LandAbi,
     functionName: "mint",
-    args: [BigNumber.from(land.id)],
+    args: [BigNumber.from(landId)],
     overrides: {
       value: ethers.utils.parseEther("1"),
     },

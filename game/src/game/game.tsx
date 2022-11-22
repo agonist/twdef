@@ -8,11 +8,10 @@ import { gameState } from "./state/game-state";
 const PhaserGame = () => {
   const parentEl = useRef<HTMLDivElement>(null);
   const game = useGame(gameConfig, parentEl);
-  const init = gameState((s) => s.init);
+  const g = gameState();
 
   useEffect(() => {
     if (game !== undefined) {
-      console.log(game);
       // init(game);
     }
   }, [game]);
@@ -21,7 +20,14 @@ const PhaserGame = () => {
     <div className="relative flex min-w-screen  h-screen overflow-hidden">
       <SidePanel />
 
-      <div className="flex-1" ref={parentEl} />
+      <div className="flex-1">
+        <div className="flex flex-row justify-center space-x-4 bg-base-300">
+          <button onClick={() => g.prevMap(game!)}>⬅️</button>
+          <p>map_{g.currentMap}</p>
+          <button onClick={() => g.nextMap(game!)}>➡️</button>
+        </div>
+        <div ref={parentEl} />
+      </div>
     </div>
   );
 };

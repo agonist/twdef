@@ -27,14 +27,24 @@ export class MainScene extends Phaser.Scene {
 
   room!: Room<GameState>;
 
+  map!: string;
+
   constructor() {
     super(Constants.SCENE_MAIN);
   }
 
+  init(data: any) {
+    this.map = data.map;
+    if (this.map === undefined) {
+      this.map = "map_1";
+    }
+  }
+
   async create() {
     try {
-      this.room = await this.client.joinOrCreate("my_room");
-      console.log("Joined successfully!");
+      this.room = await this.client.joinOrCreate(this.map);
+
+      this.worldManager = new WorldManager();
 
       this.enemyManager = new EnemyManager();
       this.enemyManager.init(this.room, this);
@@ -44,8 +54,6 @@ export class MainScene extends Phaser.Scene {
 
       this.bulletManager = new BulletManager();
       this.bulletManager.init(this.room, this);
-
-      this.worldManager = new WorldManager();
 
       this.room.state.onChange = (changes) => {
         changes.forEach((change) => {
@@ -61,6 +69,12 @@ export class MainScene extends Phaser.Scene {
     } catch (e) {
       console.error(e);
     }
+  }
+
+  async launch(map: string) {
+    this.room.removeAllListeners();
+    this.room.leave();
+    this.scene.restart({ map: map });
   }
 
   elapsedTime = 0;

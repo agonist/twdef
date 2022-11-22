@@ -14,19 +14,19 @@ import { Point } from "../tools/Point"
       width = 0
       height = 0
 
-    constructor(width: number, height: number){
+    constructor(width: number, height: number, startId: number, base: {x: number, y: number}){
         this.width = width
         this.height = height
         this.spawn = {x: 0, y: 1}
-        this.base = {x: this.width - 1, y: this.height - 1}
+        this.base =  base
 
-        this.map = this.makeMap()
-
-        console.log(this.map.filter(n => n > 0).length)
+        this.map = this.makeMap(startId)
 
         let tmp: number[] = [...this.map]
 
         while (tmp.length) this.grid.push(tmp.splice(0, this.width));
+
+        console.log(this.grid)
     }
 
     pathFind(i: number, j: number) {
@@ -65,10 +65,10 @@ import { Point } from "../tools/Point"
         this.pathsCache = {};
     }
 
-makeMap(): number[] {
+makeMap(startId: number): number[] {
     let map: number[] = []
 
-    let id = 1
+    let id = startId
     let ground = false
     let paddRight = true
 

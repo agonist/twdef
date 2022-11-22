@@ -6,6 +6,8 @@ import { monitor } from "@colyseus/monitor";
  */
 import { GameRoom } from "./rooms/GameRoom";
 import { Map1 } from "./rooms/maps/Map_1";
+import { Map2 } from "./rooms/maps/Map_2";
+import { Map3 } from "./rooms/maps/Map_3";
 
 export default Arena({
     getId: () => "Your Colyseus App",
@@ -14,8 +16,9 @@ export default Arena({
         /**
          * Define your room handlers:
          */
-        gameServer.define('my_room', Map1);
-
+        gameServer.define('map_1', Map1);
+        gameServer.define('map_2', Map2);
+        gameServer.define('map_3', Map3);
     },
 
     initializeExpress: (app) => {

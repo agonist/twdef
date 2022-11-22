@@ -6,20 +6,20 @@ import { ConnectWalletOr } from "../wallet/ConnectWalletOr";
 import { LandProps } from "./LandProps";
 import { MintLand } from "./MintLand";
 
-export const LandContent = ({ land }: LandProps) => {
+export const LandContent = ({ landId }: LandProps) => {
   const { data, isError, isLoading, isSuccess, refetch } = useContractReads({
     contracts: [
       {
         address: Contracts.LAND,
         abi: LandAbi,
         functionName: "lands",
-        args: [BigNumber.from(land?.id)],
+        args: [BigNumber.from(landId)],
       },
       {
         address: Contracts.LAND,
         abi: LandAbi,
         functionName: "ownerOf",
-        args: [BigNumber.from(land?.id)],
+        args: [BigNumber.from(landId)],
       },
     ],
     onSuccess(data) {
@@ -54,7 +54,7 @@ export const LandContent = ({ land }: LandProps) => {
         </p>
         <ConnectWalletOr>
           <MintLand
-            land={land}
+            land={landId}
             mintCallback={() => {
               refetch();
             }}

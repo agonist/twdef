@@ -7,6 +7,8 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+// Land contract for Tower Defense game
+// Cam manage multiple map with multiple lands
 contract Land is ERC721Enumerable, Ownable {
     struct LandCoord {
         uint256 id;
@@ -18,39 +20,29 @@ contract Land is ERC721Enumerable, Ownable {
     error AlreadyMinted();
     error ValueIncorrect();
 
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
-
     string public baseTokenURI;
 
-    // tokenId => lands coordinates
-    mapping(uint256 => LandCoord) public lands;
+    // mapId => tokenId => lands coordinates
+    mapping(uint256 => mapping(uint256 => LandCoord)) public lands;
+
     uint256 landPrice = 1 ether;
 
     constructor() ERC721("Land", "LAND") {}
 
-    function mint(uint256 landId) external payable {
-        if (lands[landId].minted) revert AlreadyMinted();
+    function mint(uint256 _mapId, uint256 _landId) external payable {
+        if (lands[_mapId][_landId].minted) revert AlreadyMinted();
         if (msg.value != landPrice) revert ValueIncorrect();
 
-        lands[landId].minted = true;
-        _mint(msg.sender, landId);
+        lands[_mapId][_landId].minted = true;
+        _mint(msg.sender, _landId);
     }
 
-    function mintLand(LandCoord[] calldata landsToMint) external onlyOwner {
-        for (uint i = 0; i < landsToMint.length; i++) {
-            uint256 newItemId = _tokenIds.current();
-            _mint(msg.sender, newItemId);
-            _tokenIds.increment();
-        }
-    }
-
-    function uploadLandCoordinates(LandCoord[] calldata landsToMint)
+    function createMap(uint256 _mapId, LandCoord[] calldata _landsToMint)
         external
         onlyOwner
     {
-        for (uint i = 0; i < landsToMint.length; i++) {
-            lands[landsToMint[i].id] = landsToMint[i];
+        for (uint i = 0; i < _landsToMint.length; i++) {
+            lands[_mapId][_landsToMint[i].id] = _landsToMint[i];
         }
     }
 
@@ -78,8 +70,12 @@ contract Land is ERC721Enumerable, Ownable {
         return _balanceByIdOf(_address);
     }
 
-    function isMinted(uint256 landId) external view returns (bool) {
-        return lands[landId].minted;
+    function isMinted(uint256 _mapId, uint256 _landId)
+        external
+        view
+        returns (bool)
+    {
+        return lands[_mapId][_landId].minted;
     }
 
     function _baseURI() internal view override returns (string memory) {
