@@ -3,10 +3,10 @@ import { makeGrid } from "../map-generator";
 
 async function main() {
 
-  // const Land = await ethers.getContractFactory("Land");
-  // const land = await Land.deploy();
+  const Land = await ethers.getContractFactory("Land");
+  const land = await Land.deploy();
 
-  // await land.deployed();
+  await land.deployed();
 
   const lands: {x:number, y:number, id: number, minted: boolean}[] =  []
 
@@ -50,9 +50,9 @@ async function main() {
     }
     console.log(lands3[lands3.length - 1].id)
 
-    // await land.createMap(1, lands)
-    // await land.createMap(2, lands2)
-    // await land.createMap(3, lands3)
+    await land.createMap(1, lands)
+    await land.createMap(2, lands2)
+    await land.createMap(3, lands3)
 }
 
 

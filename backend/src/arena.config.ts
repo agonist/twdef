@@ -35,6 +35,7 @@ export default Arena({
          * Read more: https://docs.colyseus.io/tools/monitor/
          */
         app.use("/colyseus", monitor());
+
     },
 
 

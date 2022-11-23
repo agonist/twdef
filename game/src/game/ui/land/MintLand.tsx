@@ -6,16 +6,16 @@ import { Land } from "../../state/game-state";
 import { LandProps } from "./LandProps";
 import { toast } from "react-toastify";
 
-export const MintLand = ({ landId, mintCallback }: LandProps) => {
+export const MintLand = ({ landId, minted, mintCallback }: LandProps) => {
   const { config } = usePrepareContractWrite({
     address: Contracts.LAND,
     abi: LandAbi,
     functionName: "mint",
-    args: [BigNumber.from(landId)],
+    args: [BigNumber.from(1), BigNumber.from(landId)],
     overrides: {
       value: ethers.utils.parseEther("1"),
     },
-    enabled: !land.minted,
+    enabled: !minted,
   });
 
   const { data, isLoading, isSuccess, write } = useContractWrite({
@@ -23,6 +23,9 @@ export const MintLand = ({ landId, mintCallback }: LandProps) => {
     onSuccess(data) {
       mintCallback?.();
       toast.success("Land bought successfully 🥳");
+    },
+    onError(data) {
+      console.log(data);
     },
   });
 
@@ -33,7 +36,7 @@ export const MintLand = ({ landId, mintCallback }: LandProps) => {
         write?.();
       }}
     >
-      BUY FOR 100 $MATIC
+      BUY FOR 1 $MATIC
     </button>
   );
 };

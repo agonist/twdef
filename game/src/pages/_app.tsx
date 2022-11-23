@@ -14,7 +14,7 @@ import { publicProvider } from "wagmi/providers/public";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const { chains, provider } = configureChains(
+export const { chains, provider } = configureChains(
   [chain.polygon, chain.polygonMumbai, chain.hardhat],
   [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
 );

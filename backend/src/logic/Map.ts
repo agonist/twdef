@@ -25,8 +25,6 @@ import { Point } from "../tools/Point"
         let tmp: number[] = [...this.map]
 
         while (tmp.length) this.grid.push(tmp.splice(0, this.width));
-
-        console.log(this.grid)
     }
 
     pathFind(i: number, j: number) {

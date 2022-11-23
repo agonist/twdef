@@ -32,18 +32,18 @@ export abstract class GameRoom extends Room<GameState> {
     this.bulletRenderer = new BulletRenderer(this.state.bullets)
     this.towerRenderer = new TowerRenderer(this.state.towers)
 
-  for (let y = 0; y < this.map.height; y+=2) {
-      for (let x = 0; x < this.map.width; x+=1) {
-        if (this.map.grid[y][x] > 0) {
-        const t1 = new CanonTower(this.enemiesRenderer, this.bulletRenderer, x , y, cellSize)
-        this.towerRenderer.add(t1)
-        }
-      }
-    }
+  // for (let y = 0; y < this.map.height; y+=2) {
+  //     for (let x = 0; x < this.map.width; x+=1) {
+  //       if (this.map.grid[y][x] > 0) {
+  //       const t1 = new CanonTower(this.enemiesRenderer, this.bulletRenderer, x , y, cellSize)
+  //       this.towerRenderer.add(t1)
+  //       }
+  //     }
+  //   }
 
     this.onMessage("type", (client, message) => {});
 
-    this.dispatcher.dispatch(new StartWaveCmd(this.enemiesRenderer, this.map))
+    // this.dispatcher.dispatch(new StartWaveCmd(this.enemiesRenderer, this.map))
 
     console.log("Game created")
 

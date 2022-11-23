@@ -92,7 +92,7 @@ public initGrid(world: World, scene: Scene, rexBoard: BoardPlugin, grid: BoardPl
     board
       .setInteractive()
       .on("tileout", function (pointer: any, tileXY: TileXYType) {
-        console.log("out " + tileXY.x + "," + tileXY.y);
+        // console.log("out " + tileXY.x + "," + tileXY.y);
       })
       .on("gameobjectdown", function (pointer: any, gameObject: Shape) {
         switch (getCellType(gameObject.x, gameObject.y)) {
@@ -115,7 +115,7 @@ public initGrid(world: World, scene: Scene, rexBoard: BoardPlugin, grid: BoardPl
         }
       })
       .on("gameobjectout", function (pointer: any, gameObject: Shape) {
-        console.log("game out");
+        // console.log("game out");
         switch (getCellType(gameObject.x, gameObject.y)) {
           case CellType.LAND:
             gameObject.setFillStyle(defaultLand, 0.2);
@@ -126,8 +126,6 @@ public initGrid(world: World, scene: Scene, rexBoard: BoardPlugin, grid: BoardPl
         }
       })
       .on("tile1tap", function (tap: any, tileXY: TileXYType) {
-        // element on grid clicked
-        console.log("1 tap " + tileXY.x + "," + tileXY.y);
         gameState.getState().selectLand(tileXY.x, tileXY.y);
       });
 

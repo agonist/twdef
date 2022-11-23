@@ -12,8 +12,8 @@ export const LandContent = ({ landId }: LandProps) => {
       {
         address: Contracts.LAND,
         abi: LandAbi,
-        functionName: "lands",
-        args: [BigNumber.from(landId)],
+        functionName: "landInfo",
+        args: [BigNumber.from(1), BigNumber.from(landId)],
       },
       {
         address: Contracts.LAND,
@@ -54,7 +54,8 @@ export const LandContent = ({ landId }: LandProps) => {
         </p>
         <ConnectWalletOr>
           <MintLand
-            land={landId}
+            minted={data?.[0].minted}
+            landId={landId}
             mintCallback={() => {
               refetch();
             }}

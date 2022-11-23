@@ -181,6 +181,46 @@ export const LandAbi = [
       "inputs": [
         {
           "internalType": "uint256",
+          "name": "_mapId",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint128",
+              "name": "x",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "y",
+              "type": "uint128"
+            },
+            {
+              "internalType": "bool",
+              "name": "minted",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct Land.LandCoord[]",
+          "name": "_landsToMint",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "createMap",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
           "name": "tokenId",
           "type": "uint256"
         }
@@ -224,7 +264,12 @@ export const LandAbi = [
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "landId",
+          "name": "_mapId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_landId",
           "type": "uint256"
         }
       ],
@@ -241,6 +286,57 @@ export const LandAbi = [
     },
     {
       "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_mapId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_landId",
+          "type": "uint256"
+        }
+      ],
+      "name": "landInfo",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint128",
+              "name": "x",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "y",
+              "type": "uint128"
+            },
+            {
+              "internalType": "bool",
+              "name": "minted",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct Land.LandCoord",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
         {
           "internalType": "uint256",
           "name": "",
@@ -277,48 +373,18 @@ export const LandAbi = [
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "landId",
+          "name": "_mapId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_landId",
           "type": "uint256"
         }
       ],
       "name": "mint",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "id",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint128",
-              "name": "x",
-              "type": "uint128"
-            },
-            {
-              "internalType": "uint128",
-              "name": "y",
-              "type": "uint128"
-            },
-            {
-              "internalType": "bool",
-              "name": "minted",
-              "type": "bool"
-            }
-          ],
-          "internalType": "struct Land.LandCoord[]",
-          "name": "landsToMint",
-          "type": "tuple[]"
-        }
-      ],
-      "name": "mintLand",
-      "outputs": [],
-      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -594,41 +660,6 @@ export const LandAbi = [
         }
       ],
       "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "id",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint128",
-              "name": "x",
-              "type": "uint128"
-            },
-            {
-              "internalType": "uint128",
-              "name": "y",
-              "type": "uint128"
-            },
-            {
-              "internalType": "bool",
-              "name": "minted",
-              "type": "bool"
-            }
-          ],
-          "internalType": "struct Land.LandCoord[]",
-          "name": "landsToMint",
-          "type": "tuple[]"
-        }
-      ],
-      "name": "uploadLandCoordinates",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

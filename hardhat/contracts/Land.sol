@@ -46,6 +46,14 @@ contract Land is ERC721Enumerable, Ownable {
         }
     }
 
+    function landInfo(uint256 _mapId, uint256 _landId)
+        external
+        view
+        returns (LandCoord memory)
+    {
+        return lands[_mapId][_landId];
+    }
+
     function _balanceByIdOf(address _address)
         internal
         view

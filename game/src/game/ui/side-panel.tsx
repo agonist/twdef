@@ -66,7 +66,7 @@ export const SectionSelector = ({ currentTab }: SectionSelectorProps) => {
 export const GameSection = () => {
   const _gameState = gameState();
 
-  if (_gameState.currentLand === undefined) {
+  if (_gameState.currentLandId === 0) {
     return (
       <p className="text-white text-center">
         Select a cell on the map and chose what you want to do
@@ -74,8 +74,8 @@ export const GameSection = () => {
     );
   }
 
-  if (_gameState.currentLand) {
-    return <LandSection land={_gameState.currentLand} />;
+  if (_gameState.currentLandId > 0) {
+    return <LandSection landId={_gameState.currentLandId} />;
   }
 
   return <></>;

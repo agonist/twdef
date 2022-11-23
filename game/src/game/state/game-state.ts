@@ -1,5 +1,7 @@
+
 import create from "zustand"
 import {devtools} from "zustand/middleware";
+import { provider } from "../../pages/_app";
 import { Constants } from "../Constants";
 import { LoaderScene } from "../scenes/loader-scene";
 import { MainScene } from "../scenes/main-scene";
@@ -26,7 +28,8 @@ export const gameState = create<GameState>()(
         currentMap: 1,
 
         async init(game: Phaser.Game){
-              
+
+
         },
 
         setWorld(world: number[][]) {
