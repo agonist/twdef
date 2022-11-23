@@ -1,5 +1,6 @@
 import Arena from "@colyseus/arena";
 import { monitor } from "@colyseus/monitor";
+import { PrismaClient } from "@prisma/client";
 
 /**
  * Import your Room files

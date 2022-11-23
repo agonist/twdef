@@ -8,12 +8,15 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 // Land contract for Tower Defense game
-// Cam manage multiple map with multiple lands
+// Can manage multiple map with multiple lands
 contract Land is ERC721Enumerable, Ownable {
-    struct LandCoord {
+
+    struct LandData {
         uint256 id;
         uint128 x;
         uint128 y;
+        uint64 biome;
+        uint64 dps;
         bool minted;
     }
 
@@ -23,7 +26,7 @@ contract Land is ERC721Enumerable, Ownable {
     string public baseTokenURI;
 
     // mapId => tokenId => lands coordinates
-    mapping(uint256 => mapping(uint256 => LandCoord)) public lands;
+    mapping(uint256 => mapping(uint256 => LandData)) public lands;
 
     uint256 landPrice = 1 ether;
 
@@ -33,11 +36,13 @@ contract Land is ERC721Enumerable, Ownable {
         if (lands[_mapId][_landId].minted) revert AlreadyMinted();
         if (msg.value != landPrice) revert ValueIncorrect();
 
+        // add some random effects like dps => chainlink
+
         lands[_mapId][_landId].minted = true;
         _mint(msg.sender, _landId);
     }
 
-    function createMap(uint256 _mapId, LandCoord[] calldata _landsToMint)
+    function createMap(uint256 _mapId, LandData[] calldata _landsToMint)
         external
         onlyOwner
     {
@@ -49,7 +54,7 @@ contract Land is ERC721Enumerable, Ownable {
     function landInfo(uint256 _mapId, uint256 _landId)
         external
         view
-        returns (LandCoord memory)
+        returns (LandData memory)
     {
         return lands[_mapId][_landId];
     }

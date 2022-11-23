@@ -7,10 +7,14 @@ import { BulletRenderer } from "../logic/renderer/BulletRenderer";
 import { TowerRenderer } from "../logic/renderer/TowerRenderer";
 import { CanonTower } from "../logic/entity/Tower/CanonTower";
 import { Map } from "../logic/Map";
+import { PrismaClient } from "@prisma/client";
 
 export const cellSize = 40
 
 export abstract class GameRoom extends Room<GameState> {
+
+  prisma = new PrismaClient()
+
   dispatcher = new Dispatcher(this);
 
   enemiesRenderer: EnemiesRenderer

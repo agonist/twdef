@@ -4,3 +4,27 @@ Lands specs
 - A map have a Land ids range i.e [1-100] and a size 15x25
 - As the game grow and have multiple map, ids will follow the previous map [1-100] -> [101-200] ...
 - Game server should have an init phase where loading basic lands spec and current state (which one is minted or not)
+
+
+
+BUY/SELL/LEND FLOW
+
+Initial sale:
+- Lands are minted by users
+- Tower are purchased by users
+
+Game starting:
+- A Land and a Tower are staked together in order to participate to the game
+
+Re-sell:
+- In order to be sold, a land must have no tower on it
+- In order to be sold, a tower must not be on a land
+
+Lending:
+- hmm
+
+Why?
+- If a Land has a tower on it and the user sell the land, what happen to the tower ?
+
+
+How to make this flow better ?
