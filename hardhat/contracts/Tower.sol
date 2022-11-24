@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Tower is ERC721Enumerable, Ownable {
+ 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     string public baseTokenURI;
@@ -63,4 +64,5 @@ contract Tower is ERC721Enumerable, Ownable {
     function setBaseURI(string calldata _baseTokenURI) external onlyOwner {
         baseTokenURI = _baseTokenURI;
     }
+    
 }

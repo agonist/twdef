@@ -1,3 +1,19 @@
+import { hexValue } from "ethers/lib/utils"
+
+export function genFinalMap(width: number, height: number, startId: number){
+  const lands: {x:number, y:number, id: number, minted: boolean}[] =  []
+
+  let map1 = makeGrid(width, height, startId)
+
+  for (let y = 0; y < height; y+=1) {
+      for (let x = 0; x < width; x+=1) {
+        if (map1[y][x] > 0) {
+         lands.push({x: x, y: y, id: map1[y][x], minted: false})
+        }
+      }
+    }
+    return lands
+}
 
 export function makeGrid(width: number, height: number, startId: number): number[][]{
 
