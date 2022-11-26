@@ -162,4 +162,17 @@ contract Landz is ERC721Enumerable, Ownable, IERC4907 {
     {
         return _users[tokenId].expires;
     }
+
+    /// @dev See {IERC165-supportsInterface}.
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override
+        returns (bool)
+    {
+        return
+            interfaceId == type(IERC4907).interfaceId ||
+            super.supportsInterface(interfaceId);
+    }
 }

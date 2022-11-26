@@ -18,8 +18,8 @@ contract Gamez is Ownable {
     mapping(uint256 => uint256) public landToTower;
     mapping(address => Stacked) stacked;
 
-    event Staking(address from, uint256 _landId, uint256 _towerId);
-    event Unstaking(address from, uint256 _landId, uint256 _towerId);
+    event Staking(address indexed from, uint256 _landId, uint256 _towerId);
+    event Unstaking(address indexed from, uint256 _landId, uint256 _towerId);
 
     constructor(address _landsContract, address _towersContract) {
         landsContract = IERC721(_landsContract);
@@ -68,7 +68,14 @@ contract Gamez is Ownable {
             staked.towersIds[indexT] = stakedTower[staked.towersIds.length - 1];
             staked.towersIds.pop();
         }
-        landToTower[_landId] = 0;
+        delete landToTower[_landId];
         emit Unstaking(msg.sender, _landId, _towerId);
+    }
+
+    function getStakedTokens(address user) public view returns (uint256[] memory stakedLandz, uint256[] memory stakedTowerz)
+    {
+        Stacked memory staked = stacked[user];
+
+        return (staked.landIds, staked.towersIds);
     }
 }

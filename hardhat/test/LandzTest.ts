@@ -1,190 +1,187 @@
-import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers"
-import { expect } from "chai"
-import { parseEther } from "ethers/lib/utils"
-import { ethers } from "hardhat"
-import { genFinalMap } from "../scripts/map-generator"
+import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
+import { expect } from "chai";
+import { parseEther } from "ethers/lib/utils";
+import { ethers } from "hardhat";
+import { genFinalMap } from "../scripts/map-generator";
+import { landPrice } from "./utils/constants";
 
-describe('Landz', function() {
+describe("Landz", function () {
 
-    const landPrice = parseEther('1')
-    const TWO_DAYS_IN_SECS = 2 * 24 * 60 * 60;
+  const TWO_DAYS_IN_SECS = 2 * 24 * 60 * 60;
 
-    async function init(){
+  async function init() {
+    const [owner, bob, alice] = await ethers.getSigners();
 
-        const [owner, bob, alice] = await ethers.getSigners()
+    const Landz = await ethers.getContractFactory("Landz");
+    const landz = await Landz.deploy();
 
-        const Landz = await ethers.getContractFactory("Landz")
-        const landz = await Landz.deploy()
+    return { landz, owner, bob, alice };
+  }
 
-        return {landz, owner, bob, alice}
-    }
+  describe("constructor", function () {
+    it("should init", async function () {
+      const { landz, owner } = await loadFixture(init);
 
-    describe('constructor', function(){
-        it('should init', async function (){
-            const {landz, owner} = await loadFixture(init)
+      const name = await landz.name();
+      const symbol = await landz.symbol();
 
-            const name = await landz.name();
-            const symbol = await landz.symbol();
+      expect(name).to.be.equal("Landz");
+      expect(symbol).to.be.equal("LANDZ");
+    });
+  });
 
-             expect(name).to.be.equal("Landz");
-             expect(symbol).to.be.equal("LANDZ");
-        })
-    })
+  describe("createMap", function () {
+    it("should create map", async function () {
+      const { landz, owner } = await loadFixture(init);
 
-    describe('createMap', function(){
-        it('should create map', async function(){
-              const {landz, owner} = await loadFixture(init)
+      let map = genFinalMap(25, 15, 1);
 
-              let map = genFinalMap(25, 15, 1)
+      await landz.createMap(1, map);
 
-              await landz.createMap(1, map)
+      const tokenId1 = await landz.landInfo(1, 1);
+      const tokenId2 = await landz.landInfo(1, 5);
 
-              const tokenId1 = await landz.landInfo(1, 1)
-              const tokenId2 = await landz.landInfo(1, 5)
+      expect(tokenId1[0]).equal(1);
+      expect(tokenId1[1]).equal(0);
+      expect(tokenId1[2]).equal(0);
+      expect(tokenId1[3]).equal(false);
 
-              expect(tokenId1[0]).equal(1)
-              expect(tokenId1[1]).equal(0)
-              expect(tokenId1[2]).equal(0)
-              expect(tokenId1[3]).equal(false)
+      expect(tokenId2[0]).equal(5);
+      expect(tokenId2[1]).equal(4);
+      expect(tokenId2[2]).equal(0);
+      expect(tokenId2[3]).equal(false);
+    });
+  });
 
-              expect(tokenId2[0]).equal(5)
-              expect(tokenId2[1]).equal(4)
-              expect(tokenId2[2]).equal(0)
-              expect(tokenId2[3]).equal(false)
+  describe("mint", function () {
+    it("should mint land", async function () {
+      const { landz, owner } = await loadFixture(init);
 
-        })
-    })
+      let map = genFinalMap(25, 15, 1);
+      await landz.createMap(1, map);
 
-    describe('mint', function(){
-        it('should mint land', async function(){
-              const {landz, owner} = await loadFixture(init)
+      await landz.mint(1, 1, { value: landPrice });
+      const balance = await landz.balanceOf(owner.address);
+      const tokenId1 = await landz.landInfo(1, 1);
 
-              let map = genFinalMap(25, 15, 1)
-              await landz.createMap(1, map)
+      expect(tokenId1[3]).equal(true);
+      expect(balance).to.equal(1);
+    });
 
-              await landz.mint(1, 1, {value: landPrice})
-              const balance = await landz.balanceOf(owner.address)
-              const tokenId1 = await landz.landInfo(1, 1)
+    it("should revert with MapNotCreated()", async function () {
+      const { landz, owner } = await loadFixture(init);
 
-              expect(tokenId1[3]).equal(true)
-              expect(balance).to.equal(1)
-        })
+      const tx = landz.mint(1, 1, { value: landPrice });
 
-        it('should revert with MapNotCreated()', async function(){
-              const {landz, owner} = await loadFixture(init)
+      await expect(tx).to.revertedWithCustomError(landz, "MapNotCreated");
+    });
 
-              const tx =  landz.mint(1, 1, {value: landPrice})
+    it("should revert with AlreadyMinted()", async function () {
+      const { landz, owner } = await loadFixture(init);
 
-              await expect(tx).to.revertedWithCustomError(landz, "MapNotCreated")
-        })
+      let map = genFinalMap(25, 15, 1);
+      await landz.createMap(1, map);
 
-        it('should revert with AlreadyMinted()', async function(){
-              const {landz, owner} = await loadFixture(init)
+      await landz.mint(1, 1, { value: landPrice });
+      const tx = landz.mint(1, 1, { value: landPrice });
 
-              let map = genFinalMap(25, 15, 1)
-              await landz.createMap(1, map)
+      await expect(tx).to.revertedWithCustomError(landz, "AlreadyMinted");
+    });
 
-              await landz.mint(1, 1, {value: landPrice})
-              const tx =  landz.mint(1, 1, {value: landPrice})
+    it("should revert with ValueIncorrect()", async function () {
+      const { landz, owner } = await loadFixture(init);
 
-              await expect(tx).to.revertedWithCustomError(landz, "AlreadyMinted")
-        })
+      let map = genFinalMap(25, 15, 1);
+      await landz.createMap(1, map);
 
-        it('should revert with ValueIncorrect()', async function(){
-              const {landz, owner} = await loadFixture(init)
+      const tx = landz.mint(1, 1, { value: parseEther("0.1") });
 
-              let map = genFinalMap(25, 15, 1)
-              await landz.createMap(1, map)
+      await expect(tx).to.revertedWithCustomError(landz, "ValueIncorrect");
+    });
+  });
 
-              const tx =  landz.mint(1, 1, {value: parseEther('0.1')})
+  describe("setUser", function () {
+    it("should set user for renting", async function () {
+      const { landz, owner, bob, alice } = await loadFixture(init);
 
-              await expect(tx).to.revertedWithCustomError(landz, "ValueIncorrect")
-        })
-    })
+      let map = genFinalMap(25, 15, 1);
+      await landz.createMap(1, map);
 
-    describe('setUser', function(){
-        it('should set user for renting', async function(){
-              const {landz, owner, bob, alice} = await loadFixture(init)
+      await landz.mint(1, 1, { value: landPrice });
 
-              let map = genFinalMap(25, 15, 1)
-              await landz.createMap(1, map)
+      const unlockTime = (await time.latest()) + TWO_DAYS_IN_SECS;
+      await landz.setUser(1, bob.address, unlockTime);
 
-              await landz.mint(1, 1, {value: landPrice})
+      const userOf1 = await landz.userOf(1);
+      const ownerOf1 = await landz.ownerOf(1);
+      const expire1 = await landz.userExpires(1);
 
-              const unlockTime = (await time.latest()) + TWO_DAYS_IN_SECS;
-              await landz.setUser(1, bob.address, unlockTime)
+      expect(userOf1).to.equal(bob.address);
+      expect(ownerOf1).to.equal(owner.address);
+      expect(expire1).to.equal(unlockTime);
+    });
 
-              const userOf1 = await landz.userOf(1)
-              const ownerOf1 = await landz.ownerOf(1)
-              const expire1 = await landz.userExpires(1)
+    it("should expire after given time", async function () {
+      const { landz, owner, bob } = await loadFixture(init);
 
-              expect(userOf1).to.equal(bob.address)
-              expect(ownerOf1).to.equal(owner.address)
-              expect(expire1).to.equal(unlockTime)
-        })
+      let map = genFinalMap(25, 15, 1);
+      await landz.createMap(1, map);
 
-         it('should expire after given time', async function(){
-              const {landz, owner, bob } = await loadFixture(init)
+      await landz.mint(1, 1, { value: landPrice });
 
-              let map = genFinalMap(25, 15, 1)
-              await landz.createMap(1, map)
+      const unlockTime = (await time.latest()) + TWO_DAYS_IN_SECS;
+      await landz.setUser(1, bob.address, unlockTime);
 
-              await landz.mint(1, 1, {value: landPrice})
+      // increase time
+      await time.increaseTo(unlockTime + 1);
 
-              const unlockTime = (await time.latest()) + TWO_DAYS_IN_SECS;
-              await landz.setUser(1, bob.address, unlockTime)
+      const userOf1 = await landz.userOf(1);
+      const ownerOf1 = await landz.ownerOf(1);
+      const expire1 = await landz.userExpires(1);
 
-              // increase time
-              await time.increaseTo(unlockTime + 1);
+      expect(userOf1).to.equal(ethers.constants.AddressZero);
+      expect(ownerOf1).to.equal(owner.address);
+      expect(expire1).to.equal(unlockTime);
+    });
 
-              const userOf1 = await landz.userOf(1)
-              const ownerOf1 = await landz.ownerOf(1)
-              const expire1 = await landz.userExpires(1)
+    it("should revert with NotTheOwner()", async function () {
+      const { landz, owner, bob, alice } = await loadFixture(init);
 
-              expect(userOf1).to.equal(ethers.constants.AddressZero)
-              expect(ownerOf1).to.equal(owner.address)
-              expect(expire1).to.equal(unlockTime)
-        })
+      let map = genFinalMap(25, 15, 1);
+      await landz.createMap(1, map);
+      await landz.mint(1, 1, { value: landPrice });
 
-        it('should revert with NotTheOwner()', async function(){
-            const {landz, owner, bob, alice} = await loadFixture(init)
+      const unlockTime = (await time.latest()) + TWO_DAYS_IN_SECS;
+      const tx = landz.connect(bob).setUser(1, bob.address, unlockTime);
 
-             let map = genFinalMap(25, 15, 1)
-              await landz.createMap(1, map)
-              await landz.mint(1, 1, {value: landPrice})
+      await expect(tx).revertedWithCustomError(landz, "NotTheOwner");
+    });
 
-             const unlockTime = (await time.latest()) + TWO_DAYS_IN_SECS;
-             const tx = landz.connect(bob).setUser(1, bob.address, unlockTime)
+    it("should revert with UserAlreadyAssigned()", async function () {
+      const { landz, owner, bob, alice } = await loadFixture(init);
 
-             await expect(tx).revertedWithCustomError(landz, "NotTheOwner")
-        })
+      let map = genFinalMap(25, 15, 1);
+      await landz.createMap(1, map);
+      await landz.mint(1, 1, { value: landPrice });
 
-        it('should revert with UserAlreadyAssigned()', async function(){
-            const {landz, owner, bob, alice} = await loadFixture(init)
+      const unlockTime = (await time.latest()) + TWO_DAYS_IN_SECS;
+      await landz.setUser(1, bob.address, unlockTime);
+      const tx = landz.setUser(1, alice.address, unlockTime);
 
-             let map = genFinalMap(25, 15, 1)
-             await landz.createMap(1, map)
-             await landz.mint(1, 1, {value: landPrice})
+      await expect(tx).revertedWithCustomError(landz, "UserAlreadyAssigned");
+    });
 
-             const unlockTime = (await time.latest()) + TWO_DAYS_IN_SECS;
-             await landz.setUser(1, bob.address, unlockTime)
-             const tx =  landz.setUser(1, alice.address, unlockTime)
+    it("should revert with ExpireNotInTheFuture()", async function () {
+      const { landz, owner, bob, alice } = await loadFixture(init);
 
-             await expect(tx).revertedWithCustomError(landz, "UserAlreadyAssigned")
-        })
+      let map = genFinalMap(25, 15, 1);
+      await landz.createMap(1, map);
+      await landz.mint(1, 1, { value: landPrice });
 
-        it('should revert with ExpireNotInTheFuture()', async function(){
-            const {landz, owner, bob, alice} = await loadFixture(init)
+      const unlockTime = (await time.latest()) - TWO_DAYS_IN_SECS;
+      const tx = landz.setUser(1, bob.address, unlockTime);
 
-             let map = genFinalMap(25, 15, 1)
-             await landz.createMap(1, map)
-             await landz.mint(1, 1, {value: landPrice})
-
-             const unlockTime = (await time.latest()) - TWO_DAYS_IN_SECS;
-             const tx =  landz.setUser(1, bob.address, unlockTime)
-
-             await expect(tx).revertedWithCustomError(landz, "ExpireNotInTheFuture")
-        })
-    })
-
-})
+      await expect(tx).revertedWithCustomError(landz, "ExpireNotInTheFuture");
+    });
+  });
+});

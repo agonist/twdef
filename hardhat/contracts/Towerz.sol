@@ -7,18 +7,18 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Tower is ERC721Enumerable, Ownable {
+contract Towerz is ERC721Enumerable, Ownable {
  
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     string public baseTokenURI;
 
-    struct Towerz {
+    struct Tower {
         uint256 typez;
         uint256 level;
     }
 
-    mapping(uint256 => Towerz) public towerz;
+    mapping(uint256 => Tower) public towerz;
 
     constructor() ERC721("Towerz", "TOWZ") {}
 
@@ -26,7 +26,7 @@ contract Tower is ERC721Enumerable, Ownable {
         for (uint256 i = 0; i < _amount; i++) {
             uint256 mintIndex = _tokenIds.current() + 1;
             _mint(msg.sender, mintIndex);
-            towerz[mintIndex] = Towerz(_type, 1);
+            towerz[mintIndex] = Tower(_type, 1);
             _tokenIds.increment();
         }
     }

@@ -12,6 +12,10 @@
     "test": "mocha --require ts-node/register test/**_test.ts --exit --timeout 15000",
     "schema-codegen": "schema-codegen src/rooms/schema/* --ts --output ../game/src/schema/"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts",
+    "generate" : "npx prisma generate" 
+  },
   "author": "",
   "license": "UNLICENSED",
   "bugs": {
@@ -39,8 +43,10 @@
     "@colyseus/uwebsockets-transport": "^0.14.29",
     "@prisma/client": "4.6.1",
     "@reactivex/rxjs": "^6.6.7",
+    "alchemy-sdk": "^2.2.3",
     "colyseus": "^0.14.20",
     "cors": "^2.8.5",
+    "ethers": "^5.7.2",
     "express": "^4.16.4",
     "rxjs": "^7.5.7"
   }

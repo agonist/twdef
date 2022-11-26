@@ -6,18 +6,43 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model Map {
-  id           Int        @id @default(autoincrement())
-  paused       Boolean    @default(false)
-  multiplier   Multiplier @relation(fields: [multiplierId], references: [id])
-  multiplierId Int
+  id     Int     @id @default(autoincrement())
+  paused Boolean @default(false)
+  cells  Cell[]
+  width  Int
+  height Int
 }
 
-model Multiplier {
-  id  Int   @id @default(autoincrement())
-  Map Map[]
+model Cell {
+  id     Int      @id @default(autoincrement())
+  x      Int
+  y      Int
+  type   CellType
+  map    Map      @relation(fields: [mapId], references: [id])
+  mapId  Int
+  land   Land?
+}
+
+model Land {
+  id     Int @id  @unique
+  minted Boolean
+  Cell   Cell @relation(fields: [cellId], references: [id])
+  cellId Int  @unique
+}
+
+model Tower {
+  id Int @id
+}
+
+enum CellType {
+  PATH // the road anemies walk in
+  LAND // a land
+  ROCK // an empty block like a rock
+  SPAWN // where ennemies spawn
+  BASE // where ennemies goes
 }
