@@ -66,11 +66,7 @@ async function main() {
   await landz.createMap(2, lands2);
   await landz.createMap(3, lands3);
 
-  await landz.mint(1, 1, { value: parseEther("1") });
-  await towerz.mint(1, 1);
-
-  await landz.setApprovalForAll(gamez.address, true);
-  await towerz.setApprovalForAll(gamez.address, true);
+  
   // await gamez.stakeLandAndTower(1, 1);
 }
 
