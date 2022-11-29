@@ -24,13 +24,15 @@ async function createMap(width: number, height: number, startId: number) {
   });
 
   let map = makeGrid(width, height, startId);
+  map[1][0] = -2;
+
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       await prisma.cell.create({
         data: {
           x: x,
           y: y,
-          type: map[y][x] > 0 ? CellType.LAND : CellType.PATH,
+          type: getMapType(map[y][x]),
           mapId: map1.id,
           land:
             map[y][x] > 0
@@ -59,6 +61,14 @@ async function createMap(width: number, height: number, startId: number) {
   //       },
   //     });
   //   };
+}
+
+function getMapType(t: number) {
+  if (t === 0) return CellType.PATH;
+  else if (t === -1) return CellType.BASE;
+  else if (t === -2) return CellType.SPAWN;
+  else if (t === -3) return CellType.ROCK;
+  else return CellType.LAND;
 }
 
 main()

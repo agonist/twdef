@@ -5,7 +5,7 @@ class MapService {
   async loadMapById(id: number) {
     return await prisma.map.findUnique({
       where: { id: id },
-      include: { cells: true },
+      include: { cells: { include: { land: true } } },
     });
   }
 }

@@ -1,5 +1,5 @@
 import { Room, Client } from "colyseus";
-import { GameState } from "./schema/GameState";
+import { Cellz, GameState } from "./schema/GameState";
 import { Dispatcher } from "@colyseus/command";
 import { StartWaveCmd } from "./commands/StartWaveCmd";
 import { EnemiesRenderer } from "../logic/renderer/EnemiesRenderer";
@@ -29,7 +29,13 @@ export abstract class GameRoom extends Room<GameState> {
     this.state.world.width = this.map.width;
     this.state.world.height = this.map.height;
     this.state.world.cellSize = cellSize;
-    this.state.world.cells.push(...this.map.map);
+
+    const m: Cellz[] = [];
+    this.map.map.forEach((e) => {
+      m.push(new Cellz({ t: e.t, id: e.id, minted: e.minted }));
+    });
+
+    this.state.world.cells.push(...m);
 
     this.enemiesRenderer = new EnemiesRenderer(this.state.enemies);
     this.bulletRenderer = new BulletRenderer(this.state.bullets);
@@ -46,7 +52,7 @@ export abstract class GameRoom extends Room<GameState> {
 
     this.onMessage("type", (client, message) => {});
 
-    // this.dispatcher.dispatch(new StartWaveCmd(this.enemiesRenderer, this.map))
+    this.dispatcher.dispatch(new StartWaveCmd(this.enemiesRenderer, this.map));
 
     console.log("Game created");
 

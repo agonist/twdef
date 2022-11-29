@@ -20,14 +20,9 @@ export class AlchemySetup {
     let abi = [
       "event Staking(address indexed from, uint256 _landId, uint256 _towerId)",
       "event Unstaking(address indexed from, uint256 _landId, uint256 _towerId)",
-      "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
     ];
 
-    let contract = new Contract(
-      "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      abi,
-      this.provider
-    );
+    let contract = new Contract(process.env.GAMEZ_CONTRACT, abi, this.provider);
 
     contract.on("Staking", (from, landId, towerId, e) => {
       console.log(
@@ -63,13 +58,11 @@ export class AlchemySetup {
       "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
     ];
 
-    let contract = new Contract(
-      "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      abi,
-      this.provider
-    );
+    let contract = new Contract(process.env.LANDZ_CONTRACT, abi, this.provider);
 
-    contract.on("Transfer", async (from, to, tokenId, e) => {
+    const mintFilter = contract.filters.Transfer(process.env.LANDZ_CONTRACT);
+
+    contract.on(mintFilter, async (from, to, tokenId, e) => {
       await landService.updateLandToMinted(BigNumber.from(tokenId).toNumber());
     });
   }

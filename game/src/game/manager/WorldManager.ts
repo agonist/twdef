@@ -7,27 +7,40 @@ import { World } from "../../schema/World";
 import { MainScene } from "../scenes/main-scene";
 import { gameState } from "../state/game-state";
 
-
 enum CellType {
-  LAND,
+  PATH,
+  SPAWN,
+  BASE,
   EMPTY,
+  LAND,
 }
 
 function getCellType(x: number, y: number): CellType {
   const land = gameState.getState().world[y / 40][x / 40];
 
-  if (land > 0) {
+  if (land.t === 0) {
+    return CellType.PATH;
+  } else if (land.t === 1) {
+    return CellType.SPAWN;
+  } else if (land.t === 2) {
+    return CellType.BASE;
+  } else if (land.t === 3) {
+    return CellType.EMPTY;
+  } else {
     return CellType.LAND;
-  } else return CellType.EMPTY;
+  }
 }
 
 const defautlBg = 0x22244e;
 const defaultLand = 0x1d5543;
 
 export class WorldManager {
-
-
-public initGrid(world: World, scene: Scene, rexBoard: BoardPlugin, grid: BoardPlugin.Board) {
+  public initGrid(
+    world: World,
+    scene: Scene,
+    rexBoard: BoardPlugin,
+    grid: BoardPlugin.Board
+  ) {
     var graphics = scene.add.graphics({
       lineStyle: {
         width: 0.2,
@@ -53,13 +66,24 @@ public initGrid(world: World, scene: Scene, rexBoard: BoardPlugin, grid: BoardPl
 
     const board = rexBoard.add
       .board(quadGridCfg)
-      .forEachTileXY( (tileXY, board) => {
+      .forEachTileXY((tileXY, board) => {
         const land = lands[tileXY.y][tileXY.x];
 
         const points = board.getGridPoints(tileXY.x, tileXY.y, true);
         // graphics.strokePoints(points, false);
 
-        if (tileXY.y === 1 && tileXY.x === 0) {
+        if (land.t === 0) {
+          // path
+          const gridElem = rexBoard.add.shape(
+            board,
+            tileXY.x,
+            tileXY.y,
+            0,
+            defautlBg,
+            0.9
+          );
+        } else if (land.t === 1) {
+          // spawn
           const gridElem = rexBoard.add.shape(
             board,
             tileXY.x,
@@ -68,7 +92,27 @@ public initGrid(world: World, scene: Scene, rexBoard: BoardPlugin, grid: BoardPl
             0xff0000,
             0.5
           );
-        } else if (land > 0) {
+        } else if (land.t === 2) {
+          // base
+          const gridElem = rexBoard.add.shape(
+            board,
+            tileXY.x,
+            tileXY.y,
+            0,
+            0x00dd00,
+            0.5
+          );
+        } else if (land.t === 3) {
+          // wall
+          const gridElem = rexBoard.add.shape(
+            board,
+            tileXY.x,
+            tileXY.y,
+            0,
+            0x111111,
+            0.5
+          );
+        } else if (land.t === 4) {
           const gridElem = rexBoard.add.shape(
             board,
             tileXY.x,
@@ -76,15 +120,6 @@ public initGrid(world: World, scene: Scene, rexBoard: BoardPlugin, grid: BoardPl
             0,
             defaultLand,
             0.2
-          );
-        } else {
-          const gridElem = rexBoard.add.shape(
-            board,
-            tileXY.x,
-            tileXY.y,
-            0,
-            defautlBg,
-            0.9
           );
         }
       });

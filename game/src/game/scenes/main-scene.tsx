@@ -9,6 +9,7 @@ import { EnemyManager } from "../manager/EnemyManager";
 import { WorldManager } from "../manager/WorldManager";
 import { TowerManger } from "../manager/TowerManager";
 import { BulletManager } from "../manager/BulletManager";
+import { Cellz } from "../../schema/Cellz";
 
 export const cellSize = 40;
 
@@ -81,7 +82,8 @@ export class MainScene extends Phaser.Scene {
   fixedTimeStep = 1000 / 60;
 
   handleWorldUpdate(world: World) {
-    const lands: number[][] = [];
+    const lands: Cellz[][] = [];
+    console.log(world);
     while (world.cells.length) lands.push(world.cells.splice(0, world.width));
     gameState.getState().setWorld(lands);
 

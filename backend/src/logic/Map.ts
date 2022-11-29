@@ -1,12 +1,14 @@
+import { Cell } from "@prisma/client";
 import { mapService } from "../db/MapService";
 import { cellSize } from "../rooms/GameRoom";
 import { easyAStar } from "../tools/astar";
 import { Point } from "../tools/Point";
 
 export class Map {
+
   mapId: number;
-  map: number[];
-  grid: number[][] = [];
+  map: { t: number; id?: number; minted?: boolean }[] = [];
+  grid: { t: number; id?: number; minted?: boolean }[][] = [];
 
   spawn: Point;
   base: Point;
@@ -23,20 +25,26 @@ export class Map {
 
   async loadMap() {
     const map = await mapService.loadMapById(this.mapId);
-    const cells: number[] = [];
+
     map.cells.forEach((c) => {
       if (c.type === "PATH") {
-        cells.push(0);
+        this.map.push({ t: 0 });
+      } else if (c.type === "BASE") {
+        this.map.push({ t: 2 });
+      } else if (c.type === "SPAWN") {
+        this.map.push({ t: 1 });
+      } else if (c.type === "ROCK") {
+        this.map.push({ t: 3 });
       } else if (c.type === "LAND") {
-        cells.push(c.id);
+        this.map.push({ t: 4, id: c.land.id, minted: c.land.minted });
       }
     });
+    // console.log(this.map);
 
     this.width = map.width;
     this.height = map.height;
-    this.map = cells;
 
-    let tmp: number[] = [...cells];
+    let tmp = [...this.map];
 
     while (tmp.length) this.grid.push(tmp.splice(0, this.width));
   }
@@ -45,7 +53,11 @@ export class Map {
     return easyAStar(
       (x, y) => {
         return (
-          this.grid[y] && this.grid[y][x] !== undefined && this.grid[y][x] === 0
+          this.grid[y] &&
+          this.grid[y][x] !== undefined &&
+          (this.grid[y][x].t === 0 ||
+            this.grid[y][x].t === 1 ||
+            this.grid[y][x].t === 2)
         );
       },
       { x: i, y: j },
