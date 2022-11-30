@@ -3,7 +3,7 @@ import { GameRoom } from "../GameRoom";
 
 export class Map2 extends GameRoom {
   async createMap(): Promise<Map> {
-    const m = new Map(2, { x: 0, y: 25 - 1 });
+    const m = new Map(2);
 
     await m.loadMap();
 

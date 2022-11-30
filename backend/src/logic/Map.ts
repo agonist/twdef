@@ -5,22 +5,25 @@ import { easyAStar } from "../tools/astar";
 import { Point } from "../tools/Point";
 
 export class Map {
-
+  // map id as in the db
   mapId: number;
+
+  // map data before being split as a grid
   map: { t: number; id?: number; minted?: boolean }[] = [];
+
+  // map data as a grid
   grid: { t: number; id?: number; minted?: boolean }[][] = [];
 
   spawn: Point;
   base: Point;
-  private pathsCache: { [k: string]: Point[] | false } = {};
 
   width = 0;
   height = 0;
 
-  constructor(id: number, base: { x: number; y: number }) {
+  private pathsCache: { [k: string]: Point[] | false } = {};
+
+  constructor(id: number) {
     this.mapId = id;
-    this.spawn = { x: 0, y: 1 };
-    this.base = base;
   }
 
   async loadMap() {
@@ -31,8 +34,10 @@ export class Map {
         this.map.push({ t: 0 });
       } else if (c.type === "BASE") {
         this.map.push({ t: 2 });
+        this.base = { x: c.x, y: c.y };
       } else if (c.type === "SPAWN") {
         this.map.push({ t: 1 });
+        this.spawn = { x: c.x, y: c.y };
       } else if (c.type === "ROCK") {
         this.map.push({ t: 3 });
       } else if (c.type === "LAND") {

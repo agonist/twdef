@@ -25,6 +25,7 @@ CREATE TABLE `Land` (
     `minted` BOOLEAN NOT NULL,
     `cellId` INTEGER NOT NULL,
 
+    UNIQUE INDEX `Land_id_key`(`id`),
     UNIQUE INDEX `Land_cellId_key`(`cellId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -13,6 +13,7 @@
     "schema-codegen": "schema-codegen src/rooms/schema/* --ts --output ../game/src/schema/"
   },
   "prisma": {
+    "migrate": "npx prisma migrate dev",
     "seed": "ts-node prisma/seed.ts",
     "generate" : "npx prisma generate" 
   },

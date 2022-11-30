@@ -1,6 +1,12 @@
 import { parseEther } from "ethers/lib/utils";
 import { ethers } from "hardhat";
-import { makeGrid } from "../map-generator";
+import {
+  makeGrid,
+  makeGridFromFileMap,
+  map_1,
+  map_2,
+  map_3,
+} from "../map-generator";
 
 async function main() {
   const Landz = await ethers.getContractFactory("Landz");
@@ -24,10 +30,10 @@ async function main() {
 
   const lands: { x: number; y: number; id: number; minted: boolean }[] = [];
 
-  let map1 = makeGrid(25, 15, 1);
+  let map1 = makeGridFromFileMap(map_1, 30, 20, 1);
 
-  for (let y = 0; y < 15; y += 1) {
-    for (let x = 0; x < 25; x += 1) {
+  for (let y = 0; y < 20; y += 1) {
+    for (let x = 0; x < 30; x += 1) {
       if (map1[y][x] > 0) {
         lands.push({ x: x, y: y, id: map1[y][x], minted: false });
       }
@@ -38,10 +44,10 @@ async function main() {
 
   const lands2: { x: number; y: number; id: number; minted: boolean }[] = [];
   let startId2 = lands[lands.length - 1].id + 1;
-  let map2 = makeGrid(25, 25, startId2);
+  let map2 = makeGridFromFileMap(map_2, 15, 25, startId2);
 
   for (let y = 0; y < 25; y += 1) {
-    for (let x = 0; x < 25; x += 1) {
+    for (let x = 0; x < 15; x += 1) {
       if (map2[y][x] > 0) {
         lands2.push({ x: x, y: y, id: map2[y][x], minted: false });
       }
@@ -51,7 +57,7 @@ async function main() {
 
   const lands3: { x: number; y: number; id: number; minted: boolean }[] = [];
   let startId3 = lands2[lands2.length - 1].id + 1;
-  let map3 = makeGrid(15, 15, startId3);
+  let map3 = makeGridFromFileMap(map_3, 15, 15, startId3);
 
   for (let y = 0; y < 15; y += 1) {
     for (let x = 0; x < 15; x += 1) {
@@ -66,7 +72,6 @@ async function main() {
   await landz.createMap(2, lands2);
   await landz.createMap(3, lands3);
 
-  
   // await gamez.stakeLandAndTower(1, 1);
 }
 

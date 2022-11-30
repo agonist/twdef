@@ -1,19 +1,32 @@
 import { Cell, CellType, PrismaClient } from "@prisma/client";
-import { genFinalMap, makeGrid, makeMap } from "./map-generator";
+import {
+  genFinalMap,
+  makeGrid,
+  makeGridFromFileMap,
+  makeMap,
+} from "./map-generator";
+import { map_1 } from "./map/map1";
+import { map_2 } from "./map/map2";
+import { map_3 } from "./map/map3";
 const prisma = new PrismaClient();
 
 async function main() {
   let c1 = (await prisma.land.count()) + 1;
-  await createMap(25, 15, c1);
+  await createMap(map_1, 30, 20, c1);
 
   let c2 = (await prisma.land.count()) + 1;
-  await createMap(25, 25, c2);
+  await createMap(map_2, 15, 25, c2);
 
   let c3 = (await prisma.land.count()) + 1;
-  await createMap(15, 15, c3);
+  await createMap(map_3, 15, 15, c3);
 }
 
-async function createMap(width: number, height: number, startId: number) {
+async function createMap(
+  mapData: number[],
+  width: number,
+  height: number,
+  startId: number
+) {
   const map1 = await prisma.map.create({
     data: {
       paused: false,
@@ -23,8 +36,8 @@ async function createMap(width: number, height: number, startId: number) {
     },
   });
 
-  let map = makeGrid(width, height, startId);
-  map[1][0] = -2;
+  let map = makeGridFromFileMap(mapData, width, height, startId);
+  console.log(map);
 
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
