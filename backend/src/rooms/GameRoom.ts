@@ -8,6 +8,8 @@ import { TowerRenderer } from "../logic/renderer/TowerRenderer";
 import { CanonTower } from "../logic/entity/Tower/CanonTower";
 import { Map } from "../logic/Map";
 import { PrismaClient } from "@prisma/client";
+import { contractUpdates } from "../web3/AlchemyProvider";
+import { Subscription } from "rxjs";
 
 export const cellSize = 40;
 
@@ -21,10 +23,17 @@ export abstract class GameRoom extends Room<GameState> {
   bulletRenderer: BulletRenderer;
   map: Map;
 
+  subscription: Subscription;
+
   async onCreate(options: any) {
     this.autoDispose = false;
     this.setState(new GameState());
     this.map = await this.createMap();
+
+    this.subscription = contractUpdates.updateSubject.subscribe((update) => {
+      console.log("UPDATE HOHO");
+      this.onTokenMinted(update);
+    });
 
     this.state.world.width = this.map.width;
     this.state.world.height = this.map.height;
@@ -77,8 +86,11 @@ export abstract class GameRoom extends Room<GameState> {
 
   onDispose() {
     console.log("room", this.roomId, "disposing...");
+    this.subscription?.unsubscribe();
     this.dispatcher.stop();
   }
 
   abstract createMap(): Promise<Map>;
+
+  abstract onTokenMinted(tokenId: number): void;
 }

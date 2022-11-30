@@ -58,10 +58,17 @@ export class MainScene extends Phaser.Scene {
 
       this.room.state.onChange = (changes) => {
         changes.forEach((change) => {
+          console.log("WORLD CHANGED");
           switch (change.field) {
             case "world": {
               const world = (change as DataChange<World>).value;
               this.handleWorldUpdate(world);
+
+              this.room.state.world.cells.onAdd = (cell, key) => {
+                cell.onChange = () => {
+                  this.worldManager?.updateTile(cell);
+                };
+              };
               break;
             }
           }

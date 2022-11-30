@@ -3,6 +3,7 @@ import BoardPlugin from "phaser3-rex-plugins/plugins/board-plugin";
 import Board from "phaser3-rex-plugins/plugins/board/board/LogicBoard";
 import Shape from "phaser3-rex-plugins/plugins/board/shape/Shape";
 import { TileXYType } from "phaser3-rex-plugins/plugins/board/types/Position";
+import { Cellz } from "../../schema/Cellz";
 import { World } from "../../schema/World";
 import { MainScene } from "../scenes/main-scene";
 import { gameState } from "../state/game-state";
@@ -35,6 +36,9 @@ const defautlBg = 0x22244e;
 const defaultLand = 0x1d5543;
 
 export class WorldManager {
+  tilemap = new Map<number, Shape>();
+  init = false;
+
   public initGrid(
     world: World,
     scene: Scene,
@@ -71,10 +75,10 @@ export class WorldManager {
 
         const points = board.getGridPoints(tileXY.x, tileXY.y, true);
         // graphics.strokePoints(points, false);
-
+        let gridElem: Shape;
         if (land.t === 0) {
           // path
-          const gridElem = rexBoard.add.shape(
+          gridElem = rexBoard.add.shape(
             board,
             tileXY.x,
             tileXY.y,
@@ -84,7 +88,7 @@ export class WorldManager {
           );
         } else if (land.t === 1) {
           // spawn
-          const gridElem = rexBoard.add.shape(
+          gridElem = rexBoard.add.shape(
             board,
             tileXY.x,
             tileXY.y,
@@ -94,7 +98,7 @@ export class WorldManager {
           );
         } else if (land.t === 2) {
           // base
-          const gridElem = rexBoard.add.shape(
+          gridElem = rexBoard.add.shape(
             board,
             tileXY.x,
             tileXY.y,
@@ -104,7 +108,7 @@ export class WorldManager {
           );
         } else if (land.t === 3) {
           // wall
-          const gridElem = rexBoard.add.shape(
+          gridElem = rexBoard.add.shape(
             board,
             tileXY.x,
             tileXY.y,
@@ -112,15 +116,22 @@ export class WorldManager {
             0x111111,
             0.5
           );
-        } else if (land.t === 4) {
-          const gridElem = rexBoard.add.shape(
+        } else {
+          let defaultLand = 0x1d5543;
+
+          if (land.minted) {
+            defaultLand = 0x5d4f43;
+          }
+
+          gridElem = rexBoard.add.shape(
             board,
             tileXY.x,
             tileXY.y,
             0,
             defaultLand,
-            0.2
+            0.5
           );
+          this.tilemap.set(land.id, gridElem);
         }
       });
 
@@ -132,20 +143,14 @@ export class WorldManager {
       .on("gameobjectdown", function (pointer: any, gameObject: Shape) {
         switch (getCellType(gameObject.x, gameObject.y)) {
           case CellType.LAND:
-            gameObject.setFillStyle(defaultLand, 0.3);
-            break;
-          case CellType.EMPTY:
-            gameObject.setFillStyle(defautlBg, 0.8);
+            // gameObject.setFillStyle(defaultLand, 0.3);
             break;
         }
       })
       .on("gameobjectover", function (pointer: any, gameObject: Shape) {
         switch (getCellType(gameObject.x, gameObject.y)) {
           case CellType.LAND:
-            gameObject.setFillStyle(defaultLand, 0.3);
-            break;
-          case CellType.EMPTY:
-            gameObject.setFillStyle(defautlBg, 0.8);
+            // gameObject.setFillStyle(defaultLand, 0.3);
             break;
         }
       })
@@ -153,10 +158,7 @@ export class WorldManager {
         // console.log("game out");
         switch (getCellType(gameObject.x, gameObject.y)) {
           case CellType.LAND:
-            gameObject.setFillStyle(defaultLand, 0.2);
-            break;
-          case CellType.EMPTY:
-            gameObject.setFillStyle(defautlBg, 0.9);
+            // gameObject.setFillStyle(defaultLand, 0.2);
             break;
         }
       })
@@ -165,5 +167,12 @@ export class WorldManager {
       });
 
     grid = board;
+    this.init = true;
+  }
+
+  updateTile(cell: Cellz) {
+    if (this.init) {
+      if (cell.minted) this.tilemap.get(cell.id)?.setFillStyle(0x5d4f43, 0.5);
+    }
   }
 }

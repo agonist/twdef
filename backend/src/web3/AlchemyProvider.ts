@@ -1,5 +1,6 @@
 import { Network, Alchemy, Contract } from "alchemy-sdk";
 import { ethers, BigNumber } from "ethers";
+import { Subject } from "rxjs";
 import { landService } from "../db/LandService";
 
 export class AlchemySetup {
@@ -10,6 +11,8 @@ export class AlchemySetup {
   };
 
   provider = new ethers.providers.WebSocketProvider("ws://127.0.0.1:8545/");
+
+  public updateSubject: Subject<number> = new Subject();
 
   init() {
     this.listenLandz();
@@ -49,7 +52,7 @@ export class AlchemySetup {
       );
 
       console.log("---- EVENT");
-      console.log(e);
+      // console.log(e);
     });
   }
 
@@ -60,10 +63,16 @@ export class AlchemySetup {
 
     let contract = new Contract(process.env.LANDZ_CONTRACT, abi, this.provider);
 
-    const mintFilter = contract.filters.Transfer(process.env.LANDZ_CONTRACT);
+    const mintFilter = contract.filters.Transfer(
+      "0x0000000000000000000000000000000000000000"
+    );
 
     contract.on(mintFilter, async (from, to, tokenId, e) => {
+      console.log("GM MINT");
       await landService.updateLandToMinted(BigNumber.from(tokenId).toNumber());
+      this.updateSubject.next(tokenId);
     });
   }
 }
+
+export const contractUpdates = new AlchemySetup();
