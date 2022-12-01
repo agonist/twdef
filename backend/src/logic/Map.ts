@@ -1,4 +1,3 @@
-import { Cell } from "@prisma/client";
 import { mapService } from "../db/MapService";
 import { cellSize } from "../rooms/GameRoom";
 import { easyAStar } from "../tools/astar";
@@ -44,7 +43,6 @@ export class Map {
         this.map.push({ t: 4, id: c.land.id, minted: c.land.minted });
       }
     });
-    // console.log(this.map);
 
     this.width = map.width;
     this.height = map.height;

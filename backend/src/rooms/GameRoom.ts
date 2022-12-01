@@ -7,9 +7,10 @@ import { BulletRenderer } from "../logic/renderer/BulletRenderer";
 import { TowerRenderer } from "../logic/renderer/TowerRenderer";
 import { CanonTower } from "../logic/entity/Tower/CanonTower";
 import { Map } from "../logic/Map";
-import { PrismaClient } from "@prisma/client";
-import { contractUpdates } from "../web3/AlchemyProvider";
+import { Land, PrismaClient } from "@prisma/client";
+import { contractUpdates } from "../web3/DefaultSocketProvider";
 import { Subscription } from "rxjs";
+import { UpdateEvent, LandMintedEvent } from "../web3/Web3SocketProvider";
 
 export const cellSize = 40;
 
@@ -31,8 +32,7 @@ export abstract class GameRoom extends Room<GameState> {
     this.map = await this.createMap();
 
     this.subscription = contractUpdates.updateSubject.subscribe((update) => {
-      console.log("UPDATE HOHO");
-      this.onTokenMinted(update);
+      this.handleUpdateEvent(update);
     });
 
     this.state.world.width = this.map.width;
@@ -90,7 +90,15 @@ export abstract class GameRoom extends Room<GameState> {
     this.dispatcher.stop();
   }
 
+  handleUpdateEvent(event: UpdateEvent) {
+    switch (event.name) {
+      case "LandMintedEvent": {
+        this.onTokenMinted(event as LandMintedEvent);
+      }
+    }
+  }
+
   abstract createMap(): Promise<Map>;
 
-  abstract onTokenMinted(tokenId: number): void;
+  abstract onTokenMinted(tokenId: LandMintedEvent): void;
 }

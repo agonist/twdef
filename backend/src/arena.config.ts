@@ -1,16 +1,13 @@
 import Arena from "@colyseus/arena";
 import { monitor } from "@colyseus/monitor";
-import { PrismaClient } from "@prisma/client";
-import { AlchemyProvider } from "alchemy-sdk";
 
 /**
  * Import your Room files
  */
-import { GameRoom } from "./rooms/GameRoom";
 import { Map1 } from "./rooms/maps/Map_1";
 import { Map2 } from "./rooms/maps/Map_2";
 import { Map3 } from "./rooms/maps/Map_3";
-import { AlchemySetup, contractUpdates } from "./web3/AlchemyProvider";
+import { contractUpdates } from "./web3/DefaultSocketProvider";
 
 export default Arena({
   getId: () => "Your Colyseus App",
@@ -39,7 +36,7 @@ export default Arena({
      */
     app.use("/colyseus", monitor());
 
-    contractUpdates.init();
+    contractUpdates.listenAll();
   },
 
   beforeListen: () => {

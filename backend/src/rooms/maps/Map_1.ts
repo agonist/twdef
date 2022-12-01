@@ -1,23 +1,24 @@
 import { Map } from "../../logic/Map";
+import { LandMintedEvent } from "../../web3/Web3SocketProvider";
 import { GameRoom } from "../GameRoom";
 import { Cellz } from "../schema/GameState";
 
 export class Map1 extends GameRoom {
-  onTokenMinted(tokenId: number): void {
+  async createMap(): Promise<Map> {
+    const m = new Map(1);
+    await m.loadMap();
+    return m;
+  }
+
+  onTokenMinted(event: LandMintedEvent): void {
     let cell: Cellz;
     this.state.world.cells.forEach((c) => {
       if (c.t == 4) {
-        if (c.id == tokenId) {
+        if (c.id == event.tokenId) {
           cell = c;
           cell.minted = true;
         }
       }
     });
-  }
-
-  async createMap(): Promise<Map> {
-    const m = new Map(1);
-    await m.loadMap();
-    return m;
   }
 }
