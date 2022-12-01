@@ -1,7 +1,7 @@
 import { mapService } from "../db/MapService";
-import { cellSize } from "../rooms/GameRoom";
 import { easyAStar } from "../tools/astar";
 import { Point } from "../tools/Point";
+import { cellSize } from "./GameLogic";
 
 export class Map {
   // map id as in the db
@@ -53,6 +53,10 @@ export class Map {
   }
 
   pathFind(i: number, j: number) {
+    console.log(i);
+    console.log(j);
+    console.log(this.base);
+
     return easyAStar(
       (x, y) => {
         return (

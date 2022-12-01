@@ -1,54 +1,15 @@
 import { Room, Client } from "colyseus";
-import { Cellz, GameState } from "./schema/GameState";
+import { GameState } from "./schema/GameState";
+import { GameLogic } from "../logic/GameLogic";
 import { Dispatcher } from "@colyseus/command";
-import { StartWaveCmd } from "./commands/StartWaveCmd";
-import { EnemiesRenderer } from "../logic/renderer/EnemiesRenderer";
-import { BulletRenderer } from "../logic/renderer/BulletRenderer";
-import { TowerRenderer } from "../logic/renderer/TowerRenderer";
-import { CanonTower } from "../logic/entity/Tower/CanonTower";
-import { Map } from "../logic/Map";
-import { Land, PrismaClient } from "@prisma/client";
-import { contractUpdates } from "../web3/DefaultSocketProvider";
-import { Subscription } from "rxjs";
-import { UpdateEvent, LandMintedEvent } from "../web3/Web3SocketProvider";
-
-export const cellSize = 40;
 
 export abstract class GameRoom extends Room<GameState> {
-  prisma = new PrismaClient();
-
-  dispatcher = new Dispatcher(this);
-
-  enemiesRenderer: EnemiesRenderer;
-  towerRenderer: TowerRenderer;
-  bulletRenderer: BulletRenderer;
-  map: Map;
-
-  subscription: Subscription;
+  game = new GameLogic(this);
 
   async onCreate(options: any) {
     this.autoDispose = false;
     this.setState(new GameState());
-    this.map = await this.createMap();
-
-    this.subscription = contractUpdates.updateSubject.subscribe((update) => {
-      this.handleUpdateEvent(update);
-    });
-
-    this.state.world.width = this.map.width;
-    this.state.world.height = this.map.height;
-    this.state.world.cellSize = cellSize;
-
-    const m: Cellz[] = [];
-    this.map.map.forEach((e) => {
-      m.push(new Cellz({ t: e.t, id: e.id, minted: e.minted }));
-    });
-
-    this.state.world.cells.push(...m);
-
-    this.enemiesRenderer = new EnemiesRenderer(this.state.enemies);
-    this.bulletRenderer = new BulletRenderer(this.state.bullets);
-    this.towerRenderer = new TowerRenderer(this.state.towers);
+    await this.game.onCreate();
 
     // for (let y = 0; y < this.map.height; y+=2) {
     //     for (let x = 0; x < this.map.width; x+=1) {
@@ -58,11 +19,6 @@ export abstract class GameRoom extends Room<GameState> {
     //       }
     //     }
     //   }
-
-    this.onMessage("type", (client, message) => {});
-
-    this.dispatcher.dispatch(new StartWaveCmd(this.enemiesRenderer, this.map));
-
     console.log("Game created");
 
     this.setSimulationInterval((deltaTime) => {
@@ -71,9 +27,7 @@ export abstract class GameRoom extends Room<GameState> {
   }
 
   update(deltaTime: number) {
-    this.bulletRenderer.update();
-    this.enemiesRenderer.update();
-    this.towerRenderer.update();
+    this.game.update();
   }
 
   onJoin(client: Client, options: any) {
@@ -86,19 +40,8 @@ export abstract class GameRoom extends Room<GameState> {
 
   onDispose() {
     console.log("room", this.roomId, "disposing...");
-    this.subscription?.unsubscribe();
-    this.dispatcher.stop();
+    this.game.onDispose();
   }
 
-  handleUpdateEvent(event: UpdateEvent) {
-    switch (event.name) {
-      case "LandMintedEvent": {
-        this.onTokenMinted(event as LandMintedEvent);
-      }
-    }
-  }
-
-  abstract createMap(): Promise<Map>;
-
-  abstract onTokenMinted(tokenId: LandMintedEvent): void;
+  abstract mapId(): number;
 }
