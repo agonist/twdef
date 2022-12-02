@@ -15,7 +15,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const { chains, provider } = configureChains(
-  [chain.polygon, chain.polygonMumbai, chain.hardhat],
+  [chain.hardhat],
   [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
 );
 
@@ -41,8 +41,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           borderRadius: "none",
         })}
       >
+        <html data-theme="synthwave"></html>
         <div>
-          <html data-theme="synthwave"></html>
           <Component {...pageProps} />
           <ToastContainer
             position="bottom-right"

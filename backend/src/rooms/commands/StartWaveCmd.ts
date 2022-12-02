@@ -36,8 +36,6 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
     this.sub = interval(200)
       .pipe(take(5))
       .subscribe((x) => {
-        console.log(this.map.base);
-
         const r = Math.random();
 
         let mult = Math.floor(1 + Math.random() * (100 - 1 + 1));

@@ -5,8 +5,11 @@ import { Contracts } from "../../../web3/Contracts";
 import { Land } from "../../state/game-state";
 import { LandProps } from "./LandProps";
 import { toast } from "react-toastify";
+import { userState } from "../../state/user-state";
 
 export const MintLand = ({ landId, minted, mintCallback }: LandProps) => {
+  const addInLandsBalance = userState((s) => s.addInLandsBalance);
+
   const { config } = usePrepareContractWrite({
     address: Contracts.LAND,
     abi: LandAbi,
@@ -22,6 +25,7 @@ export const MintLand = ({ landId, minted, mintCallback }: LandProps) => {
     ...config,
     onSuccess(data) {
       mintCallback?.();
+      addInLandsBalance(landId);
       toast.success("Land bought successfully 🥳");
     },
     onError(data) {

@@ -1,5 +1,7 @@
+import { useAccount } from "wagmi";
 import { gameState } from "../state/game-state";
 import { uiState } from "../state/ui-state";
+import { Initializer } from "./Initializer";
 import { LandSection } from "./land/LandSection";
 import { MyLands } from "./land/MyLands";
 import { MyTower } from "./tower/MyTower";
@@ -7,9 +9,11 @@ import { MyTower } from "./tower/MyTower";
 export const SidePanel = () => {
   const currentTab = uiState((s) => s.currentTab);
   const setCurrentTab = uiState((s) => s.setCurrentTab);
+  const { isConnected } = useAccount();
 
   return (
     <div className="w-3/12 bg-base-300 prose  overflow-y-auto ">
+      {isConnected ? <Initializer /> : <></>}
       <div className="flex flex-col items-center space-y-3">
         <h3 className="text-accent">TOWER FARMER V1.0 (👩‍🌾, 🏰)</h3>
 

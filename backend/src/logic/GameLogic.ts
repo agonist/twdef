@@ -1,6 +1,4 @@
 import { Dispatcher } from "@colyseus/command";
-import { resolveGraphqlOptions } from "apollo-server-core";
-import { Room } from "colyseus";
 import { Subscription } from "rxjs";
 import { NewLandMintedCmd } from "../rooms/commands/NewLandMintedCmd";
 import { StartWaveCmd } from "../rooms/commands/StartWaveCmd";

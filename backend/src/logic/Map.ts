@@ -53,10 +53,6 @@ export class Map {
   }
 
   pathFind(i: number, j: number) {
-    console.log(i);
-    console.log(j);
-    console.log(this.base);
-
     return easyAStar(
       (x, y) => {
         return (

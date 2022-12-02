@@ -58,6 +58,7 @@ export const LandContent = ({ landId }: LandProps) => {
             landId={landId}
             mintCallback={() => {
               refetch();
+              
             }}
           />
         </ConnectWalletOr>

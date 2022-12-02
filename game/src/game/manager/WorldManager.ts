@@ -7,6 +7,7 @@ import { Cellz } from "../../schema/Cellz";
 import { World } from "../../schema/World";
 import { MainScene } from "../scenes/main-scene";
 import { gameState } from "../state/game-state";
+import { userState } from "../state/user-state";
 
 enum CellType {
   PATH,
@@ -168,11 +169,32 @@ export class WorldManager {
 
     grid = board;
     this.init = true;
+
+    userState.subscribe(
+      (s) => s.landsBalanceByIds,
+      (lands: number[], prev: number[]) => {
+        this.updateUserLand(lands);
+      },
+      { fireImmediately: true }
+    );
   }
 
   updateTile(cell: Cellz) {
     if (this.init) {
-      if (cell.minted) this.tilemap.get(cell.id)?.setFillStyle(0x5d4f43, 0.5);
+      const isUserLand = userState
+        .getState()
+        .landsBalanceByIds.find((c) => c == cell.id);
+
+      if (cell.minted && isUserLand === undefined)
+        this.tilemap.get(cell.id)?.setFillStyle(0x5d4f43, 0.5);
+    }
+  }
+
+  updateUserLand(ids: number[]) {
+    if (this.init) {
+      ids.forEach((id) => {
+        this.tilemap.get(id)?.setFillStyle(0x5ffff3, 0.5);
+      });
     }
   }
 }
