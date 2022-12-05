@@ -40,6 +40,8 @@ export class DefaultSocketProvider implements WebSocketProvider {
       this.provider
     );
 
+    
+    
     contract.on("Staking", (from, landId, towerId, e) => {
       // add proper logger
       console.log(

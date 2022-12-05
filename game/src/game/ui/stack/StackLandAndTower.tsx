@@ -1,24 +1,25 @@
 import { toast } from "react-toastify";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
-import { TowerzAbi } from "../../../abi/Towerz";
+import { GamezAbi } from "../../../abi/Gamez";
 import { Contracts } from "../../../web3/Contracts";
-import { userState } from "../../state/user-state";
 
-export const ApproveGamezForTowerz = () => {
-  const setTowerzApproved = userState((u) => u.setTowerzApproved);
+interface LandTowerPair {
+  landId: number;
+  towerId: number;
+}
 
+export const StackLandAndTower = ({ landId, towerId }: LandTowerPair) => {
   const { config } = usePrepareContractWrite({
-    address: Contracts.TOWERZ,
-    abi: TowerzAbi,
-    functionName: "setApprovalForAll",
+    address: Contracts.GAMEZ,
+    abi: GamezAbi,
+    functionName: "stakeLandAndTower",
     // @ts-ignore
-    args: [Contracts.GAMEZ, true],
+    args: [landId, towerId],
   });
 
   const { data, isLoading, isSuccess, write } = useContractWrite({
     ...config,
     onSuccess(data) {
-      setTowerzApproved(true);
       toast.success("Towerz approved successfully 🥳");
     },
     onError(data) {
@@ -33,7 +34,7 @@ export const ApproveGamezForTowerz = () => {
         write?.();
       }}
     >
-      Approve
+      Stack
     </button>
   );
 };

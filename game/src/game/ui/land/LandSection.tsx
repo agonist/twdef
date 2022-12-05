@@ -1,4 +1,5 @@
 import { ApproveOr } from "../ApproveOr";
+import { StackLandAndTower } from "../stack/StackLandAndTower";
 
 import { LandContent } from "./LandContent";
 import { LandProps } from "./LandProps";
@@ -13,7 +14,7 @@ export const LandSection = ({ landId }: LandProps) => {
       <LandContent landId={landId} />
 
       <ApproveOr>
-        <p>EVERYTHING APPROVED</p>
+        <StackLandAndTower landId={1} towerId={1} />
       </ApproveOr>
     </div>
   );
