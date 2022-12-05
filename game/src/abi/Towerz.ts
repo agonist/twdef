@@ -1,4 +1,4 @@
-export const LandAbi = [
+export const TowerzAbi = [
   {
     inputs: [],
     stateMutability: "nonpayable",
@@ -6,37 +6,7 @@ export const LandAbi = [
   },
   {
     inputs: [],
-    name: "AlreadyMinted",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "ExpireNotInTheFuture",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "MapNotCreated",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "NotTheOwner",
-    type: "error",
-  },
-  {
-    inputs: [],
     name: "Unhautorized",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "UserAlreadyAssigned",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "ValueIncorrect",
     type: "error",
   },
   {
@@ -134,31 +104,6 @@ export const LandAbi = [
     type: "event",
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint64",
-        name: "expires",
-        type: "uint64",
-      },
-    ],
-    name: "UpdateUser",
-    type: "event",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -231,46 +176,6 @@ export const LandAbi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_mapId",
-        type: "uint256",
-      },
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
-          },
-          {
-            internalType: "uint128",
-            name: "x",
-            type: "uint128",
-          },
-          {
-            internalType: "uint128",
-            name: "y",
-            type: "uint128",
-          },
-          {
-            internalType: "bool",
-            name: "minted",
-            type: "bool",
-          },
-        ],
-        internalType: "struct Landz.LandData[]",
-        name: "_landsToMint",
-        type: "tuple[]",
-      },
-    ],
-    name: "createMap",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
         name: "tokenId",
         type: "uint256",
       },
@@ -313,146 +218,18 @@ export const LandAbi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "_mapId",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_landId",
-        type: "uint256",
-      },
-    ],
-    name: "isMinted",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_mapId",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_landId",
-        type: "uint256",
-      },
-    ],
-    name: "landInfo",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
-          },
-          {
-            internalType: "uint128",
-            name: "x",
-            type: "uint128",
-          },
-          {
-            internalType: "uint128",
-            name: "y",
-            type: "uint128",
-          },
-          {
-            internalType: "bool",
-            name: "minted",
-            type: "bool",
-          },
-        ],
-        internalType: "struct Landz.LandData",
-        name: "",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "lands",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        internalType: "uint128",
-        name: "x",
-        type: "uint128",
-      },
-      {
-        internalType: "uint128",
-        name: "y",
-        type: "uint128",
-      },
-      {
-        internalType: "bool",
-        name: "minted",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "mapCreated",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
         name: "_to",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "_mapId",
+        name: "_type",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "_landId",
+        name: "_amount",
         type: "uint256",
       },
     ],
@@ -616,29 +393,6 @@ export const LandAbi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-      {
-        internalType: "uint64",
-        name: "expires",
-        type: "uint64",
-      },
-    ],
-    name: "setUser",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "bytes4",
         name: "interfaceId",
         type: "bytes4",
@@ -746,6 +500,25 @@ export const LandAbi = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "towerz",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "from",
         type: "address",
@@ -783,38 +556,13 @@ export const LandAbi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "tokenId",
+        name: "_id",
         type: "uint256",
       },
     ],
-    name: "userExpires",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
-    name: "userOf",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
+    name: "upgradeTower",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
 ] as const;

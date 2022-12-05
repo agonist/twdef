@@ -6,27 +6,28 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./interfaces/ITowerz.sol";
 
-contract Towerz is ERC721Enumerable, Ownable {
+contract Towerz is ERC721Enumerable, Ownable, ITowerz {
  
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     string public baseTokenURI;
 
-    struct Tower {
-        uint256 typez;
-        uint256 level;
-    }
+    error Unhautorized();
 
-    mapping(uint256 => Tower) public towerz;
+    // id to type
+    mapping(uint256 => uint256) public towerz;
+    mapping(address => bool) minter;
 
     constructor() ERC721("Towerz", "TOWZ") {}
 
-    function mint(uint256 _type, uint256 _amount) external payable {
+    function mint(address _to, uint256 _type, uint256 _amount) external {
+        if (!minter[msg.sender]) revert Unhautorized();
         for (uint256 i = 0; i < _amount; i++) {
             uint256 mintIndex = _tokenIds.current() + 1;
-            _mint(msg.sender, mintIndex);
-            towerz[mintIndex] = Tower(_type, 1);
+            _mint(_to, mintIndex);
+            towerz[mintIndex] = _type;
             _tokenIds.increment();
         }
     }
@@ -63,6 +64,10 @@ contract Towerz is ERC721Enumerable, Ownable {
 
     function setBaseURI(string calldata _baseTokenURI) external onlyOwner {
         baseTokenURI = _baseTokenURI;
+    }
+
+        function setMinter(address _address, bool _minter) external onlyOwner {
+        minter[_address] = _minter;
     }
     
 }

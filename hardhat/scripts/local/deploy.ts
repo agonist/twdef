@@ -24,9 +24,18 @@ async function main() {
 
   await gamez.deployed();
 
+  const ShopV1 = await ethers.getContractFactory("ShopV1");
+  const shopV1 = await ShopV1.deploy(landz.address, towerz.address);
+
+  await shopV1.deployed();
+
   console.log("Landz _ : " + landz.address);
   console.log("Towerz _ : " + towerz.address);
   console.log("GAMEZ _ : " + gamez.address);
+  console.log("ShopV1 _ : " + shopV1.address);
+
+  await landz.setMinter(shopV1.address, true);
+  await towerz.setMinter(shopV1.address, true);
 
   const lands: { x: number; y: number; id: number; minted: boolean }[] = [];
 

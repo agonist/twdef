@@ -1,7 +1,7 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 
-interface LayoutProps {
+export interface LayoutProps {
   children: React.ReactNode;
 }
 

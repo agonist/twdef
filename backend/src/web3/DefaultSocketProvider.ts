@@ -42,10 +42,21 @@ export class DefaultSocketProvider implements WebSocketProvider {
 
     contract.on("Staking", (from, landId, towerId, e) => {
       // add proper logger
+      console.log(
+        "Stacking Land#" +
+          BigNumber.from(landId).toNumber() +
+          " with Tower#" +
+          BigNumber.from(towerId).toNumber()
+      );
     });
 
     contract.on("Unstaking", (from, landId, towerId, e) => {
-      // add proper logger
+      console.log(
+        "Unstacking Land#" +
+          BigNumber.from(landId).toNumber() +
+          " with Tower#" +
+          BigNumber.from(towerId).toNumber()
+      );
     });
   }
 

@@ -6,6 +6,7 @@ import { GameRoom } from "../rooms/GameRoom";
 import { Cellz } from "../rooms/schema/GameState";
 import { contractUpdates } from "../web3/DefaultSocketProvider";
 import { LandMintedEvent, UpdateEvent } from "../web3/Web3SocketProvider";
+import { CanonTower } from "./entity/Tower/CanonTower";
 import { Map } from "./Map";
 import { BulletRenderer } from "./renderer/BulletRenderer";
 import { EnemiesRenderer } from "./renderer/EnemiesRenderer";
@@ -53,6 +54,21 @@ export class GameLogic<R extends GameRoom> {
     this.towerRenderer = new TowerRenderer(this.room.state.towers);
 
     this.dispatcher.dispatch(new StartWaveCmd(this.enemiesRenderer, this.map));
+
+    //     for (let y = 0; y < this.map.height; y += 2) {
+    //   for (let x = 0; x < this.map.width; x += 1) {
+    //     if (this.map.grid[y][x].t == 4) {
+    //       const t1 = new CanonTower(
+    //         this.enemiesRenderer,
+    //         this.bulletRenderer,
+    //         x,
+    //         y,
+    //         cellSize
+    //       );
+    //       this.towerRenderer.add(t1);
+    //     }
+    //   }
+    // }
   }
 
   update() {

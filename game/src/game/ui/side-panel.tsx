@@ -4,7 +4,7 @@ import { uiState } from "../state/ui-state";
 import { Initializer } from "./Initializer";
 import { LandSection } from "./land/LandSection";
 import { MyLands } from "./land/MyLands";
-import { MyTower } from "./tower/MyTower";
+import { MyTowers } from "./tower/MyTower";
 
 export const SidePanel = () => {
   const currentTab = uiState((s) => s.currentTab);
@@ -62,7 +62,7 @@ export const SectionSelector = ({ currentTab }: SectionSelectorProps) => {
     return <MyLands />;
   }
   if (currentTab === 2) {
-    return <MyTower />;
+    return <MyTowers />;
   }
   return <></>;
 };

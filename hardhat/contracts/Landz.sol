@@ -7,10 +7,13 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./lib/IERC4907.sol";
+import "./interfaces/ILandz.sol";
+
 
 // Land contract for Tower Defense game
 // Can manage multiple map with multiple lands
-contract Landz is ERC721Enumerable, Ownable, IERC4907 {
+contract Landz is ERC721Enumerable, Ownable, IERC4907, ILandz {
+
     struct UserInfo {
         address user; // address of user role
         uint64 expires; // unix timestamp, user expires
@@ -30,6 +33,7 @@ contract Landz is ERC721Enumerable, Ownable, IERC4907 {
     error NotTheOwner();
     error UserAlreadyAssigned();
     error ExpireNotInTheFuture();
+    error Unhautorized();
 
     string public baseTokenURI;
 
@@ -39,15 +43,18 @@ contract Landz is ERC721Enumerable, Ownable, IERC4907 {
 
     uint256 landPrice = 1 ether;
 
+    mapping(address => bool) minter;
+
     constructor() ERC721("Landz", "LANDZ") {}
 
-    function mint(uint256 _mapId, uint256 _landId) external payable {
+    function mint(address _to, uint256 _mapId, uint256 _landId) external {
+        if (!minter[msg.sender]) revert Unhautorized();
         if (!mapCreated[_mapId]) revert MapNotCreated();
         if (lands[_mapId][_landId].minted) revert AlreadyMinted();
-        if (msg.value != landPrice) revert ValueIncorrect();
+        // if (msg.value != landPrice) revert ValueIncorrect();
 
         lands[_mapId][_landId].minted = true;
-        _mint(msg.sender, _landId);
+        _mint(_to, _landId);
     }
 
     function createMap(uint256 _mapId, LandData[] calldata _landsToMint)
@@ -106,6 +113,10 @@ contract Landz is ERC721Enumerable, Ownable, IERC4907 {
 
     function setBaseURI(string calldata _baseTokenURI) external onlyOwner {
         baseTokenURI = _baseTokenURI;
+    }
+
+    function setMinter(address _address, bool _minter) external onlyOwner {
+        minter[_address] = _minter;
     }
 
     // Lending stuff ERC-4907
