@@ -13,6 +13,7 @@ export const StackLandAndTower = ({ landId, towerId }: LandTowerPair) => {
     address: Contracts.GAMEZ,
     abi: GamezAbi,
     functionName: "stakeLandAndTower",
+    // functionName: "unstakeLandAndTower",
     // @ts-ignore
     args: [landId, towerId],
   });
@@ -20,7 +21,7 @@ export const StackLandAndTower = ({ landId, towerId }: LandTowerPair) => {
   const { data, isLoading, isSuccess, write } = useContractWrite({
     ...config,
     onSuccess(data) {
-      toast.success("Towerz approved successfully 🥳");
+      toast.success("Staked successfully 🥳");
     },
     onError(data) {
       console.log(data);

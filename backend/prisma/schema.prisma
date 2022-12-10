@@ -16,6 +16,7 @@ model Map {
   cells  Cell[]
   width  Int
   height Int
+  map InGame[]
 }
 
 model Cell {
@@ -33,10 +34,31 @@ model Land {
   minted Boolean
   Cell   Cell @relation(fields: [cellId], references: [id])
   cellId Int  @unique
+  inGame InGame?
+}
+
+model InGame {
+   id Int @id @default(autoincrement())
+   tower Tower @relation(fields: [towerId], references: [id])
+   towerId Int @unique
+   land Land @relation(fields: [landId], references: [id])
+   landId Int @unique
+   map Map @relation(fields: [mapId], references: [id])
+   mapId Int @unique
 }
 
 model Tower {
-  id Int @id
+  id Int @id  @unique
+  damage  Int
+  speed Int
+  level Int @default(1)
+  type TowerType
+  inGame InGame?
+}
+
+enum TowerType {
+  REGULAR
+  FIRE
 }
 
 enum CellType {

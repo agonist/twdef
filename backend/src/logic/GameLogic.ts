@@ -2,11 +2,15 @@ import { Dispatcher } from "@colyseus/command";
 import { Subscription } from "rxjs";
 import { NewLandMintedCmd } from "../rooms/commands/NewLandMintedCmd";
 import { StartWaveCmd } from "../rooms/commands/StartWaveCmd";
+import { TowerStakingCmd } from "../rooms/commands/TowerStakingComand";
 import { GameRoom } from "../rooms/GameRoom";
 import { Cellz } from "../rooms/schema/GameState";
 import { contractUpdates } from "../web3/DefaultSocketProvider";
-import { LandMintedEvent, UpdateEvent } from "../web3/Web3SocketProvider";
-import { CanonTower } from "./entity/Tower/CanonTower";
+import {
+  LandMintedEvent,
+  TowerStakingEvent,
+  UpdateEvent,
+} from "../web3/Web3SocketProvider";
 import { Map } from "./Map";
 import { BulletRenderer } from "./renderer/BulletRenderer";
 import { EnemiesRenderer } from "./renderer/EnemiesRenderer";
@@ -54,21 +58,6 @@ export class GameLogic<R extends GameRoom> {
     this.towerRenderer = new TowerRenderer(this.room.state.towers);
 
     this.dispatcher.dispatch(new StartWaveCmd(this.enemiesRenderer, this.map));
-
-    //     for (let y = 0; y < this.map.height; y += 2) {
-    //   for (let x = 0; x < this.map.width; x += 1) {
-    //     if (this.map.grid[y][x].t == 4) {
-    //       const t1 = new CanonTower(
-    //         this.enemiesRenderer,
-    //         this.bulletRenderer,
-    //         x,
-    //         y,
-    //         cellSize
-    //       );
-    //       this.towerRenderer.add(t1);
-    //     }
-    //   }
-    // }
   }
 
   update() {
@@ -84,6 +73,17 @@ export class GameLogic<R extends GameRoom> {
         this.dispatcher.dispatch(new NewLandMintedCmd(), {
           tokenId: (event as LandMintedEvent).tokenId,
         });
+        break;
+      }
+      case "TowerStakingEvent": {
+        this.dispatcher.dispatch(new TowerStakingCmd(), {
+          landId: (event as TowerStakingEvent).landId,
+          towerId: (event as TowerStakingEvent).towerId,
+        });
+        break;
+      }
+      case "TowerUnstakingEvent": {
+        break;
       }
     }
   }

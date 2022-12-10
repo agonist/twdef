@@ -31,9 +31,27 @@ CREATE TABLE `Land` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `InGame` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `towerId` INTEGER NOT NULL,
+    `landId` INTEGER NOT NULL,
+    `mapId` INTEGER NOT NULL,
+
+    UNIQUE INDEX `InGame_towerId_key`(`towerId`),
+    UNIQUE INDEX `InGame_landId_key`(`landId`),
+    UNIQUE INDEX `InGame_mapId_key`(`mapId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Tower` (
     `id` INTEGER NOT NULL,
+    `damage` INTEGER NOT NULL,
+    `speed` INTEGER NOT NULL,
+    `level` INTEGER NOT NULL DEFAULT 1,
+    `type` ENUM('REGULAR', 'FIRE') NOT NULL,
 
+    UNIQUE INDEX `Tower_id_key`(`id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -42,3 +60,12 @@ ALTER TABLE `Cell` ADD CONSTRAINT `Cell_mapId_fkey` FOREIGN KEY (`mapId`) REFERE
 
 -- AddForeignKey
 ALTER TABLE `Land` ADD CONSTRAINT `Land_cellId_fkey` FOREIGN KEY (`cellId`) REFERENCES `Cell`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `InGame` ADD CONSTRAINT `InGame_towerId_fkey` FOREIGN KEY (`towerId`) REFERENCES `Tower`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `InGame` ADD CONSTRAINT `InGame_landId_fkey` FOREIGN KEY (`landId`) REFERENCES `Land`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `InGame` ADD CONSTRAINT `InGame_mapId_fkey` FOREIGN KEY (`mapId`) REFERENCES `Map`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

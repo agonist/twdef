@@ -14,7 +14,7 @@ export const LandSection = ({ landId }: LandProps) => {
       <LandContent landId={landId} />
 
       <ApproveOr>
-        <StackLandAndTower landId={1} towerId={1} />
+        <StackLandAndTower landId={30} towerId={1} />
       </ApproveOr>
     </div>
   );

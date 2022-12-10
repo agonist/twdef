@@ -2,6 +2,8 @@ import { Room, Client } from "colyseus";
 import { GameState } from "./schema/GameState";
 import { GameLogic } from "../logic/GameLogic";
 import { Dispatcher } from "@colyseus/command";
+import { TowerRenderer } from "../logic/renderer/TowerRenderer";
+import { BulletRenderer } from "../logic/renderer/BulletRenderer";
 
 export abstract class GameRoom extends Room<GameState> {
   game = new GameLogic(this);

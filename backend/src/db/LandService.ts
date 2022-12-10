@@ -2,8 +2,18 @@ import { Land } from "@prisma/client";
 import { prisma } from "./DbService";
 
 class LandService {
-  async findLandById(id: number): Promise<Land> {
-    return await prisma.land.findUnique({ where: { id: id } });
+  async findLandById(id: number, includeCell: boolean = false): Promise<Land> {
+    return await prisma.land.findUnique({
+      where: { id: id },
+      include: { Cell: includeCell },
+    });
+  }
+
+  async findLandByIdwithCell(id: number) {
+    return await prisma.land.findUnique({
+      where: { id: id },
+      include: { Cell: true },
+    });
   }
 
   async updateLandToMinted(id: number) {
