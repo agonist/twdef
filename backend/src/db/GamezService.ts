@@ -3,8 +3,8 @@ import { prisma } from "./DbService";
 import { landService } from "./LandService";
 
 class GamezService {
-  async findLandById(id: number): Promise<InGame> {
-    return await prisma.inGame.findUnique({ where: { id: id } });
+  async findGameByLandId(landId: number): Promise<InGame> {
+    return await prisma.inGame.findUnique({ where: { landId: landId } });
   }
 
   async create(towerId: number, landId: number): Promise<InGame> {

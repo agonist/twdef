@@ -1,9 +1,7 @@
 import { Room, Client } from "colyseus";
 import { GameState } from "./schema/GameState";
 import { GameLogic } from "../logic/GameLogic";
-import { Dispatcher } from "@colyseus/command";
-import { TowerRenderer } from "../logic/renderer/TowerRenderer";
-import { BulletRenderer } from "../logic/renderer/BulletRenderer";
+import { log } from "../tools/logger";
 
 export abstract class GameRoom extends Room<GameState> {
   game = new GameLogic(this);
@@ -13,7 +11,7 @@ export abstract class GameRoom extends Room<GameState> {
     this.setState(new GameState());
     await this.game.onCreate();
 
-    console.log("Game created");
+    log.info("Game created");
 
     this.setSimulationInterval((deltaTime) => {
       this.update(deltaTime);
@@ -25,15 +23,15 @@ export abstract class GameRoom extends Room<GameState> {
   }
 
   onJoin(client: Client, options: any) {
-    console.log(client.sessionId, "joined!");
+    log.info(client.sessionId, "joined!");
   }
 
   onLeave(client: Client, consented: boolean) {
-    console.log(client.sessionId, "left!");
+    log.info(client.sessionId, "left!");
   }
 
   onDispose() {
-    console.log("room", this.roomId, "disposing...");
+    log.info("room", this.roomId, "disposing...");
     this.game.onDispose();
   }
 

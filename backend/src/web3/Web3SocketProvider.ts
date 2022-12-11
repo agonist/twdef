@@ -21,10 +21,12 @@ export interface TowerStakingEvent extends UpdateEvent {
   readonly name: "TowerStakingEvent";
   towerId: number;
   landId: number;
+  mapId: number;
 }
 
 export interface TowerUnstakingEvent extends UpdateEvent {
   readonly name: "TowerUnstakingEvent";
   towerId: number;
   landId: number;
+  mapId: number;
 }

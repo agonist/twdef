@@ -15,7 +15,7 @@
   "prisma": {
     "migrate": "npx prisma migrate dev",
     "seed": "ts-node prisma/seed.ts",
-    "generate" : "npx prisma generate" 
+    "generate": "npx prisma generate"
   },
   "author": "",
   "license": "UNLICENSED",
@@ -49,6 +49,7 @@
     "cors": "^2.8.5",
     "ethers": "^5.7.2",
     "express": "^4.16.4",
-    "rxjs": "^7.5.7"
+    "rxjs": "^7.5.7",
+    "tslog": "^4.4.4"
   }
 }

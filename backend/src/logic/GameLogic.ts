@@ -76,9 +76,14 @@ export class GameLogic<R extends GameRoom> {
         break;
       }
       case "TowerStakingEvent": {
+        const e = event as TowerStakingEvent;
+        if (e.mapId != this.map.mapId) {
+          return;
+        }
+
         this.dispatcher.dispatch(new TowerStakingCmd(), {
-          landId: (event as TowerStakingEvent).landId,
-          towerId: (event as TowerStakingEvent).towerId,
+          landId: e.landId,
+          towerId: e.towerId,
         });
         break;
       }

@@ -1,9 +1,10 @@
 import { Network, Alchemy, Contract } from "alchemy-sdk";
-import { ethers, BigNumber } from "ethers";
+import { ethers, BigNumber, logger } from "ethers";
 import { Subject } from "rxjs";
 import { gameService } from "../db/GamezService";
 import { landService } from "../db/LandService";
 import { towerService } from "../db/TowerService";
+import { log } from "../tools/logger";
 import {
   LandMintedEvent,
   TowerStakingEvent,
@@ -38,6 +39,7 @@ export class DefaultSocketProvider implements WebSocketProvider {
 
   listenAll() {
     this.listenLandzEvent();
+    this.listenTowerEvents();
     this.listenGamezEvents();
   }
 
@@ -49,34 +51,63 @@ export class DefaultSocketProvider implements WebSocketProvider {
     );
 
     contract.on("Staking", async (from, landId, towerId, e) => {
-      // add proper logger
-      const tower = BigNumber.from(towerId).toNumber();
-      const land = BigNumber.from(landId).toNumber();
-      console.log("Stacking Land#" + land + " with Tower#" + tower);
-      const inGame = await gameService.create(tower, land);
+      try {
+        const tower = BigNumber.from(towerId).toNumber();
+        const land = BigNumber.from(landId).toNumber();
+        log.info(from + " stacking land#" + land + " tower#" + tower);
 
-      let stack: TowerStakingEvent = {
-        name: "TowerStakingEvent",
-        towerId: tower,
-        landId: land,
-      };
+        const inGame = await gameService.create(tower, land);
 
-      this.updateSubject.next(stack);
+        let stack: TowerStakingEvent = {
+          name: "TowerStakingEvent",
+          towerId: inGame.towerId,
+          landId: inGame.landId,
+          mapId: inGame.mapId,
+        };
+        log.info(
+          "Dispatch TowerStakingEvent " +
+            " land#" +
+            stack.landId +
+            " tower#" +
+            stack.towerId +
+            " map#" +
+            stack.mapId
+        );
+        this.updateSubject.next(stack);
+      } catch (e) {
+        log.error(e);
+      }
     });
 
     contract.on("Unstaking", async (from, landId, towerId, e) => {
-      const tower = BigNumber.from(towerId).toNumber();
-      const land = BigNumber.from(landId).toNumber();
+      try {
+        const tower = BigNumber.from(towerId).toNumber();
+        const land = BigNumber.from(landId).toNumber();
+        log.info(from + " Unstacking Land#" + land + " with Tower#" + tower);
 
-      console.log("Unstacking Land#" + land + " with Tower#" + tower);
-      await gameService.remove(tower, land);
+        const inGame = await gameService.findGameByLandId(land);
 
-      let unstack: TowerUnstakingEvent = {
-        name: "TowerUnstakingEvent",
-        towerId: tower,
-        landId: land,
-      };
-      this.updateSubject.next(unstack);
+        await gameService.remove(tower, land);
+
+        let unstack: TowerUnstakingEvent = {
+          name: "TowerUnstakingEvent",
+          towerId: tower,
+          landId: land,
+          mapId: inGame.landId,
+        };
+        log.info(
+          "Dispatch TowerUnstakingEvent " +
+            " land#" +
+            unstack.landId +
+            " tower#" +
+            unstack.towerId +
+            " map#" +
+            unstack.mapId
+        );
+        this.updateSubject.next(unstack);
+      } catch (e) {
+        log.error(e);
+      }
     });
   }
 
@@ -93,21 +124,26 @@ export class DefaultSocketProvider implements WebSocketProvider {
 
     // used to listen when a land is minted. state is updated in the db and spread to clients
     contract.on(mintFilter, async (from, to, tokenId, e) => {
-      console.log("New Land minted: #" + BigNumber.from(tokenId).toNumber());
-      await landService.updateLandToMinted(BigNumber.from(tokenId).toNumber());
+      try {
+        const landId = BigNumber.from(tokenId).toNumber();
+        log.info("New Land minted: #" + landId + " to " + to);
+        await landService.updateLandToMinted(landId);
 
-      let landMinted: LandMintedEvent = {
-        tokenId: BigNumber.from(tokenId).toNumber(),
-        name: "LandMintedEvent",
-      };
-
-      this.updateSubject.next(landMinted);
+        let landMinted: LandMintedEvent = {
+          tokenId: landId,
+          name: "LandMintedEvent",
+        };
+        log.info("Dispatch LandMintedEvent land#" + landMinted.tokenId);
+        this.updateSubject.next(landMinted);
+      } catch (e) {
+        console.error(e);
+      }
     });
   }
 
   listenTowerEvents() {
     let contract = new Contract(
-      process.env.LANDZ_CONTRACT,
+      process.env.TOWERZ_CONTRACT,
       this.towerzAbi,
       this.provider
     );
@@ -117,15 +153,17 @@ export class DefaultSocketProvider implements WebSocketProvider {
     );
 
     contract.on(mintFilter, async (from, to, tokenId, e) => {
-      console.log("New Tower minted: #" + BigNumber.from(tokenId).toNumber());
-      const tower = await towerService.createTower(
-        BigNumber.from(tokenId).toNumber(),
-        1
-      );
-      console.log(
-        "Tower added to db #" + tower.id + " dmg " + tower.damage,
-        +" speed " + tower.speed
-      );
+      try {
+        const towerId = BigNumber.from(tokenId).toNumber();
+        log.info("New Tower minted: #" + towerId + " to " + to);
+        const tower = await towerService.createTower(towerId, 1);
+        log.info(
+          "Tower added to db #" + tower.id + " dmg " + tower.damage,
+          +" speed " + tower.speed
+        );
+      } catch (e) {
+        console.error(e);
+      }
     });
   }
 

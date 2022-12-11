@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
+    "inlineSourceMap": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src"]
