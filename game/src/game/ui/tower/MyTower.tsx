@@ -2,8 +2,13 @@ import Image from "next/image";
 import { useAccount, useContractReads } from "wagmi";
 import { TowerzAbi } from "../../../abi/Towerz";
 import { Contracts } from "../../../web3/Contracts";
+import { StackLandAndTower } from "../stack/StackLandAndTower";
 
-export const MyTowers = () => {
+interface LandId {
+  landId: number;
+}
+
+export const MyTowers = ({ landId }: LandId) => {
   const { address } = useAccount();
 
   const { data, isError, isLoading, isSuccess, refetch } = useContractReads({
@@ -28,24 +33,26 @@ export const MyTowers = () => {
   }
 
   return (
-    <div className="flex flex-col w-full space-y-4">
-      {data?.[0].map((l) => (
-        <div key={l.toNumber()} className="w-full bg-neutral">
-          <div className="flex flex-col space-y-4  items-start">
-            <div className="flex space-x-2">
-              <Image src={"/land.png"} width={100} height={100} />
-              <div className="flex flex-col space-y-2">
-                <p className="my-1 font-bold text-xl">Tower #{l.toNumber()}</p>
-                <p className="my-1">Do stuff with my super tower</p>
+    <div className="overflow-x-scroll">
+      <div className="flex">
+        {data?.[0].map((l) => (
+          <div key={l.toNumber()} className="flex-shrink-0 bg-neutral">
+            <div className="flex flex-col space-y-4  items-start">
+              <div className="flex space-x-2">
+                <Image src={"/land.png"} width={100} height={100} />
+                <div className="flex flex-col space-y-2">
+                  <p className="my-1 font-bold text-xl">
+                    Tower #{l.toNumber()}
+                  </p>
+                  <p className="my-1">Lvl: 1 - dmg: 27</p>
 
-                <div className="flex space-x-2 pb-2">
-                  <button className="btn btn-xs btn-secondary">Sell</button>
+                  <StackLandAndTower landId={landId} towerId={l.toNumber()} />
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

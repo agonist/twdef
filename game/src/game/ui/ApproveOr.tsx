@@ -8,11 +8,25 @@ export const ApproveOr = ({ children }: LayoutProps) => {
   const user = userState();
 
   if (!user.landzToGamezApproved) {
-    return <ApproveGamezForLandz />;
+    return (
+      <div className="flex flex-col w-11/12 items-center">
+        <p className="text-center">
+          You need to approve the game contract for Lands first.
+        </p>
+        <ApproveGamezForLandz />
+      </div>
+    );
   }
 
   if (!user.towerzToGamezApproved) {
-    return <ApproveGamezForTowerz />;
+    return (
+      <div className="flex flex-col w-11/12 items-center">
+        <p className="text-center">
+          You need to approve the game contract for Towers first.
+        </p>
+        <ApproveGamezForTowerz />
+      </div>
+    );
   }
 
   return <div>{children}</div>;

@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { GamezAbi } from "../../../abi/Gamez";
 import { Contracts } from "../../../web3/Contracts";
+import { MyTowers } from "../tower/MyTower";
 
 interface LandTowerPair {
   landId: number;
@@ -29,13 +30,15 @@ export const StackLandAndTower = ({ landId, towerId }: LandTowerPair) => {
   });
 
   return (
-    <button
-      className={"btn btn-secondary " + (isLoading ? "loading" : "")}
-      onClick={() => {
-        write?.();
-      }}
-    >
-      Stack
-    </button>
+    <div>
+      <button
+        className={"btn btn-xs btn-secondary " + (isLoading ? "loading" : "")}
+        onClick={() => {
+          write?.();
+        }}
+      >
+        BUILD
+      </button>
+    </div>
   );
 };

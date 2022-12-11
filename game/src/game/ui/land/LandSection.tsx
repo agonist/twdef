@@ -12,10 +12,6 @@ export const LandSection = ({ landId }: LandProps) => {
       </div>
 
       <LandContent landId={landId} />
-
-      <ApproveOr>
-        <StackLandAndTower landId={61} towerId={1} />
-      </ApproveOr>
     </div>
   );
 };

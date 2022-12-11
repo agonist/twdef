@@ -37,7 +37,6 @@ async function createMap(
   });
 
   let map = makeGridFromFileMap(mapData, width, height, startId);
-  console.log(map);
 
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
