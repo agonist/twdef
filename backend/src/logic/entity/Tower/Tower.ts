@@ -28,13 +28,17 @@ export abstract class Tower extends Entity {
 
   enemyRenderer: EnemiesRenderer;
 
+  public id:number
+
   constructor(
     enemyRenderer: EnemiesRenderer,
     x: number,
     y: number,
-    width: number
+    width: number,
+    id: number
   ) {
     super(x, y, width);
+    this.id = id
     this.enemyRenderer = enemyRenderer;
   }
 

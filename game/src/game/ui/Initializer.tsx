@@ -21,6 +21,12 @@ export const Initializer = () => {
         args: [address!!],
       },
       {
+        address: Contracts.TOWERZ,
+        abi: TowerzAbi,
+        functionName: "balanceByIdOf",
+        args: [address!!],
+      },
+      {
         address: Contracts.GAMEZ,
         abi: GamezAbi,
         functionName: "getStakedTokens",
@@ -42,19 +48,22 @@ export const Initializer = () => {
       },
     ],
     onSuccess(data) {
-      const ids = data[0].map((id) => BigNumber.from(id).toNumber());
-      const stackedLandsIds = data[1][0].map((id) =>
+      const landsIds = data[0].map((id) => BigNumber.from(id).toNumber());
+      const towersIds = data[1].map((id) => BigNumber.from(id).toNumber());
+      const stackedLandsIds = data[2][0].map((id) =>
         BigNumber.from(id).toNumber()
       );
-      const stackedTowersIds = data[1][1].map((id) =>
+      const stackedTowersIds = data[2][1].map((id) =>
         BigNumber.from(id).toNumber()
       );
-      const allLands = [...ids, ...stackedLandsIds];
+      // const allLands = [...landsIds, ...stackedLandsIds];
 
-      user.setLandsBalance(allLands);
+      user.setLandsBalance(landsIds);
+      user.setTowersBalance(towersIds);
+      user.setStakedLandsTowersBalance(stackedLandsIds, stackedTowersIds);
 
-      const landzApproved = data[2];
-      const towerzApproved = data[3];
+      const landzApproved = data[3];
+      const towerzApproved = data[4];
 
       user.setContractApproved(landzApproved, towerzApproved);
     },

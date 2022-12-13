@@ -18,6 +18,7 @@ export class EnemyS extends Schema {
 }
 
 export class TowerS extends Schema {
+  @type("uint32") id: number;
   @type("uint32") x: number;
   @type("uint32") y: number;
   @type("uint8") t: number;

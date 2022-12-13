@@ -38,6 +38,7 @@ export class DefaultSocketProvider implements WebSocketProvider {
   ];
 
   listenAll() {
+    log.info("Listen to contract events");
     this.listenLandzEvent();
     this.listenTowerEvents();
     this.listenGamezEvents();
@@ -93,7 +94,7 @@ export class DefaultSocketProvider implements WebSocketProvider {
           name: "TowerUnstakingEvent",
           towerId: tower,
           landId: land,
-          mapId: inGame.landId,
+          mapId: inGame.mapId,
         };
         log.info(
           "Dispatch TowerUnstakingEvent " +

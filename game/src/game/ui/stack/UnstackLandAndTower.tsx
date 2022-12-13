@@ -10,14 +10,13 @@ interface LandTowerPair {
   towerId: number;
 }
 
-export const StackLandAndTower = ({ landId, towerId }: LandTowerPair) => {
-  const stake = userState((s) => s.stake);
+export const UnstackLandAndTower = ({ landId, towerId }: LandTowerPair) => {
+  const unstake = userState((s) => s.unstake);
 
   const { config } = usePrepareContractWrite({
     address: Contracts.GAMEZ,
     abi: GamezAbi,
-    functionName: "stakeLandAndTower",
-    // functionName: "unstakeLandAndTower",
+    functionName: "unstakeLandAndTower",
     // @ts-ignore
     args: [landId, towerId],
   });
@@ -25,8 +24,8 @@ export const StackLandAndTower = ({ landId, towerId }: LandTowerPair) => {
   const { data, isLoading, isSuccess, write } = useContractWrite({
     ...config,
     onSuccess(data) {
-      stake(landId, towerId);
-      toast.success("Staked successfully 🥳");
+      unstake(landId, towerId);
+      toast.success("Unstaked successfully 🥳");
     },
     onError(data) {
       log.error(data);
@@ -41,7 +40,7 @@ export const StackLandAndTower = ({ landId, towerId }: LandTowerPair) => {
           write?.();
         }}
       >
-        BUILD
+        Unbuild
       </button>
     </div>
   );

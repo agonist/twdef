@@ -171,8 +171,9 @@ export class WorldManager {
     this.init = true;
 
     userState.subscribe(
-      (s) => s.landsBalanceByIds,
+      (s) => s.getAllLandsBalance(),
       (lands: number[], prev: number[]) => {
+        console.log(lands);
         this.updateUserLand(lands);
       },
       { fireImmediately: true }
@@ -183,7 +184,8 @@ export class WorldManager {
     if (this.init) {
       const isUserLand = userState
         .getState()
-        .landsBalanceByIds.find((c) => c == cell.id);
+        .getAllLandsBalance()
+        .find((c) => c == cell.id);
 
       if (cell.minted && isUserLand === undefined)
         this.tilemap.get(cell.id)?.setFillStyle(0x5d4f43, 0.5);

@@ -3,12 +3,14 @@ import { Subscription } from "rxjs";
 import { NewLandMintedCmd } from "../rooms/commands/NewLandMintedCmd";
 import { StartWaveCmd } from "../rooms/commands/StartWaveCmd";
 import { TowerStakingCmd } from "../rooms/commands/TowerStakingComand";
+import { TowerUnstakingCmd } from "../rooms/commands/TowerUnstakingComand";
 import { GameRoom } from "../rooms/GameRoom";
 import { Cellz } from "../rooms/schema/GameState";
 import { contractUpdates } from "../web3/DefaultSocketProvider";
 import {
   LandMintedEvent,
   TowerStakingEvent,
+  TowerUnstakingEvent,
   UpdateEvent,
 } from "../web3/Web3SocketProvider";
 import { Map } from "./Map";
@@ -88,6 +90,14 @@ export class GameLogic<R extends GameRoom> {
         break;
       }
       case "TowerUnstakingEvent": {
+        const e = event as TowerUnstakingEvent;
+        if (e.mapId != this.map.mapId) {
+          return;
+        }
+        this.dispatcher.dispatch(new TowerUnstakingCmd(), {
+          landId: e.landId,
+          towerId: e.towerId,
+        });
         break;
       }
     }

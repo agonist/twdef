@@ -1,5 +1,6 @@
 import { Command } from "@colyseus/command";
 import { Room } from "colyseus";
+import { gameService } from "../../db/GamezService";
 import { landService } from "../../db/LandService";
 import { CanonTower } from "../../logic/entity/Tower/CanonTower";
 import { cellSize } from "../../logic/GameLogic";
@@ -12,6 +13,7 @@ export class TowerStakingCmd extends Command<
 > {
   async execute({ landId, towerId } = this.payload) {
     log.info("Exec TowerStakingCmd land#" + landId + " tower#" + towerId);
+
     const towerRender = this.room.game.towerRenderer;
     const bulletRenderer = this.room.game.bulletRenderer;
     const enemiesRenderer = this.room.game.enemiesRenderer;
@@ -23,7 +25,8 @@ export class TowerStakingCmd extends Command<
       bulletRenderer,
       land.Cell.x,
       land.Cell.y,
-      cellSize
+      cellSize,
+      towerId
     );
 
     towerRender.add(t1);

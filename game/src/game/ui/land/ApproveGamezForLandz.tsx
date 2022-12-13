@@ -28,7 +28,7 @@ export const ApproveGamezForLandz = () => {
 
   return (
     <button
-      className={"btn btn-secondary " + (isLoading ? "loading" : "")}
+      className={"btn btn-xs btn-secondary " + (isLoading ? "loading" : "")}
       onClick={() => {
         write?.();
       }}

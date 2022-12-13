@@ -4,25 +4,40 @@ import { ArraySchema } from "@colyseus/schema";
 import { TowerS } from "../../rooms/schema/GameState";
 
 export class TowerRenderer extends EntityRenderer<Tower> {
+  towers: ArraySchema<TowerS>;
 
-    towers: ArraySchema<TowerS>
+  constructor(towers: ArraySchema<TowerS>) {
+    super();
+    this.towers = towers;
+  }
 
-    constructor(towers: ArraySchema<TowerS>) {
-        super()
-        this.towers = towers
+  public add(entity: Tower) {
+    this.entities.push(entity);
+    this.towers.push(
+      new TowerS({ x: entity.x, y: entity.y, t: 0, id: entity.id })
+    );
+  }
+
+  public remove(towerId: number) {
+    const index = this.entities.findIndex((object) => {
+      return object.id === towerId;
+    });
+    if (index !== -1) {
+      this.entities.splice(index, 1);
     }
 
-    public add(entity: Tower) {
-        this.entities.push(entity);
-        this.towers.push(new TowerS({x: entity.x, y: entity.y, t: 0}))
+    const index2 = this.towers.findIndex((object) => {
+      return object.id === towerId;
+    });
+    if (index2 !== -1) {
+      this.towers.splice(index2, 1);
     }
+  }
 
-
-    update(): void {
-        this.entities.forEach((tower, i) => {
-            // manage destruction
-            tower.update()
-        })
-
-    }
+  update(): void {
+    this.entities.forEach((tower, i) => {
+      // manage destruction
+      tower.update();
+    });
+  }
 }
