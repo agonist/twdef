@@ -54,6 +54,17 @@ CREATE TABLE `Tower` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `Wave` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `count` INTEGER NOT NULL,
+    `multiplier` DOUBLE NOT NULL,
+    `mapId` INTEGER NOT NULL,
+
+    UNIQUE INDEX `Wave_mapId_key`(`mapId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `Cell` ADD CONSTRAINT `Cell_mapId_fkey` FOREIGN KEY (`mapId`) REFERENCES `Map`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -68,3 +79,6 @@ ALTER TABLE `InGame` ADD CONSTRAINT `InGame_landId_fkey` FOREIGN KEY (`landId`) 
 
 -- AddForeignKey
 ALTER TABLE `InGame` ADD CONSTRAINT `InGame_mapId_fkey` FOREIGN KEY (`mapId`) REFERENCES `Map`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Wave` ADD CONSTRAINT `Wave_mapId_fkey` FOREIGN KEY (`mapId`) REFERENCES `Map`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -17,6 +17,7 @@ model Map {
   width  Int
   height Int
   map InGame[]
+  wave Wave?
 }
 
 model Cell {
@@ -54,6 +55,14 @@ model Tower {
   level Int @default(1)
   type TowerType
   inGame InGame?
+}
+
+model Wave {
+  id Int @id @default(autoincrement())
+  count Int
+  multiplier Float
+  map Map @relation(fields: [mapId], references: [id])
+  mapId Int @unique
 }
 
 enum TowerType {

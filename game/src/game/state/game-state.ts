@@ -19,6 +19,8 @@ interface GameState {
   currentLandId: number;
   currentMap: number;
 
+  
+
   selectLand: (x: number, y: number) => void;
   init: (game: Phaser.Game) => void;
   setWorld: (world: Cellz[][]) => void;

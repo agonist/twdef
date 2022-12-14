@@ -11,6 +11,7 @@ import { TowerManger } from "../manager/TowerManager";
 import { BulletManager } from "../manager/BulletManager";
 import { Cellz } from "../../schema/Cellz";
 import { userState } from "../state/user-state";
+import { WaveManager } from "../manager/WaveManager";
 
 export const cellSize = 40;
 
@@ -23,6 +24,7 @@ export class MainScene extends Phaser.Scene {
   private worldManager?: WorldManager;
   private towerManager?: TowerManger;
   private bulletManager?: BulletManager;
+  private waveManager?: WaveManager;
 
   // client = new Client("ws://updeon.colyseus.de");
   client = new Client("ws://localhost:2567");
@@ -47,6 +49,9 @@ export class MainScene extends Phaser.Scene {
       this.room = await this.client.joinOrCreate(this.map);
 
       this.worldManager = new WorldManager();
+
+      this.waveManager = new WaveManager();
+      this.waveManager.init(this.room, this);
 
       this.enemyManager = new EnemyManager();
       this.enemyManager.init(this.room, this);
@@ -77,7 +82,6 @@ export class MainScene extends Phaser.Scene {
     } catch (e) {
       console.error(e);
     }
-
   }
 
   async launch(map: string) {

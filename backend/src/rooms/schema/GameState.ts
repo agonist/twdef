@@ -41,6 +41,11 @@ export class Cellz extends Schema {
   @type("boolean") minted?: boolean;
 }
 
+export class Wavez extends Schema {
+  @type("uint32") count: number;
+  @type("number") multiplier: number;
+}
+
 class World extends Schema {
   // in cells
   @type("uint16") width: number;
@@ -52,6 +57,7 @@ class World extends Schema {
 
 export class GameState extends Schema {
   @type(World) world: World = new World();
+  @type(Wavez) wave: Wavez = new Wavez();
 
   @type([EnemyS]) enemies = new ArraySchema<EnemyS>();
   @type([TowerS]) towers = new ArraySchema<TowerS>();

@@ -8,9 +8,7 @@
 import { Schema, type, ArraySchema, MapSchema, SetSchema, DataChange } from '@colyseus/schema';
 
 
-export class TowerS extends Schema {
-    @type("uint32") public id!: number;
-    @type("uint32") public x!: number;
-    @type("uint32") public y!: number;
-    @type("uint8") public t!: number;
+export class Wavez extends Schema {
+    @type("uint32") public count!: number;
+    @type("number") public multiplier!: number;
 }
