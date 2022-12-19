@@ -46,6 +46,8 @@ model InGame {
    landId Int @unique
    map Map @relation(fields: [mapId], references: [id])
    mapId Int
+   x      Int
+   y      Int
 }
 
 model Tower {

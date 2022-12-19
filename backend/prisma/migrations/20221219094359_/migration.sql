@@ -36,6 +36,8 @@ CREATE TABLE `InGame` (
     `towerId` INTEGER NOT NULL,
     `landId` INTEGER NOT NULL,
     `mapId` INTEGER NOT NULL,
+    `x` INTEGER NOT NULL,
+    `y` INTEGER NOT NULL,
 
     UNIQUE INDEX `InGame_towerId_key`(`towerId`),
     UNIQUE INDEX `InGame_landId_key`(`landId`),

@@ -11,7 +11,7 @@ import { SimpleEnemy } from "../../logic/entity/enemy/SimpleEnemy";
 import { Map } from "../../logic/Map";
 import { EnemiesRenderer } from "../../logic/renderer/EnemiesRenderer";
 import { GameRoom } from "../GameRoom";
-import { log } from "../../tools/logger";
+import { Enemy } from "../../logic/entity/enemy/Enemy";
 
 export class StartWaveCmd extends Command<GameRoom, {}> {
   sub: Subscription;
@@ -25,64 +25,65 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
   }
 
   async execute() {
+    // try to restore the last wave or start from 0 if new map
     let wave = await waveService.getWaveByMapId(this.room.mapId());
     if (wave == undefined) {
       wave = await waveService.createWave(this.room.mapId());
     }
 
-    interval(5000).subscribe(async (x) => {
+    const waveInterval = 5000
+    interval(waveInterval).subscribe(async (x) => {
       this.sub?.unsubscribe();
+
+      this.room.game.waveManager.update();
 
       wave = await waveService.nextWave(wave);
 
-      log.info(
-        "Starting wave " + wave.count + " with multiplier " + wave.multiplier
-      );
-
-      let mult = wave.multiplier;
       this.generateWave(wave);
-      this.state.wave.multiplier = mult;
+
+      this.state.wave.multiplier = wave.multiplier;
       this.state.wave.count = wave.count;
     });
   }
 
   generateWave(wave: Wave) {
+    const takes = 5;
+    let enemies: Enemy[] = [];
+
     this.sub = interval(200)
-      .pipe(take(5))
+      .pipe(take(takes))
       .subscribe((x) => {
+        let newEnemy: Enemy;
+
         const r = Math.random();
-        // /let mult = Math.floor(1 + Math.random() * (100 - 1 + 1));
-        let mult = 1;
+
+        let mult = wave.multiplier;
+
         if (r > 0.9) {
-          this.enemiesRenderer.add(
-            new BossEnemy(0, 1, mult, (i, j) => {
-              return this.map.getPathFromGridCell(i, j);
-            })
-          );
+          newEnemy = new BossEnemy(0, 1, mult, (i, j) => {
+            return this.map.getPathFromGridCell(i, j);
+          });
         } else if (r > 0.8) {
-          this.enemiesRenderer.add(
-            new HealerEnemy(0, 1, mult, (i, j) => {
-              return this.map.getPathFromGridCell(i, j);
-            })
-          );
+          newEnemy = new HealerEnemy(0, 1, mult, (i, j) => {
+            return this.map.getPathFromGridCell(i, j);
+          });
         } else if (r > 0.7) {
-          this.enemiesRenderer.add(
-            new ArmoredEnemy(0, 1, mult, (i, j) => {
-              return this.map.getPathFromGridCell(i, j);
-            })
-          );
+          newEnemy = new ArmoredEnemy(0, 1, mult, (i, j) => {
+            return this.map.getPathFromGridCell(i, j);
+          });
         } else if (r > 0.5) {
-          this.enemiesRenderer.add(
-            new FastEnemy(0, 1, mult, (i, j) => {
-              return this.map.getPathFromGridCell(i, j);
-            })
-          );
+          newEnemy = new FastEnemy(0, 1, mult, (i, j) => {
+            return this.map.getPathFromGridCell(i, j);
+          });
         } else {
-          this.enemiesRenderer.add(
-            new SimpleEnemy(0, 1, mult, (i, j) => {
-              return this.map.getPathFromGridCell(i, j);
-            })
-          );
+          newEnemy = new SimpleEnemy(0, 1, mult, (i, j) => {
+            return this.map.getPathFromGridCell(i, j);
+          });
+        }
+        this.enemiesRenderer.add(newEnemy);
+        enemies.push(newEnemy);
+        if (x + 1 === takes) {
+          this.room.game.waveManager.addWave(wave.count, enemies);
         }
       });
   }

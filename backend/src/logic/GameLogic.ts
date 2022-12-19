@@ -1,6 +1,7 @@
 import { Dispatcher } from "@colyseus/command";
 import { Subscription } from "rxjs";
 import { NewLandMintedCmd } from "../rooms/commands/NewLandMintedCmd";
+import { RestoreStateCmd } from "../rooms/commands/RestoreStateCmd";
 import { StartWaveCmd } from "../rooms/commands/StartWaveCmd";
 import { TowerStakingCmd } from "../rooms/commands/TowerStakingComand";
 import { TowerUnstakingCmd } from "../rooms/commands/TowerUnstakingComand";
@@ -17,6 +18,7 @@ import { Map } from "./Map";
 import { BulletRenderer } from "./renderer/BulletRenderer";
 import { EnemiesRenderer } from "./renderer/EnemiesRenderer";
 import { TowerRenderer } from "./renderer/TowerRenderer";
+import { WaveManager } from "./renderer/WaveManager";
 
 export const cellSize = 40;
 
@@ -26,6 +28,7 @@ export class GameLogic<R extends GameRoom> {
   enemiesRenderer: EnemiesRenderer;
   towerRenderer: TowerRenderer;
   bulletRenderer: BulletRenderer;
+  waveManager: WaveManager;
   map: Map;
 
   subscription: Subscription;
@@ -58,6 +61,9 @@ export class GameLogic<R extends GameRoom> {
     this.enemiesRenderer = new EnemiesRenderer(this.room.state.enemies);
     this.bulletRenderer = new BulletRenderer(this.room.state.bullets);
     this.towerRenderer = new TowerRenderer(this.room.state.towers);
+    this.waveManager = new WaveManager();
+
+    this.dispatcher.dispatch(new RestoreStateCmd(), { mapId: this.map.mapId });
 
     this.dispatcher.dispatch(new StartWaveCmd(this.enemiesRenderer, this.map));
   }

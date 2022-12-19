@@ -2,6 +2,8 @@ import { Tower } from "../entity/Tower/Tower";
 import { EntityRenderer } from "./EntityRenderer";
 import { ArraySchema } from "@colyseus/schema";
 import { TowerS } from "../../rooms/schema/GameState";
+import { gameService } from "../../db/GamezService";
+import { CanonTower } from "../entity/Tower/CanonTower";
 
 export class TowerRenderer extends EntityRenderer<Tower> {
   towers: ArraySchema<TowerS>;
