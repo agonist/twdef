@@ -15,7 +15,8 @@ export class RestoreStateCmd extends Command<GameRoom, { mapId: number }> {
         g.x,
         g.y,
         cellSize,
-        g.towerId
+        g.towerId,
+        g.owner
       );
 
       this.room.game.towerRenderer.add(t1);

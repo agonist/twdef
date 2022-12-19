@@ -22,6 +22,7 @@ export interface TowerStakingEvent extends UpdateEvent {
   towerId: number;
   landId: number;
   mapId: number;
+  from: string
 }
 
 export interface TowerUnstakingEvent extends UpdateEvent {

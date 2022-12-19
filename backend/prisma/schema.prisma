@@ -48,6 +48,7 @@ model InGame {
    mapId Int
    x      Int
    y      Int
+   owner String
 }
 
 model Tower {

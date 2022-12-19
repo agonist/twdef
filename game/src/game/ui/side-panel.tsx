@@ -15,7 +15,7 @@ export const SidePanel = () => {
     <div className="w-3/12 bg-base-300 prose  overflow-y-auto ">
       {isConnected ? <Initializer /> : <></>}
       <div className="flex flex-col items-center space-y-3">
-        <h3 className="text-accent">TOWER FARMER V1.0 (👩‍🌾, 🏰)</h3>
+        <h3 className="text-accent">TOWERZ</h3>
 
         <div className="tabs tabs-boxed">
           <a

@@ -92,6 +92,7 @@ export class GameLogic<R extends GameRoom> {
         this.dispatcher.dispatch(new TowerStakingCmd(), {
           landId: e.landId,
           towerId: e.towerId,
+          owner: e.from,
         });
         break;
       }

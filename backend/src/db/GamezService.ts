@@ -14,7 +14,7 @@ class GamezService {
     });
   }
 
-  async create(towerId: number, landId: number): Promise<InGame> {
+  async create(towerId: number, landId: number, from: string): Promise<InGame> {
     const land = await prisma.land.findUnique({
       where: { id: landId },
       include: { Cell: true },
@@ -26,7 +26,8 @@ class GamezService {
         landId: landId,
         mapId: land.Cell.mapId,
         x: land.Cell.x,
-        y: land.Cell.y
+        y: land.Cell.y,
+        owner: from
       },
     });
 

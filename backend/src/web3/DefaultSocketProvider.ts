@@ -57,13 +57,14 @@ export class DefaultSocketProvider implements WebSocketProvider {
         const land = BigNumber.from(landId).toNumber();
         log.info(from + " stacking land#" + land + " tower#" + tower);
 
-        const inGame = await gameService.create(tower, land);
+        const inGame = await gameService.create(tower, land, from);
 
         let stack: TowerStakingEvent = {
           name: "TowerStakingEvent",
           towerId: inGame.towerId,
           landId: inGame.landId,
           mapId: inGame.mapId,
+          from: from
         };
         log.info(
           "Dispatch TowerStakingEvent " +

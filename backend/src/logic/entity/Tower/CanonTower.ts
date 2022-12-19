@@ -24,9 +24,9 @@ export class CanonTower extends Tower {
         secondary: '#778BEB'
     };
     bulletRenderer: BulletRenderer
-
-    constructor(enemyRenderer: EnemiesRenderer, bulletRenderer: BulletRenderer, x: number, y: number, width: number, id: number) {
-        super(enemyRenderer, x, y, width, id);
+    
+    constructor(enemyRenderer: EnemiesRenderer, bulletRenderer: BulletRenderer, x: number, y: number, width: number, id: number, owner: string) {
+        super(enemyRenderer, x, y, width, id, owner);
         this.bulletRenderer = bulletRenderer
 
         this.radius = this.halfWidth * 0.8;

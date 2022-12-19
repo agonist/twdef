@@ -11,7 +11,7 @@ export abstract class Tower extends Entity {
   abstract reloadDurationMs: number;
   abstract damage: number | { max: number; min: number };
   abstract aimRadius: number;
-  
+
   abstract cost: number;
   private countdown: number = 0;
   protected canShoot: boolean = true;
@@ -25,21 +25,24 @@ export abstract class Tower extends Entity {
   public targetInRange = false;
   abstract name: string;
   abstract description: string;
+  owner: string;
 
   enemyRenderer: EnemiesRenderer;
 
-  public id:number
+  public id: number;
 
   constructor(
     enemyRenderer: EnemiesRenderer,
     x: number,
     y: number,
     width: number,
-    id: number
+    id: number,
+    owner: string
   ) {
     super(x, y, width);
-    this.id = id
+    this.id = id;
     this.enemyRenderer = enemyRenderer;
+    this.owner = owner
   }
 
   update() {

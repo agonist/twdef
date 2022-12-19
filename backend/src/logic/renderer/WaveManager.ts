@@ -24,6 +24,19 @@ export class WaveManager {
       }
       if (!w.inProgress) {
         log.info("Wave #" + w.num + " ended");
+        const damageForWave: Map<string, number> = new Map();
+        w.enemies.forEach((e) => {
+          e.damageFrom.forEach((v, k) => {
+            if (damageForWave.has(k)) {
+              damageForWave.set(k, damageForWave.get(k) + v);
+            } else {
+              damageForWave.set(k, v);
+            }
+          });
+        });
+        damageForWave.forEach((v, k) => {
+          log.info(v + " damage from " + k);
+        });
       }
     });
 

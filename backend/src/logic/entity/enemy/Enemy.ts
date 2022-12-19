@@ -10,7 +10,9 @@ export abstract class Enemy extends Entity {
   abstract type: number;
   protected damage: number = 10;
   public alive = true;
+
   damageTaken: number = 0;
+  damageFrom: Map<string, number> = new Map();
 
   private path: Point[] | false = false;
   private targetIndex: number = 1;
@@ -69,8 +71,15 @@ export abstract class Enemy extends Entity {
     }
   }
 
-  takeDamage(damage: number) {
+  takeDamage(damage: number, from: string) {
     this.damageTaken += damage;
+
+    if (this.damageFrom.has(from)) {
+      const curr = this.damageFrom.get(from);
+      this.damageFrom.set(from, damage + curr);
+    } else {
+      this.damageFrom.set(from, damage);
+    }
 
     if (this.damageTaken >= this.life && this.alive) {
       this.alive = false;

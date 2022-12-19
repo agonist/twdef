@@ -9,9 +9,9 @@ import { GameRoom } from "../GameRoom";
 
 export class TowerStakingCmd extends Command<
   GameRoom,
-  { landId: number; towerId: number }
+  { landId: number; towerId: number; owner: string }
 > {
-  async execute({ landId, towerId } = this.payload) {
+  async execute({ landId, towerId, owner } = this.payload) {
     log.info("Exec TowerStakingCmd land#" + landId + " tower#" + towerId);
 
     const towerRender = this.room.game.towerRenderer;
@@ -26,7 +26,8 @@ export class TowerStakingCmd extends Command<
       land.Cell.x,
       land.Cell.y,
       cellSize,
-      towerId
+      towerId,
+      owner
     );
 
     towerRender.add(t1);
