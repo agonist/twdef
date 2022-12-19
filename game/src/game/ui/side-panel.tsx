@@ -2,6 +2,7 @@ import { useAccount } from "wagmi";
 import { gameState } from "../state/game-state";
 import { uiState } from "../state/ui-state";
 import { Initializer } from "./Initializer";
+import { LandContent } from "./land/LandContent";
 import { LandSection } from "./land/LandSection";
 import { MyLands } from "./land/MyLands";
 import { MyTowers } from "./tower/MyTower";
@@ -12,12 +13,10 @@ export const SidePanel = () => {
   const { isConnected } = useAccount();
 
   return (
-    <div className="w-3/12 bg-base-300 prose  overflow-y-auto ">
+    <div className="w-3/12 bg-dbg overflow-y-auto ">
       {isConnected ? <Initializer /> : <></>}
-      <div className="flex flex-col items-center space-y-3">
-        <h3 className="text-accent">TOWERZ</h3>
-
-        <div className="tabs tabs-boxed">
+      <div className="flex flex-col items-center space-y-3 py-4">
+        <div className="tabs tabs-boxed bg-neutral">
           <a
             className={
               "tab link link-hover " + (currentTab === 0 ? "tab-active" : "")
@@ -79,7 +78,11 @@ export const GameSection = () => {
   }
 
   if (_gameState.currentLandId > 0) {
-    return <LandSection landId={_gameState.currentLandId} />;
+    return (
+      <div className="flex flex-col w-full items-center py-4">
+        <LandContent landId={_gameState.currentLandId} />
+      </div>
+    );
   }
 
   return <></>;

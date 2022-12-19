@@ -1,4 +1,5 @@
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
+import Image from "next/image";
 import { useAccount, useContractReads } from "wagmi";
 import { LandAbi } from "../../../abi/Land";
 import { Contracts } from "../../../web3/Contracts";
@@ -45,37 +46,71 @@ export const LandContent = ({ landId }: LandProps) => {
   if (isSuccess && data?.[0].minted && data?.[1] === address) {
     return (
       <ApproveOr>
-        <div className="flex flex-col w-full">
-          <p>BUILD TOWER</p>
-          <MyTowers landId={landId} />
+        <div className=" card flex flex-col w-11/12 bg-base-100 shadow-md shadow-pinkz">
+          <figure>
+            <Image src={"/land.png"} width={300} height={300} />
+            <Image src={"/firetower.jpeg"} width={300} height={300} />
+          </figure>
+
+          <div className="flex flex-col p-2">
+            <p className="text-primary-content text-pinkz font-bold text-2xl">
+              LAND #{landId}
+            </p>
+            <p>Damage Bonus: </p>
+          </div>
         </div>
+
+        <MyTowers landId={landId} />
       </ApproveOr>
     );
   }
 
   if (isSuccess && data?.[0].minted && user.stakedLandTowerByIds.has(landId)) {
     return (
-      <div>
-        <p>your staked land</p>
-        <p>
-          Land #{landId} with tower#{user.stakedLandTowerByIds.get(landId)}
-        </p>
-        <UnstackLandAndTower
-          landId={landId}
-          towerId={user.stakedLandTowerByIds.get(landId)!}
-        />
+      <div className=" card flex flex-col w-11/12 bg-base-100 shadow-md shadow-pinkz">
+        <figure>
+          <Image src={"/land.png"} width={300} height={300} />
+          <Image src={"/firetower.jpeg"} width={300} height={300} />
+        </figure>
+
+        <div className="flex flex-col p-2">
+          <p className="text-primary-content text-pinkz font-bold text-2xl">
+            LAND #{landId} + TOWER #{user.stakedLandTowerByIds.get(landId)}
+          </p>
+          <p>Damage Bonus: </p>
+        </div>
+        <div className="card-actions justify-start px-2 pb-2">
+          <ConnectWalletOr>
+            <UnstackLandAndTower
+              landId={landId}
+              towerId={user.stakedLandTowerByIds.get(landId)!}
+            />
+          </ConnectWalletOr>
+        </div>
       </div>
     );
   }
 
   if (isSuccess && data?.[0].minted && data?.[1] !== address) {
     return (
-      <div>
-        <p className="text-accent">
-          Current owner
-          <br />
-          <span className="text-sm text-white">{data?.[1]}</span>
-        </p>
+      <div className=" card flex flex-col w-11/12 bg-base-100 shadow-md shadow-pinkz">
+        <figure>
+          <Image src={"/land.png"} width={300} height={300} />
+          <Image src={"/firetower.jpeg"} width={300} height={300} />
+        </figure>
+
+        <div className="flex flex-col p-2">
+          <p className="text-primary-content text-pinkz font-bold text-2xl">
+            LAND #{landId} + TOWER #{user.stakedLandTowerByIds.get(landId)}
+          </p>
+          <p>
+            owned by{" "}
+            <span className="text-sm text-white">
+              {data?.[1].substring(0, 20) + "..."}
+            </span>
+          </p>
+          <p>Damage Bonus: </p>
+        </div>
       </div>
     );
   }
@@ -83,18 +118,29 @@ export const LandContent = ({ landId }: LandProps) => {
   if (isSuccess && !data?.[0].minted) {
     return (
       <div className="flex flex-col items-center">
-        <p className="text-white my-4">
-          Buy this land and start building towers
-        </p>
-        <ConnectWalletOr>
-          <MintLand
-            minted={data?.[0].minted}
-            landId={landId}
-            mintCallback={() => {
-              refetch();
-            }}
-          />
-        </ConnectWalletOr>
+        <div className=" card flex flex-col w-12/12 bg-base-100 shadow-md shadow-pinkz">
+          <figure>
+            <Image src={"/land.png"} width={300} height={300} />{" "}
+          </figure>
+
+          <div className="flex flex-col p-2">
+            <p className="text-primary-content text-pinkz font-bold text-2xl">
+              LAND #{landId}
+            </p>
+            <p>Damage Bonus: </p>
+          </div>
+          <div className="card-actions justify-start px-2 pb-2">
+            <ConnectWalletOr>
+              <MintLand
+                minted={data?.[0].minted}
+                landId={landId}
+                mintCallback={() => {
+                  refetch();
+                }}
+              />
+            </ConnectWalletOr>
+          </div>
+        </div>
       </div>
     );
   }

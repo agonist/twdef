@@ -33,8 +33,9 @@ function getCellType(x: number, y: number): CellType {
   }
 }
 
-const defautlBg = 0x22244e;
-const defaultLand = 0x1d5543;
+const defautlBg = 0x050838;
+const landColor = 0x163d54;
+const rockColor = 0x03051f;
 
 export class WorldManager {
   tilemap = new Map<number, Shape>();
@@ -85,7 +86,7 @@ export class WorldManager {
             tileXY.y,
             0,
             defautlBg,
-            0.9
+            1
           );
         } else if (land.t === 1) {
           // spawn
@@ -114,11 +115,11 @@ export class WorldManager {
             tileXY.x,
             tileXY.y,
             0,
-            0x111111,
-            0.5
+            rockColor,
+            1
           );
         } else {
-          let defaultLand = 0x1d5543;
+          let defaultLand = landColor;
 
           if (land.minted) {
             defaultLand = 0x5d4f43;
@@ -130,7 +131,7 @@ export class WorldManager {
             tileXY.y,
             0,
             defaultLand,
-            0.5
+            1
           );
           this.tilemap.set(land.id, gridElem);
         }

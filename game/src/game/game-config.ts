@@ -8,16 +8,16 @@ export const gameConfig: Types.Core.GameConfig = {
   height: "100%",
   type: Phaser.WEBGL,
   fps: {
-    target: 30
+    target: 30,
   },
   scale: {
     mode: Phaser.Scale.RESIZE,
   },
-  backgroundColor: "#2D2367",
+  backgroundColor: "#0c1380",
   render: {
     antialias: false,
   },
-  
+
   scene: [LoaderScene, MainScene],
   plugins: {
     scene: [

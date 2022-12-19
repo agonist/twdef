@@ -1,8 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
-import { LandAbi } from "../../../abi/Land";
 import { Contracts } from "../../../web3/Contracts";
-import { Land } from "../../state/game-state";
 import { LandProps } from "./LandProps";
 import { toast } from "react-toastify";
 import { userState } from "../../state/user-state";
@@ -36,7 +34,9 @@ export const MintLand = ({ landId, minted, mintCallback }: LandProps) => {
 
   return (
     <button
-      className={"btn btn-secondary " + (isLoading ? "loading" : "")}
+      className={
+        "btn btn-sm mt-4 btn-secondary " + (isLoading ? "loading" : "")
+      }
       onClick={() => {
         write?.();
       }}
