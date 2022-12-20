@@ -4,13 +4,13 @@ import { GamezAbi } from "../../../abi/Gamez";
 import { Contracts } from "../../../web3/Contracts";
 import { log } from "../../helpers/logger";
 import { userState } from "../../state/user-state";
+import { LandTowerPair } from "./StackLandAndTower";
 
-interface LandTowerPair {
-  landId: number;
-  towerId: number;
-}
-
-export const UnstackLandAndTower = ({ landId, towerId }: LandTowerPair) => {
+export const UnstackLandAndTower = ({
+  landId,
+  towerId,
+  successCallback,
+}: LandTowerPair) => {
   const unstake = userState((s) => s.unstake);
 
   const { config } = usePrepareContractWrite({
@@ -25,6 +25,7 @@ export const UnstackLandAndTower = ({ landId, towerId }: LandTowerPair) => {
     ...config,
     onSuccess(data) {
       unstake(landId, towerId);
+      successCallback?.();
       toast.success("Unstaked successfully 🥳");
     },
     onError(data) {

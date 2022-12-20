@@ -63,7 +63,12 @@ export const LandContent = ({ landId }: LandProps) => {
           </div>
         </div>
         <ApproveOr>
-          <MyTowers landId={landId} />
+          <MyTowers
+            landId={landId}
+            successCallback={() => {
+              refetch();
+            }}
+          />
         </ApproveOr>
       </div>
     );
@@ -88,6 +93,9 @@ export const LandContent = ({ landId }: LandProps) => {
             <UnstackLandAndTower
               landId={landId}
               towerId={user.stakedLandTowerByIds.get(landId)!}
+              successCallback={() => {
+                refetch();
+              }}
             />
           </ConnectWalletOr>
         </div>
@@ -104,7 +112,7 @@ export const LandContent = ({ landId }: LandProps) => {
         </figure>
 
         <div className="flex flex-col p-2">
-          <p className="text-primary-content text-pinkz font-bold text-2xl">
+          <p className="text-pinkz font-bold text-2xl">
             LAND #{landId} + TOWER #{user.stakedLandTowerByIds.get(landId)}
           </p>
           <p>

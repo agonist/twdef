@@ -61,7 +61,7 @@ export const SectionSelector = ({ currentTab }: SectionSelectorProps) => {
     return <MyLands />;
   }
   if (currentTab === 2) {
-    return <MyTowers />;
+    // return <MyTowers />;
   }
   return <></>;
 };

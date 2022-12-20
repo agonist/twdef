@@ -36,6 +36,9 @@ model Land {
   Cell   Cell @relation(fields: [cellId], references: [id])
   cellId Int  @unique
   inGame InGame?
+  type LandType?
+  damageBonus Int?
+  imgUrl String?
 }
 
 model InGame {
@@ -68,9 +71,16 @@ model Wave {
   mapId Int @unique
 }
 
-enum TowerType {
-  REGULAR
+enum LandType {
   FIRE
+  ICE
+  JUNGLE
+}
+
+enum TowerType {
+  FIRE
+  ICE
+  JUNGLE
 }
 
 enum CellType {

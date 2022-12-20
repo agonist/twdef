@@ -24,6 +24,9 @@ CREATE TABLE `Land` (
     `id` INTEGER NOT NULL,
     `minted` BOOLEAN NOT NULL,
     `cellId` INTEGER NOT NULL,
+    `type` ENUM('FIRE', 'ICE', 'JUNGLE') NULL,
+    `damageBonus` INTEGER NULL,
+    `imgUrl` VARCHAR(191) NULL,
 
     UNIQUE INDEX `Land_id_key`(`id`),
     UNIQUE INDEX `Land_cellId_key`(`cellId`),
@@ -38,6 +41,7 @@ CREATE TABLE `InGame` (
     `mapId` INTEGER NOT NULL,
     `x` INTEGER NOT NULL,
     `y` INTEGER NOT NULL,
+    `owner` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `InGame_towerId_key`(`towerId`),
     UNIQUE INDEX `InGame_landId_key`(`landId`),
@@ -50,7 +54,7 @@ CREATE TABLE `Tower` (
     `damage` INTEGER NOT NULL,
     `speed` INTEGER NOT NULL,
     `level` INTEGER NOT NULL DEFAULT 1,
-    `type` ENUM('REGULAR', 'FIRE') NOT NULL,
+    `type` ENUM('FIRE', 'ICE', 'JUNGLE') NOT NULL,
 
     UNIQUE INDEX `Tower_id_key`(`id`),
     PRIMARY KEY (`id`)

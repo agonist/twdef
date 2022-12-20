@@ -7,9 +7,10 @@ import { StackLandAndTower } from "../stack/StackLandAndTower";
 
 interface LandId {
   landId: number;
+  successCallback?: () => void;
 }
 
-export const MyTowers = ({ landId }: LandId) => {
+export const MyTowers = ({ landId, successCallback }: LandId) => {
   const { address } = useAccount();
   const user = userState();
 
@@ -51,7 +52,13 @@ export const MyTowers = ({ landId }: LandId) => {
               <h2 className="card-title text-pinkz">🔥Tower #{l}</h2>
               <p className="text-yellow-200">⚔️25 🌪️12</p>
               <div className="card-actions justify-center pt-2">
-                <StackLandAndTower landId={landId} towerId={l} />
+                <StackLandAndTower
+                  landId={landId}
+                  towerId={l}
+                  successCallback={() => {
+                    successCallback?.();
+                  }}
+                />
               </div>
             </div>
           </div>
