@@ -33,7 +33,7 @@ export const ApproveGamezForTowerz = () => {
         write?.();
       }}
     >
-      Approve
+      Approve Tower
     </button>
   );
 };

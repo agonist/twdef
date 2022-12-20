@@ -33,7 +33,7 @@ export const ApproveGamezForLandz = () => {
         write?.();
       }}
     >
-      Approve
+      Approve Land
     </button>
   );
 };

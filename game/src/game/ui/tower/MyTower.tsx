@@ -37,20 +37,20 @@ export const MyTowers = ({ landId }: LandId) => {
   }
 
   return (
-    <div className="overflow-x-scroll pt-4">
+    <div className="overflow-x-scroll pt-4 ">
       <div className="flex space-x-4">
         {user.towersBalanceByIds.map((l) => (
           <div
             key={l}
-            className="card card-compact bg-base-100 shadow-xl flex-shrink-0"
+            className="flex-shrink-0 card card-compact mb-4 bg-base-100 shadow-md shadow-pinkz "
           >
             <figure>
-              <Image src={"/firetower.jpeg"} width={150} height={150} />
+              <Image src={"/firetower.jpeg"} width={130} height={130} />
             </figure>
-            <div className="card-body">
-              <h2 className="card-title">Tower #{l}</h2>
-              <p>Click the button</p>
-              <div className="card-actions justify-end">
+            <div className="flex flex-col p-2">
+              <h2 className="card-title text-pinkz">🔥Tower #{l}</h2>
+              <p className="text-yellow-200">⚔️25 🌪️12</p>
+              <div className="card-actions justify-center pt-2">
                 <StackLandAndTower landId={landId} towerId={l} />
               </div>
             </div>

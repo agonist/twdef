@@ -79,7 +79,7 @@ export const GameSection = () => {
 
   if (_gameState.currentLandId > 0) {
     return (
-      <div className="flex flex-col w-full items-center py-4">
+      <div className="flex flex-col w-full items-center py-4 ">
         <LandContent landId={_gameState.currentLandId} />
       </div>
     );

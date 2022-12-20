@@ -7,29 +7,23 @@ import { LayoutProps } from "./wallet/ConnectWalletOr";
 export const ApproveOr = ({ children }: LayoutProps) => {
   const user = userState();
 
-  if (!user.landzToGamezApproved) {
-    return (
-      <div className="flex flex-col w-11/12 items-center">
-        <p className="text-center">
-          You need to approve the game contract for Lands first.
-        </p>
-        <ApproveGamezForLandz />
-      </div>
-    );
-  }
-
-  if (!user.towerzToGamezApproved) {
-    return (
-      <div className="flex flex-col w-11/12 items-center">
-        <p className="text-center">
-          You need to approve the game contract for Towers first.
-        </p>
-        <ApproveGamezForTowerz />
-      </div>
-    );
+  if (user.landzToGamezApproved && user.towerzToGamezApproved) {
+    return <div>{children}</div>;
   }
 
   return (
-    <div className="flex flex-col items-center justify-center">{children}</div>
+    <div className=" card card-compact card-side w-11/12 bg-base-100 shadow-md shadow-pinkz">
+      <div className="flex flex-col p-2">
+        <p className=" text-pinkz font-bold text-2xl">Approve contracts</p>
+        <p className="text-sm text-yellow-200">
+          In order to build a tower, you need first to approve the Land contract
+          and the Tower contract
+        </p>
+        <div className="flex h-full py-2 items-end space-x-2">
+          {!user.landzToGamezApproved ? <ApproveGamezForLandz /> : <></>}
+          {!user.towerzToGamezApproved ? <ApproveGamezForTowerz /> : <></>}
+        </div>
+      </div>
+    </div>
   );
 };
