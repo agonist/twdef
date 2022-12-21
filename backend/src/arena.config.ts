@@ -1,6 +1,7 @@
 import Arena from "@colyseus/arena";
 import { monitor } from "@colyseus/monitor";
 import { landService } from "./db/LandService";
+import { towerService } from "./db/TowerService";
 
 /**
  * Import your Room files
@@ -26,6 +27,7 @@ export default Arena({
     /**
      * Bind your custom express routes here:
      */
+
     app.get("/", (req, res) => {
       res.send("It's time to kick ass and chew bubblegum!");
     });
@@ -56,6 +58,36 @@ export default Arena({
       });
     });
 
+    app.get("/metadata/tower/:towerId", async (req, res) => {
+      const id = parseInt(req.params.towerId);
+
+      const t = await towerService.findTowerById(id);
+      
+      const attr: any[] = [
+        {
+          trait_type: "Type",
+          value: t.type,
+        },
+        {
+          trait_type: "Damage",
+          value: t.damage,
+        },
+        {
+          trait_type: "Speed",
+          value: t.speed,
+        },
+        {
+          trait_type: "Level",
+          value: t.level,
+        },
+      ];
+      res.json({
+        name: "Tower#" + id,
+        description: "",
+        image: t.imgUrl,
+        attributes: attr,
+      });
+    });
     /**
      * Bind @colyseus/monitor
      * It is recommended to protect this route with a password.

@@ -5,6 +5,7 @@ import { prisma } from "./DbService";
 class TowerService {
   damagebinning: TSMT$Bin = new TSMT$Bin();
   speedBinning: TSMT$Bin = new TSMT$Bin();
+  towerType: TSMT$Bin = new TSMT$Bin();
 
   constructor() {
     this.damagebinning.create([
@@ -24,6 +25,13 @@ class TowerService {
       { percentage: 10, action: 420 },
       { percentage: 10, action: 425 },
     ]);
+
+
+  this.towerType.create([
+    { percentage: 33, action: 1 },
+    { percentage: 33, action: 2 },
+    { percentage: 34, action: 3 },
+  ]);
   }
 
   async findTowerById(id: number): Promise<Tower> {
@@ -33,6 +41,7 @@ class TowerService {
   async createTower(id: number, type: number): Promise<Tower> {
     const damage = this.getDammage();
     const speed = this.getSpeed();
+    const rtype = this.getRandomType();
 
     const tower = await prisma.tower.create({
       data: {
@@ -40,7 +49,8 @@ class TowerService {
         damage: damage,
         speed: speed,
         level: 1,
-        type: TowerType.FIRE,
+        type: rtype.type,
+        imgUrl: rtype.img
       },
     });
     return tower;
@@ -52,6 +62,30 @@ class TowerService {
 
   getSpeed() {
     return this.speedBinning.nextAction();
+  }
+
+  getRandomType() {
+    const type = this.towerType.nextAction();
+    switch (type) {
+      case 1: {
+        return {
+          type: TowerType.FIRE,
+          img: "https://ipfs.filebase.io/ipfs/QmdFEidi7obndinYTcFKuYhkofXYcXR7VFFgTrsdCcxkwB/QmX6vmM5KX6FMyXWvm4MxJDGnghWKbj1VpsB8k3W5JXLq5",
+        };
+      }
+      case 2: {
+        return {
+          type: TowerType.ICE,
+          img: "https://ipfs.filebase.io/ipfs/QmdFEidi7obndinYTcFKuYhkofXYcXR7VFFgTrsdCcxkwB/QmfNWD8EW7zzjDAWjPfrXRBx8GUEpPWzLawxpdBSBvewhZ",
+        };
+      }
+      case 3: {
+        return {
+          type: TowerType.JUNGLE,
+          img: "https://ipfs.filebase.io/ipfs/QmdFEidi7obndinYTcFKuYhkofXYcXR7VFFgTrsdCcxkwB/QmTJAgUMdaRnmoDFwNW8SefjzHN3md96VqTHqpCVRoUjeG",
+        };
+      }
+    }
   }
 }
 

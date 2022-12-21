@@ -55,6 +55,7 @@ CREATE TABLE `Tower` (
     `speed` INTEGER NOT NULL,
     `level` INTEGER NOT NULL DEFAULT 1,
     `type` ENUM('FIRE', 'ICE', 'JUNGLE') NOT NULL,
+    `imgUrl` VARCHAR(191) NULL,
 
     UNIQUE INDEX `Tower_id_key`(`id`),
     PRIMARY KEY (`id`)
