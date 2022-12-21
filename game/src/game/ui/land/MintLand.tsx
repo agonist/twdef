@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { userState } from "../../state/user-state";
 import { ShopV1Abi } from "../../../abi/ShopV1";
 
-export const MintLand = ({ landId, minted, mintCallback }: LandProps) => {
+export const MintLand = ({ minted, mintCallback, landId }: LandProps) => {
   const addInLandsBalance = userState((s) => s.addInLandsBalance);
 
   const { config } = usePrepareContractWrite({

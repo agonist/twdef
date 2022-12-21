@@ -12,7 +12,7 @@ export const ApproveOr = ({ children }: LayoutProps) => {
   }
 
   return (
-    <div className=" card card-compact card-side w-11/12 bg-base-100 shadow-md shadow-pinkz">
+    <div className=" card card-compact card-side w-12/12 bg-base-100 shadow-md shadow-pinkz">
       <div className="flex flex-col p-2">
         <p className=" text-pinkz font-bold text-2xl">Approve contracts</p>
         <p className="text-sm text-yellow-200">

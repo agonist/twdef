@@ -14,6 +14,7 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 export const { chains, provider } = configureChains(
   [hardhat],
@@ -31,34 +32,38 @@ const wagmiClient = createClient({
   provider,
 });
 
+const queryClient = new QueryClient();
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider
-        modalSize="compact"
-        chains={chains}
-        theme={darkTheme({
-          accentColor: "#a24cc2",
-          borderRadius: "none",
-        })}
-      >
-        <html data-theme="synthwave"></html>
-        <div>
-          <Component {...pageProps} />
-          <ToastContainer
-            position="bottom-right"
-            autoClose={5000}
-            hideProgressBar
-            newestOnTop
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
-        </div>
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <QueryClientProvider client={queryClient}>
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider
+          modalSize="compact"
+          chains={chains}
+          theme={darkTheme({
+            accentColor: "#a24cc2",
+            borderRadius: "none",
+          })}
+        >
+          <html data-theme="synthwave"></html>
+          <div>
+            <Component {...pageProps} />
+            <ToastContainer
+              position="bottom-right"
+              autoClose={5000}
+              hideProgressBar
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+            />
+          </div>
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </QueryClientProvider>
   );
 }
 

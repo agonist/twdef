@@ -1,4 +1,4 @@
-import { Cell, CellType, PrismaClient } from "@prisma/client";
+import { Cell, CellType, LandType, PrismaClient } from "@prisma/client";
 import {
   genFinalMap,
   makeGrid,
@@ -8,9 +8,53 @@ import {
 import { map_1 } from "./map/map1";
 import { map_2 } from "./map/map2";
 import { map_3 } from "./map/map3";
+import { TSMT$Bin } from "../src/tools/binning";
+
 const prisma = new PrismaClient();
+let damagebinning: TSMT$Bin = new TSMT$Bin();
+let towerType: TSMT$Bin = new TSMT$Bin();
 
 async function main() {
+  damagebinning.create([
+    { percentage: 10, action: 0 },
+    { percentage: 8, action: 1 },
+    { percentage: 8, action: 2 },
+    { percentage: 7, action: 3 },
+    { percentage: 6, action: 4 },
+    { percentage: 5, action: 5 },
+    { percentage: 4, action: 6 },
+    { percentage: 4, action: 7 },
+    { percentage: 3, action: 8 },
+    { percentage: 3, action: 9 },
+    { percentage: 3, action: 10 },
+    { percentage: 3, action: 11 },
+    { percentage: 3, action: 12 },
+    { percentage: 3, action: 13 },
+    { percentage: 3, action: 14 },
+    { percentage: 3, action: 15 },
+    { percentage: 2, action: 16 },
+    { percentage: 2, action: 17 },
+    { percentage: 2, action: 18 },
+    { percentage: 2, action: 19 },
+    { percentage: 2, action: 20 },
+    { percentage: 2, action: 21 },
+    { percentage: 2, action: 22 },
+    { percentage: 2, action: 23 },
+    { percentage: 2, action: 24 },
+    { percentage: 1, action: 25 },
+    { percentage: 1, action: 26 },
+    { percentage: 1, action: 27 },
+    { percentage: 1, action: 28 },
+    { percentage: 1, action: 29 },
+    { percentage: 1, action: 30 },
+  ]);
+
+  towerType.create([
+    { percentage: 33, action: 1 },
+    { percentage: 33, action: 2 },
+    { percentage: 34, action: 3 },
+  ]);
+
   let c1 = (await prisma.land.count()) + 1;
   await createMap(map_1, 30, 20, c1);
 
@@ -40,6 +84,7 @@ async function createMap(
 
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
+      const r = getRandomType();
       await prisma.cell.create({
         data: {
           x: x,
@@ -52,6 +97,9 @@ async function createMap(
                   create: {
                     id: map[y][x],
                     minted: false,
+                    type: r?.type,
+                    imgUrl: r?.img,
+                    damageBonus: damagebinning.nextAction(),
                   },
                 }
               : undefined,
@@ -73,6 +121,30 @@ async function createMap(
   //       },
   //     });
   //   };
+}
+
+function getRandomType() {
+  const type = towerType.nextAction();
+  switch (type) {
+    case 1: {
+      return {
+        type: LandType.FIRE,
+        img: "https://ipfs.filebase.io/ipfs/QmdFEidi7obndinYTcFKuYhkofXYcXR7VFFgTrsdCcxkwB/QmX6vmM5KX6FMyXWvm4MxJDGnghWKbj1VpsB8k3W5JXLq5",
+      };
+    }
+    case 2: {
+      return {
+        type: LandType.ICE,
+        img: "https://ipfs.filebase.io/ipfs/QmdFEidi7obndinYTcFKuYhkofXYcXR7VFFgTrsdCcxkwB/QmfNWD8EW7zzjDAWjPfrXRBx8GUEpPWzLawxpdBSBvewhZ",
+      };
+    }
+    case 3: {
+      return {
+        type: LandType.JUNGLE,
+        img: "https://ipfs.filebase.io/ipfs/QmdFEidi7obndinYTcFKuYhkofXYcXR7VFFgTrsdCcxkwB/QmTJAgUMdaRnmoDFwNW8SefjzHN3md96VqTHqpCVRoUjeG",
+      };
+    }
+  }
 }
 
 function getMapType(t: number) {

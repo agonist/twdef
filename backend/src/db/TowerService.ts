@@ -40,7 +40,7 @@ class TowerService {
         damage: damage,
         speed: speed,
         level: 1,
-        type: TowerType.REGULAR,
+        type: TowerType.FIRE,
       },
     });
     return tower;

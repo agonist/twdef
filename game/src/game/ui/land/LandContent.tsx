@@ -1,8 +1,10 @@
 import { BigNumber, ethers } from "ethers";
 import Image from "next/image";
+import { useQuery, useQueryClient } from "react-query";
 import { useAccount, useContractReads } from "wagmi";
 import { LandAbi } from "../../../abi/Land";
 import { Contracts } from "../../../web3/Contracts";
+import { fetchLandInfo } from "../../api/api";
 import { userState } from "../../state/user-state";
 import { ApproveOr } from "../ApproveOr";
 import { StackLandAndTower } from "../stack/StackLandAndTower";
@@ -10,10 +12,45 @@ import { UnstackLandAndTower } from "../stack/UnstackLandAndTower";
 import { MyTowers } from "../tower/MyTower";
 import { ConnectWalletOr } from "../wallet/ConnectWalletOr";
 import { BuyLandItem } from "./BuyLandItem";
+import { LandBonusDamage } from "./LandBonusDamage";
 import { LandProps } from "./LandProps";
+import { LandTitle } from "./LandTitle";
 import { MintLand } from "./MintLand";
 
-export const LandContent = ({ landId }: LandProps) => {
+export interface LandData {
+  id: number;
+  name: string;
+  image: string;
+  type: string;
+  damageBonus: number;
+  attributes: [{ trait_type: string; value: any }];
+}
+
+export interface LandId {
+  landId: number;
+}
+
+export function getBonusDamage(land: LandData) {
+  const l = land.attributes.find((a) => a.trait_type === "Damage Boost");
+  return parseInt(l?.value);
+}
+
+export function emojiForLandType(land: LandData) {
+  const l = land.attributes.find((a) => a.trait_type === "Type");
+  switch (l?.value) {
+    case "FIRE": {
+      return "🔥";
+    }
+    case "ICE": {
+      return "🧊";
+    }
+    case "JUNGLE": {
+      return "🌴";
+    }
+  }
+}
+
+export const LandContent = ({ landId }: LandId) => {
   const { address } = useAccount();
   const user = userState();
 
@@ -40,17 +77,27 @@ export const LandContent = ({ landId }: LandProps) => {
     },
   });
 
-  if (isLoading) {
+  const queryClient = useQueryClient();
+  const land = useQuery<LandData, Error>(["land", landId], () =>
+    fetchLandInfo(landId!)
+  );
+
+  if (isLoading && land.isLoading) {
     return <></>;
   }
 
-  if (isSuccess && data?.[0].minted && data?.[1] === address) {
+  if (
+    isSuccess &&
+    land.isSuccess &&
+    data?.[0].minted &&
+    data?.[1] === address
+  ) {
     return (
       <div className="flex flex-col w-11/12 space-y-6 ">
         <div className="card card-compact card-side bg-base-100 shadow-md shadow-pinkz">
           <figure>
             <Image
-              src={"/land.png"}
+              src={land.data?.image!}
               width={130}
               height={130}
               alt={"land img"}
@@ -58,13 +105,13 @@ export const LandContent = ({ landId }: LandProps) => {
           </figure>
 
           <div className="flex flex-col pl-2">
-            <p className=" text-pinkz font-bold text-2xl">🔥 LAND#{landId}</p>
-            <p className="text-yellow-200 text-sm">+20% dmg</p>
+            <LandTitle land={land.data} landId={landId} />
+            <LandBonusDamage bonus={getBonusDamage(land.data)} />
           </div>
         </div>
         <ApproveOr>
           <MyTowers
-            landId={landId}
+            landId={landId!}
             successCallback={() => {
               refetch();
             }}
@@ -130,6 +177,7 @@ export const LandContent = ({ landId }: LandProps) => {
   if (isSuccess && !data?.[0].minted) {
     return (
       <BuyLandItem
+        land={land.data!}
         landId={landId}
         minted={data?.[0].minted}
         mintCallback={() => {

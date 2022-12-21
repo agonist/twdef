@@ -1,5 +1,6 @@
 import Arena from "@colyseus/arena";
 import { monitor } from "@colyseus/monitor";
+import { landService } from "./db/LandService";
 
 /**
  * Import your Room files
@@ -27,6 +28,32 @@ export default Arena({
      */
     app.get("/", (req, res) => {
       res.send("It's time to kick ass and chew bubblegum!");
+    });
+
+    app.get("/metadata/land/:landId", async (req, res) => {
+      const id = parseInt(req.params.landId);
+
+      const l = await landService.findLandById(id);
+
+      const attr: any[] = [
+        {
+          trait_type: "Type",
+          value: l.type,
+        },
+      ];
+      if (l.minted) {
+        attr.push({
+          display_type: "number",
+          trait_type: "Damage Boost",
+          value: l.damageBonus,
+        });
+      }
+      res.json({
+        name: "Land#" + id,
+        description: "",
+        image: l.imgUrl,
+        attributes: attr,
+      });
     });
 
     /**
