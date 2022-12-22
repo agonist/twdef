@@ -70,19 +70,19 @@ class TowerService {
       case 1: {
         return {
           type: TowerType.FIRE,
-          img: "https://ipfs.filebase.io/ipfs/QmdFEidi7obndinYTcFKuYhkofXYcXR7VFFgTrsdCcxkwB/QmX6vmM5KX6FMyXWvm4MxJDGnghWKbj1VpsB8k3W5JXLq5",
+          img: "https://ipfs.filebase.io/ipfs/QmaBvXzNhCoQiBcpNQ9pkSt8W1NGQ2nUFD8yiN5r3U2cvQ",
         };
       }
       case 2: {
         return {
           type: TowerType.ICE,
-          img: "https://ipfs.filebase.io/ipfs/QmdFEidi7obndinYTcFKuYhkofXYcXR7VFFgTrsdCcxkwB/QmfNWD8EW7zzjDAWjPfrXRBx8GUEpPWzLawxpdBSBvewhZ",
+          img: "https://ipfs.filebase.io/ipfs/QmNW8UQYpV8zvyv4ofgQykQ1ukjCoaTnnaJJuyJceog6S2",
         };
       }
       case 3: {
         return {
           type: TowerType.JUNGLE,
-          img: "https://ipfs.filebase.io/ipfs/QmdFEidi7obndinYTcFKuYhkofXYcXR7VFFgTrsdCcxkwB/QmTJAgUMdaRnmoDFwNW8SefjzHN3md96VqTHqpCVRoUjeG",
+          img: "https://ipfs.filebase.io/ipfs/QmagomZJjdngXgzfFfzGA23TUFU44dgvcc8ivGeV1UoW4v",
         };
       }
     }

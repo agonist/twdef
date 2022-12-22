@@ -18,9 +18,9 @@ export const TowerBonus = ({ tower }: TowerProps) => {
 
   return (
     <div className="flex flex-col">
-      <p>lvl: {level()}</p>
-      <p>dmg: {damage()}</p>
-      <p>speed: {speed()}</p>
+      <p className="text-sm text-yellow-300">lvl: {level()}</p>
+      <p className="text-sm text-yellow-300">dmg: {damage()}</p>
+      <p className="text-sm text-yellow-300">speed: {speed()}</p>
     </div>
   );
 };

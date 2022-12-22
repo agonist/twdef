@@ -1,18 +1,10 @@
-import Image from "next/image";
 import { useAccount, useContractReads } from "wagmi";
 import { TowerzAbi } from "../../../abi/Towerz";
 import { Contracts } from "../../../web3/Contracts";
 import { userState } from "../../state/user-state";
-import { StackLandAndTower } from "../stack/StackLandAndTower";
-import { TowerTitle } from "./TowerTitle";
-import { TowerToBuild } from "./TowerToBuild";
+import { MyTowerItem } from "./MyTowerItem";
 
-interface LandId {
-  landId: number;
-  successCallback?: () => void;
-}
-
-export const MyTowers = ({ landId, successCallback }: LandId) => {
+export const MyTowersInventory = () => {
   const { address } = useAccount();
   const user = userState();
 
@@ -39,18 +31,15 @@ export const MyTowers = ({ landId, successCallback }: LandId) => {
     return <></>;
   }
 
+  if (isError) {
+    return <></>;
+  }
+
   return (
-    <div className="overflow-x-scroll pt-4 ">
-      <div className="flex space-x-4">
-        {user.towersBalanceByIds.map((l) => (
-          <TowerToBuild
-            key={l}
-            landId={landId}
-            towerId={l}
-            successCallback={() => successCallback?.()}
-          />
-        ))}
-      </div>
+    <div className="flex flex-col w-11/12 pt-4 space-y-4">
+      {user.towersBalanceByIds.map((l) => (
+        <MyTowerItem towerId={l} key={l} />
+      ))}
     </div>
   );
 };

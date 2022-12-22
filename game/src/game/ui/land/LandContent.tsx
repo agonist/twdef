@@ -7,6 +7,7 @@ import { Contracts } from "../../../web3/Contracts";
 import { fetchLandInfo } from "../../api/api";
 import { userState } from "../../state/user-state";
 import { ApproveOr } from "../ApproveOr";
+import { StackedLandTower } from "../stack/StackedLandTower";
 import { StackLandAndTower } from "../stack/StackLandAndTower";
 import { UnstackLandAndTower } from "../stack/UnstackLandAndTower";
 import { MyTowers } from "../tower/MyTower";
@@ -123,30 +124,14 @@ export const LandContent = ({ landId }: LandId) => {
 
   if (isSuccess && data?.[0].minted && user.stakedLandTowerByIds.has(landId)) {
     return (
-      <div className=" card flex flex-col w-11/12 bg-base-100 shadow-md shadow-pinkz">
-        <figure>
-          <Image src={"/land.png"} width={300} height={300} />
-          <Image src={"/firetower.jpeg"} width={300} height={300} />
-        </figure>
+      <StackedLandTower
+        landId={landId}
+        land={land.data!}
+        mintCallback={() => {
+          refetch();
+        }}
+      />
 
-        <div className="flex flex-col p-2">
-          <p className="text-pinkz font-bold text-2xl">
-            LAND#{landId} + TOWER#{user.stakedLandTowerByIds.get(landId)}
-          </p>
-          <p className="text-yellow-200 text-sm">+20% dmg</p>
-        </div>
-        <div className="card-actions justify-start px-2 pb-2">
-          <ConnectWalletOr>
-            <UnstackLandAndTower
-              landId={landId}
-              towerId={user.stakedLandTowerByIds.get(landId)!}
-              successCallback={() => {
-                refetch();
-              }}
-            />
-          </ConnectWalletOr>
-        </div>
-      </div>
     );
   }
 
