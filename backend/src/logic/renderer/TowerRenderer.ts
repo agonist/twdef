@@ -13,6 +13,7 @@ export class TowerRenderer extends EntityRenderer<Tower> {
     this.towers = towers;
   }
 
+  // type - 0 = fire , 1 = ice , 2 = jungle
   public add(entity: Tower) {
     this.entities.push(entity);
     this.towers.push(
