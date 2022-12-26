@@ -49,7 +49,7 @@ async function main() {
     }
   }
 
-  console.log(lands[lands.length - 1].id);
+  // console.log(lands[lands.length - 1].id);
 
   const lands2: { x: number; y: number; id: number; minted: boolean }[] = [];
   let startId2 = lands[lands.length - 1].id + 1;
@@ -62,7 +62,7 @@ async function main() {
       }
     }
   }
-  console.log(lands2[lands2.length - 1].id);
+  // console.log(lands2[lands2.length - 1].id);
 
   const lands3: { x: number; y: number; id: number; minted: boolean }[] = [];
   let startId3 = lands2[lands2.length - 1].id + 1;
@@ -75,7 +75,7 @@ async function main() {
       }
     }
   }
-  console.log(lands3[lands3.length - 1].id);
+  // console.log(lands3[lands3.length - 1].id);
 
   await landz.createMap(1, lands);
   await landz.createMap(2, lands2);

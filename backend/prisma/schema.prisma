@@ -10,6 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+    id     Int     @id @default(autoincrement())
+    address String
+    balance Int @default(0)
+}
+
 model Map {
   id     Int     @id @default(autoincrement())
   paused Boolean @default(false)
