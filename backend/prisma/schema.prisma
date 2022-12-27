@@ -11,9 +11,8 @@ datasource db {
 }
 
 model User {
-    id     Int     @id @default(autoincrement())
-    address String
-    balance Int @default(0)
+    address String @id @unique
+    balance Float @default(0)
 }
 
 model Map {

@@ -9,6 +9,7 @@ export class RestoreStateCmd extends Command<GameRoom, { mapId: number }> {
   async execute({ mapId } = this.payload) {
     const games = await gameService.findGameByMapId(mapId);
     games.forEach((g) => {
+      const dmg = g.land.damageBonus + g.tower.damage;
       const t1 = new CanonTower(
         this.room.game.enemiesRenderer,
         this.room.game.bulletRenderer,
@@ -16,7 +17,8 @@ export class RestoreStateCmd extends Command<GameRoom, { mapId: number }> {
         g.y,
         cellSize,
         g.towerId,
-        g.owner
+        g.owner,
+        dmg
       );
 
       this.room.game.towerRenderer.add(t1);

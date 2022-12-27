@@ -2,6 +2,7 @@ import Arena from "@colyseus/arena";
 import { monitor } from "@colyseus/monitor";
 import { landService } from "./db/LandService";
 import { towerService } from "./db/TowerService";
+import { userService } from "./db/UserService";
 
 /**
  * Import your Room files
@@ -9,6 +10,7 @@ import { towerService } from "./db/TowerService";
 import { Map1 } from "./rooms/maps/Map_1";
 import { Map2 } from "./rooms/maps/Map_2";
 import { Map3 } from "./rooms/maps/Map_3";
+import { log } from "./tools/logger";
 import { contractUpdates } from "./web3/DefaultSocketProvider";
 
 export default Arena({
@@ -62,7 +64,7 @@ export default Arena({
       const id = parseInt(req.params.towerId);
 
       const t = await towerService.findTowerById(id);
-      
+
       const attr: any[] = [
         {
           trait_type: "Type",
@@ -87,6 +89,16 @@ export default Arena({
         image: t.imgUrl,
         attributes: attr,
       });
+    });
+
+    app.use("/player/balance/:address", async (req, res) => {
+      const address = req.params.address;
+      const user = await userService.findUserByAddress(address);
+      log.info(user);
+      let balance = 0;
+      if (user !== null) balance = user.balance;
+
+      res.json({ balance: balance });
     });
     /**
      * Bind @colyseus/monitor

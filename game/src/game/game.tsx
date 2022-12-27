@@ -4,12 +4,15 @@ import { gameConfig } from "./game-config";
 import { SidePanel } from "./ui/side-panel";
 import { gameState } from "./state/game-state";
 import Image from "next/image";
+import { PlayerBalance } from "./ui/user/PlayerBalance";
+import { useAccount } from "wagmi";
 
 // Game Root component
 const PhaserGame = () => {
   const parentEl = useRef<HTMLDivElement>(null);
   const game = useGame(gameConfig, parentEl);
   const g = gameState();
+  const { isConnected, address } = useAccount();
 
   useEffect(() => {
     if (game !== undefined) {
@@ -29,8 +32,11 @@ const PhaserGame = () => {
 
         <button className="btn btn-sm gap-2 ml-4 text-pinkz">
           Multiplier
-          <div className="badge badge-secondary">x{g.currentMultiplier}</div>
+          <div className="badge badge-secondary">
+            x{g.currentMultiplier.toFixed(2)}
+          </div>
         </button>
+        {isConnected ? <PlayerBalance address={address!} /> : <></>}
 
         {/*        
         <button onClick={() => g.prevMap(game!)}>⬅️</button>

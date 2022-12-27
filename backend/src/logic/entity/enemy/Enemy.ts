@@ -10,7 +10,7 @@ export abstract class Enemy extends Entity {
   abstract type: number;
   protected damage: number = 10;
   public alive = true;
-
+  public dieFromWin = false
   damageTaken: number = 0;
   damageFrom: Map<string, number> = new Map();
 
@@ -67,6 +67,7 @@ export abstract class Enemy extends Entity {
       } else {
         //map.homeBase.handleDamage();
         this.alive = false;
+        this.dieFromWin = true
       }
     }
   }

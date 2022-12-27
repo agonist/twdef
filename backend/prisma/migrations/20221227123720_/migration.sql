@@ -1,4 +1,13 @@
 -- CreateTable
+CREATE TABLE `User` (
+    `address` VARCHAR(191) NOT NULL,
+    `balance` DOUBLE NOT NULL DEFAULT 0,
+
+    UNIQUE INDEX `User_address_key`(`address`),
+    PRIMARY KEY (`address`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Map` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `paused` BOOLEAN NOT NULL DEFAULT false,

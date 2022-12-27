@@ -31,13 +31,13 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
       wave = await waveService.createWave(this.room.mapId());
     }
 
-    const waveInterval = 5000
+    const waveInterval = 5000;
     interval(waveInterval).subscribe(async (x) => {
       this.sub?.unsubscribe();
 
-      this.room.game.waveManager.update();
+      const increaseMultiplier = this.room.game.waveManager.update();
 
-      wave = await waveService.nextWave(wave);
+      wave = await waveService.nextWave(wave, increaseMultiplier);
 
       this.generateWave(wave);
 

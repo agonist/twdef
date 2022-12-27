@@ -12,7 +12,7 @@ import "./interfaces/ILandz.sol";
 
 // Land contract for Tower Defense game
 // Can manage multiple map with multiple lands
-contract Landz is ERC721Enumerable, Ownable, IERC4907, ILandz {
+contract Landz is ERC721Enumerable, Ownable, ILandz {
 
     struct UserInfo {
         address user; // address of user role
@@ -119,71 +119,5 @@ contract Landz is ERC721Enumerable, Ownable, IERC4907, ILandz {
         minter[_address] = _minter;
     }
 
-    // Lending stuff ERC-4907
 
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal virtual override {
-        super._beforeTokenTransfer(from, to, tokenId);
-        if (
-            from != to &&
-            _users[tokenId].user != address(0) && //user still present
-            block.timestamp >= _users[tokenId].expires // user expired
-        ) {
-            delete _users[tokenId];
-            emit UpdateUser(tokenId, address(0), 0);
-        }
-    }
-
-    function setUser(
-        uint256 tokenId,
-        address user,
-        uint64 expires
-    ) public virtual override {
-        if (!_isApprovedOrOwner(msg.sender, tokenId)) revert NotTheOwner();
-        if (userOf(tokenId) != address(0)) revert UserAlreadyAssigned();
-        if (expires < block.timestamp) revert ExpireNotInTheFuture();
-        UserInfo storage info = _users[tokenId];
-        info.user = user;
-        info.expires = expires;
-        emit UpdateUser(tokenId, user, expires);
-    }
-
-    function userOf(uint256 tokenId)
-        public
-        view
-        virtual
-        override
-        returns (address)
-    {
-        if (uint256(_users[tokenId].expires) >= block.timestamp) {
-            return _users[tokenId].user;
-        }
-        return address(0);
-    }
-
-    function userExpires(uint256 tokenId)
-        public
-        view
-        virtual
-        override
-        returns (uint256)
-    {
-        return _users[tokenId].expires;
-    }
-
-    /// @dev See {IERC165-supportsInterface}.
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        virtual
-        override
-        returns (bool)
-    {
-        return
-            interfaceId == type(IERC4907).interfaceId ||
-            super.supportsInterface(interfaceId);
-    }
 }

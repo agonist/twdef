@@ -3,7 +3,6 @@ import { gameState } from "../state/game-state";
 import { uiState } from "../state/ui-state";
 import { Initializer } from "./Initializer";
 import { LandContent } from "./land/LandContent";
-import { LandSection } from "./land/LandSection";
 import { MyLands } from "./land/MyLands";
 import { MyTowers } from "./tower/MyTower";
 import { MyTowersInventory } from "./tower/MyTowersInventory";
