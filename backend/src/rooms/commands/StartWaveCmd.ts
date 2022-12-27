@@ -35,7 +35,9 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
     interval(waveInterval).subscribe(async (x) => {
       this.sub?.unsubscribe();
 
-      const increaseMultiplier = this.room.game.waveManager.update();
+      const increaseMultiplier = this.room.game.waveManager.update(
+        this.state.wave.multiplier
+      );
 
       wave = await waveService.nextWave(wave, increaseMultiplier);
 

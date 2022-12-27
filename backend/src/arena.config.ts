@@ -38,7 +38,9 @@ export default Arena({
       const id = parseInt(req.params.landId);
 
       const l = await landService.findLandById(id);
-
+      if (l === null) {
+        res.status(404).send("not found");
+      }
       const attr: any[] = [
         {
           trait_type: "Type",
@@ -64,6 +66,10 @@ export default Arena({
       const id = parseInt(req.params.towerId);
 
       const t = await towerService.findTowerById(id);
+      if (t === null) {
+        res.status(404).send("not found");
+        return;
+      }
 
       const attr: any[] = [
         {
