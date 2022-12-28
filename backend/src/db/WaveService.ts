@@ -6,7 +6,7 @@ class WaveService {
   async createWave(mapId: number): Promise<Wave> {
     return await prisma.wave.create({
       data: {
-        count: 1,
+        count: 0,
         multiplier: 1,
         mapId: mapId,
       },

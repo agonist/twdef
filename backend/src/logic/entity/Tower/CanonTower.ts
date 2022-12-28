@@ -13,6 +13,7 @@ export class CanonTower extends Tower {
     public reloadDurationMs: number = 400;
     public damage: number = 25;
     public cost: number = 50;
+    public type: number = 0
 
     private readonly radius: number;
     private canonLength: number;
@@ -25,10 +26,11 @@ export class CanonTower extends Tower {
     };
     bulletRenderer: BulletRenderer
     
-    constructor(enemyRenderer: EnemiesRenderer, bulletRenderer: BulletRenderer, x: number, y: number, width: number, id: number, owner: string, damage: number) {
+    constructor(enemyRenderer: EnemiesRenderer, bulletRenderer: BulletRenderer, x: number, y: number, width: number, id: number, owner: string, damage: number, type: number) {
         super(enemyRenderer, x, y, width, id, owner);
         this.bulletRenderer = bulletRenderer
         this.damage = damage
+        this.type = type
         this.radius = this.halfWidth * 0.8;
         this.canonLength = this.halfWidth * 1.2;
         this.canonExtremity = {

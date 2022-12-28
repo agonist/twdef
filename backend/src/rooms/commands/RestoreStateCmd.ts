@@ -1,8 +1,8 @@
 import { Command } from "@colyseus/command";
-import { Room } from "colyseus";
 import { gameService } from "../../db/GamezService";
 import { CanonTower } from "../../logic/entity/Tower/CanonTower";
 import { cellSize } from "../../logic/GameLogic";
+import { getTowerType } from "../../tools/helpers";
 import { GameRoom } from "../GameRoom";
 
 export class RestoreStateCmd extends Command<GameRoom, { mapId: number }> {
@@ -10,6 +10,7 @@ export class RestoreStateCmd extends Command<GameRoom, { mapId: number }> {
     const games = await gameService.findGameByMapId(mapId);
     games.forEach((g) => {
       const dmg = g.land.damageBonus + g.tower.damage;
+
       const t1 = new CanonTower(
         this.room.game.enemiesRenderer,
         this.room.game.bulletRenderer,
@@ -18,7 +19,8 @@ export class RestoreStateCmd extends Command<GameRoom, { mapId: number }> {
         cellSize,
         g.towerId,
         g.owner,
-        dmg
+        dmg,
+        getTowerType(g.tower.type)
       );
 
       this.room.game.towerRenderer.add(t1);

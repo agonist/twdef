@@ -1,4 +1,4 @@
-
+import { TowerType } from "@prisma/client";
 import { euclideanDistanceSquared } from "../../../tools/helpers";
 import { cellSize } from "../../GameLogic";
 import { EnemiesRenderer } from "../../renderer/EnemiesRenderer";
@@ -11,7 +11,7 @@ export abstract class Tower extends Entity {
   abstract reloadDurationMs: number;
   abstract damage: number | { max: number; min: number };
   abstract aimRadius: number;
-
+  abstract type: number;
   abstract cost: number;
   private countdown: number = 0;
   protected canShoot: boolean = true;
@@ -42,7 +42,7 @@ export abstract class Tower extends Entity {
     super(x, y, width);
     this.id = id;
     this.enemyRenderer = enemyRenderer;
-    this.owner = owner
+    this.owner = owner;
   }
 
   update() {

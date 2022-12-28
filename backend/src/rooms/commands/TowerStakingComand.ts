@@ -5,6 +5,7 @@ import { landService } from "../../db/LandService";
 import { towerService } from "../../db/TowerService";
 import { CanonTower } from "../../logic/entity/Tower/CanonTower";
 import { cellSize } from "../../logic/GameLogic";
+import { getTowerType } from "../../tools/helpers";
 import { log } from "../../tools/logger";
 import { GameRoom } from "../GameRoom";
 
@@ -32,7 +33,8 @@ export class TowerStakingCmd extends Command<
       cellSize,
       towerId,
       owner,
-      towerDamage
+      towerDamage,
+      getTowerType(tower.type)
     );
 
     towerRender.add(t1);

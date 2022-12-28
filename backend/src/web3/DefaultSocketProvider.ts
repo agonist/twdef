@@ -126,6 +126,7 @@ export class DefaultSocketProvider implements WebSocketProvider {
 
     // used to listen when a land is minted. state is updated in the db and spread to clients
     contract.on(mintFilter, async (from, to, tokenId, e) => {
+  
       try {
         const landId = BigNumber.from(tokenId).toNumber();
         log.info("New Land minted: #" + landId + " to " + to);

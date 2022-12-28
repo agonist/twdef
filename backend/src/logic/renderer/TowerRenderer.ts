@@ -16,8 +16,9 @@ export class TowerRenderer extends EntityRenderer<Tower> {
   // type - 0 = fire , 1 = ice , 2 = jungle
   public add(entity: Tower) {
     this.entities.push(entity);
+    
     this.towers.push(
-      new TowerS({ x: entity.x, y: entity.y, t: 0, id: entity.id })
+      new TowerS({ x: entity.x, y: entity.y, t: entity.type, id: entity.id })
     );
   }
 
