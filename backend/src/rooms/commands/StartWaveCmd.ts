@@ -12,6 +12,7 @@ import { Map } from "../../logic/Map";
 import { EnemiesRenderer } from "../../logic/renderer/EnemiesRenderer";
 import { GameRoom } from "../GameRoom";
 import { Enemy } from "../../logic/entity/enemy/Enemy";
+import weightedRandom from "../utils/wightedrandom";
 
 export class StartWaveCmd extends Command<GameRoom, {}> {
   sub: Subscription;
@@ -57,31 +58,45 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
       .subscribe((x) => {
         let newEnemy: Enemy;
 
-        const r = Math.random();
-
         let mult = wave.multiplier;
 
-        if (r > 0.9) {
-          newEnemy = new BossEnemy(0, 1, mult, (i, j) => {
-            return this.map.getPathFromGridCell(i, j);
-          });
-        } else if (r > 0.8) {
-          newEnemy = new HealerEnemy(0, 1, mult, (i, j) => {
-            return this.map.getPathFromGridCell(i, j);
-          });
-        } else if (r > 0.7) {
-          newEnemy = new ArmoredEnemy(0, 1, mult, (i, j) => {
-            return this.map.getPathFromGridCell(i, j);
-          });
-        } else if (r > 0.5) {
-          newEnemy = new FastEnemy(0, 1, mult, (i, j) => {
-            return this.map.getPathFromGridCell(i, j);
-          });
-        } else {
-          newEnemy = new SimpleEnemy(0, 1, mult, (i, j) => {
-            return this.map.getPathFromGridCell(i, j);
-          });
+        let mob = [1, 2, 3, 4, 5];
+        let weight = [0.5, 0.3, 0.3, 0.2, 0.01];
+        const mobGen = weightedRandom(mob, weight);
+
+        switch (mobGen.item) {
+          case 1: {
+            newEnemy = new SimpleEnemy(0, 1, mult, (i, j) => {
+              return this.map.getPathFromGridCell(i, j);
+            });
+            break;
+          }
+          case 2: {
+            newEnemy = new ArmoredEnemy(0, 1, mult, (i, j) => {
+              return this.map.getPathFromGridCell(i, j);
+            });
+            break;
+          }
+          case 3: {
+            newEnemy = new FastEnemy(0, 1, mult, (i, j) => {
+              return this.map.getPathFromGridCell(i, j);
+            });
+            break;
+          }
+          case 4: {
+            newEnemy = new HealerEnemy(0, 1, mult, (i, j) => {
+              return this.map.getPathFromGridCell(i, j);
+            });
+            break;
+          }
+          case 5: {
+            newEnemy = new BossEnemy(0, 1, mult, (i, j) => {
+              return this.map.getPathFromGridCell(i, j);
+            });
+            break;
+          }
         }
+
         this.enemiesRenderer.add(newEnemy);
         enemies.push(newEnemy);
         if (x + 1 === takes) {
