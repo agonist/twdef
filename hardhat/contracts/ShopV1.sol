@@ -12,7 +12,7 @@ contract ShopV1 {
   ILandz public landsContract;
   ITowerz public towersContract;
 
-  uint256 landPrice = 1 ether;
+  uint256 landPrice = 0.1 ether;
 
   error ValueIncorrect();
 
@@ -21,9 +21,9 @@ contract ShopV1 {
         towersContract = ITowerz(_towersContract);
     }
 
-    function purchaseCombo(uint256 _mapId, uint256 _landId) external payable {
+   function purchaseCombo(uint256 _mapId, uint256 _landId) external payable {
         if (msg.value != landPrice) revert ValueIncorrect();
         landsContract.mint(msg.sender, _mapId, _landId);
-        towersContract.mint(msg.sender, 1, 1);
-    }
+        towersContract.mint(msg.sender, 1);
+   }
 }

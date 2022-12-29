@@ -6,8 +6,6 @@ import {
   makeMap,
 } from "./map-generator";
 import { map_1 } from "./map/map1";
-import { map_2 } from "./map/map2";
-import { map_3 } from "./map/map3";
 import { TSMT$Bin } from "../src/tools/binning";
 
 const prisma = new PrismaClient();
@@ -58,11 +56,11 @@ async function main() {
   let c1 = (await prisma.land.count()) + 1;
   await createMap(map_1, 30, 20, c1);
 
-  let c2 = (await prisma.land.count()) + 1;
-  await createMap(map_2, 15, 25, c2);
+  // let c2 = (await prisma.land.count()) + 1;
+  // await createMap(map_2, 15, 25, c2);
 
-  let c3 = (await prisma.land.count()) + 1;
-  await createMap(map_3, 15, 15, c3);
+  // let c3 = (await prisma.land.count()) + 1;
+  // await createMap(map_3, 15, 15, c3);
 }
 
 async function createMap(
@@ -82,45 +80,34 @@ async function createMap(
 
   let map = makeGridFromFileMap(mapData, width, height, startId);
 
+  const allData: any[] = [];
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       const r = getRandomType();
-      await prisma.cell.create({
-        data: {
-          x: x,
-          y: y,
-          type: getMapType(map[y][x]),
-          mapId: map1.id,
-          land:
-            map[y][x] > 0
-              ? {
-                  create: {
-                    id: map[y][x],
-                    minted: false,
-                    type: r?.type,
-                    imgUrl: r?.img,
-                    damageBonus: damagebinning.nextAction(),
-                  },
-                }
-              : undefined,
-        },
-      });
+      const data = {
+        x: x,
+        y: y,
+        type: getMapType(map[y][x]),
+        mapId: map1.id,
+        land:
+          map[y][x] > 0
+            ? {
+                create: {
+                  id: map[y][x],
+                  minted: false,
+                  type: r?.type,
+                  imgUrl: r?.img,
+                  damageBonus: damagebinning.nextAction(),
+                },
+              }
+            : undefined,
+      };
+      allData.push(data);
     }
   }
-
-  //   const updateMapWithCells = async () => {
-  //     const cellss = await prisma.cell.findMany({ where: { mapId: 1 } });
-
-  //     let cellId: { id: number }[] = [];
-  //     cellss.forEach((c: Cell) => cellId.push({ id: c.id }));
-
-  //     await prisma.map.update({
-  //       where: { id: 1 },
-  //       data: {
-  //         cells: { connect: cellId },
-  //       },
-  //     });
-  //   };
+  await prisma.cell.createMany({
+    data: allData,
+  });
 }
 
 function getRandomType() {

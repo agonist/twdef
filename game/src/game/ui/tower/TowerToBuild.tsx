@@ -29,7 +29,7 @@ export const TowerToBuild = ({
   return (
     <div className="flex-shrink-0 card card-compact mb-4 bg-base-100 shadow-md shadow-pinkz ">
       <figure>
-        <Image src={"/firetower.jpeg"} width={150} height={150} />
+        <Image src={data?.image!} width={150} height={150} alt={'tower'}/>
       </figure>
       <div className="flex flex-col p-2">
         <TowerTitle tower={data!} />

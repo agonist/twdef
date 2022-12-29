@@ -62,3 +62,13 @@ Fill the .env with contract values previously deployed then
 
 
 And voila. everything should be running.
+
+
+# Deployement
+
+deploy checklist
+
+### hardhat 
+
+- [ ]  `yarn deploy:testnet`
+- [ ] ``

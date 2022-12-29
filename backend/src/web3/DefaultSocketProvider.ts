@@ -1,4 +1,4 @@
-import { Network, Alchemy, Contract } from "alchemy-sdk";
+import { Network, Alchemy, Contract, AlchemySubscription } from "alchemy-sdk";
 import { ethers, BigNumber, logger } from "ethers";
 import { Subject } from "rxjs";
 import { gameService } from "../db/GamezService";
@@ -19,6 +19,8 @@ export class DefaultSocketProvider implements WebSocketProvider {
     network: Network.MATIC_MUMBAI, // Replace with your network.
     URL: "http://127.0.0.1:8545/",
   };
+
+  alchemy = new Alchemy(this.settings);
 
   provider = new ethers.providers.WebSocketProvider("ws://127.0.0.1:8545/");
 
@@ -52,6 +54,7 @@ export class DefaultSocketProvider implements WebSocketProvider {
     );
 
     contract.on("Staking", async (from, landId, towerId, e) => {
+      
       try {
         const tower = BigNumber.from(towerId).toNumber();
         const land = BigNumber.from(landId).toNumber();
@@ -64,7 +67,7 @@ export class DefaultSocketProvider implements WebSocketProvider {
           towerId: inGame.towerId,
           landId: inGame.landId,
           mapId: inGame.mapId,
-          from: from
+          from: from,
         };
         log.info(
           "Dispatch TowerStakingEvent " +
@@ -126,7 +129,6 @@ export class DefaultSocketProvider implements WebSocketProvider {
 
     // used to listen when a land is minted. state is updated in the db and spread to clients
     contract.on(mintFilter, async (from, to, tokenId, e) => {
-  
       try {
         const landId = BigNumber.from(tokenId).toNumber();
         log.info("New Land minted: #" + landId + " to " + to);

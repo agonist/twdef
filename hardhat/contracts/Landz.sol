@@ -14,12 +14,6 @@ import "./interfaces/ILandz.sol";
 // Can manage multiple map with multiple lands
 contract Landz is ERC721Enumerable, Ownable, ILandz {
 
-    struct UserInfo {
-        address user; // address of user role
-        uint64 expires; // unix timestamp, user expires
-    }
-    mapping(uint256 => UserInfo) private _users;
-
     struct LandData {
         uint256 id;
         uint128 x;
@@ -28,7 +22,6 @@ contract Landz is ERC721Enumerable, Ownable, ILandz {
     }
 
     error AlreadyMinted();
-    error ValueIncorrect();
     error MapNotCreated();
     error NotTheOwner();
     error UserAlreadyAssigned();
@@ -41,8 +34,7 @@ contract Landz is ERC721Enumerable, Ownable, ILandz {
     mapping(uint256 => mapping(uint256 => LandData)) public lands;
     mapping(uint256 => bool) public mapCreated;
 
-    uint256 landPrice = 1 ether;
-
+    // wihch contracts can mint.
     mapping(address => bool) minter;
 
     constructor() ERC721("Landz", "LANDZ") {}
@@ -51,7 +43,6 @@ contract Landz is ERC721Enumerable, Ownable, ILandz {
         if (!minter[msg.sender]) revert Unhautorized();
         if (!mapCreated[_mapId]) revert MapNotCreated();
         if (lands[_mapId][_landId].minted) revert AlreadyMinted();
-        // if (msg.value != landPrice) revert ValueIncorrect();
 
         lands[_mapId][_landId].minted = true;
         _mint(_to, _landId);

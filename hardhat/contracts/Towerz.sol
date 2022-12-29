@@ -16,18 +16,16 @@ contract Towerz is ERC721Enumerable, Ownable, ITowerz {
 
     error Unhautorized();
 
-    // id to type
-    mapping(uint256 => uint256) public towerz;
+
     mapping(address => bool) minter;
 
     constructor() ERC721("Towerz", "TOWZ") {}
 
-    function mint(address _to, uint256 _type, uint256 _amount) external {
+    function mint(address _to, uint256 _amount) external {
         if (!minter[msg.sender]) revert Unhautorized();
         for (uint256 i = 0; i < _amount; i++) {
             uint256 mintIndex = _tokenIds.current() + 1;
             _mint(_to, mintIndex);
-            towerz[mintIndex] = _type;
             _tokenIds.increment();
         }
     }
