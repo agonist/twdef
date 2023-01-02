@@ -1,9 +1,16 @@
-import {  Enemy } from "./Enemy";
+import { EnemyCfg } from "../../../rooms/commands/StartWaveCmd";
+import { Enemy } from "./Enemy";
 
 export class HealerEnemy extends Enemy {
-  type: number = 3;
-  speed: number = 2.5;
-  life: number = 50 * this.multiplier;
-  cash: number = (10 / 0.2) * this.multiplier;
-  radius: number = 8;
+  constructor(
+    x: number,
+    y: number,
+    mult: number,
+    enemyCfg: EnemyCfg,
+    pathUpdate: (i: number, j: number) => any
+  ) {
+    super(x, y, mult, enemyCfg, pathUpdate);
+    this.type = 3;
+    this.radius = 8;
+  }
 }

@@ -14,6 +14,68 @@ import { GameRoom } from "../GameRoom";
 import { Enemy } from "../../logic/entity/enemy/Enemy";
 import weightedRandom from "../utils/wightedrandom";
 
+interface GameCfg {
+  waveInterval: number;
+  enemiesPerWave: number;
+  enemiesStats: EnemyCfg[];
+}
+
+export interface EnemyCfg {
+  type: number;
+  probability: number;
+  multiplierEffect: number;
+  life: number;
+  cash: number;
+  speed: number;
+}
+
+const gameCfg: GameCfg = {
+  waveInterval: 5000, //ms
+  enemiesPerWave: 5,
+  enemiesStats: [
+    {
+      type: 0,
+      probability: 0.5,
+      multiplierEffect: 1,
+      life: 50,
+      cash: 10,
+      speed: 2.5,
+    },
+    {
+      type: 1,
+      probability: 0.3,
+      multiplierEffect: 1,
+      life: 100,
+      cash: 10,
+      speed: 3,
+    },
+    {
+      type: 2,
+      probability: 0.3,
+      multiplierEffect: 1,
+      life: 150,
+      cash: 10,
+      speed: 2.5,
+    },
+    {
+      type: 3,
+      probability: 0.2,
+      multiplierEffect: 1,
+      life: 50,
+      cash: 10,
+      speed: 2.5,
+    },
+    {
+      type: 4,
+      probability: 0.01,
+      multiplierEffect: 1,
+      life: 200,
+      cash: 10,
+      speed: 2.5,
+    },
+  ],
+};
+
 export class StartWaveCmd extends Command<GameRoom, {}> {
   sub: Subscription;
   enemiesRenderer: EnemiesRenderer;
@@ -32,7 +94,7 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
       wave = await waveService.createWave(this.room.mapId());
     }
 
-    const waveInterval = 5000;
+    const waveInterval = gameCfg.waveInterval;
     interval(waveInterval).subscribe(async (x) => {
       this.sub?.unsubscribe();
 
@@ -50,7 +112,7 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
   }
 
   generateWave(wave: Wave) {
-    const takes = 5;
+    const takes = gameCfg.enemiesPerWave;
     let enemies: Enemy[] = [];
 
     this.sub = interval(200)
@@ -60,37 +122,48 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
 
         let mult = wave.multiplier;
 
-        let mob = [1, 2, 3, 4, 5];
-        let weight = [0.5, 0.3, 0.3, 0.2, 0.01];
+        let mob = [0, 1, 2, 3, 4];
+        let weight = [
+          gameCfg.enemiesStats[0].probability,
+          gameCfg.enemiesStats[1].probability,
+          gameCfg.enemiesStats[2].probability,
+          gameCfg.enemiesStats[3].probability,
+          gameCfg.enemiesStats[4].probability,
+        ];
         const mobGen = weightedRandom(mob, weight);
 
         switch (mobGen.item) {
+          case 0: {
+            const eStats = gameCfg.enemiesStats[0];
+            newEnemy = new SimpleEnemy(0, 1, mult, eStats, (i, j) => {
+              return this.map.getPathFromGridCell(i, j);
+            });
+            break;
+          }
           case 1: {
-            newEnemy = new SimpleEnemy(0, 1, mult, (i, j) => {
+            const eStats = gameCfg.enemiesStats[1];
+            newEnemy = new ArmoredEnemy(0, 1, mult, eStats, (i, j) => {
               return this.map.getPathFromGridCell(i, j);
             });
             break;
           }
           case 2: {
-            newEnemy = new ArmoredEnemy(0, 1, mult, (i, j) => {
+            const eStats = gameCfg.enemiesStats[2];
+            newEnemy = new FastEnemy(0, 1, mult, eStats, (i, j) => {
               return this.map.getPathFromGridCell(i, j);
             });
             break;
           }
           case 3: {
-            newEnemy = new FastEnemy(0, 1, mult, (i, j) => {
+            const eStats = gameCfg.enemiesStats[3];
+            newEnemy = new HealerEnemy(0, 1, mult, eStats, (i, j) => {
               return this.map.getPathFromGridCell(i, j);
             });
             break;
           }
           case 4: {
-            newEnemy = new HealerEnemy(0, 1, mult, (i, j) => {
-              return this.map.getPathFromGridCell(i, j);
-            });
-            break;
-          }
-          case 5: {
-            newEnemy = new BossEnemy(0, 1, mult, (i, j) => {
+            const eStats = gameCfg.enemiesStats[4];
+            newEnemy = new BossEnemy(0, 1, mult, eStats, (i, j) => {
               return this.map.getPathFromGridCell(i, j);
             });
             break;

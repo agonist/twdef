@@ -1,9 +1,17 @@
-import {  Enemy } from "./Enemy";
+import { EnemyCfg } from "../../../rooms/commands/StartWaveCmd";
+import { cellSize } from "../../GameLogic";
+import { Enemy } from "./Enemy";
 
 export class SimpleEnemy extends Enemy {
-    type: number = 0;
-    speed: number = 2.5;
-    life: number = 50 * this.multiplier;
-    cash: number = (10 / 0.5) * this.multiplier;
-    radius: number = 8;
+  constructor(
+    x: number,
+    y: number,
+    mult: number,
+    enemyCfg: EnemyCfg,
+    pathUpdate: (i: number, j: number) => any
+  ) {
+    super(x, y, mult, enemyCfg, pathUpdate);
+    this.type = 0;
+    this.radius = 8;
+  }
 }

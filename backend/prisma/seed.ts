@@ -5,8 +5,9 @@ import {
   makeGridFromFileMap,
   makeMap,
 } from "./map-generator";
-import { map_1 } from "./map/map1";
+
 import { TSMT$Bin } from "../src/tools/binning";
+import { betaMap } from "./map/beta_map";
 
 const prisma = new PrismaClient();
 let damagebinning: TSMT$Bin = new TSMT$Bin();
@@ -54,7 +55,7 @@ async function main() {
   ]);
 
   let c1 = (await prisma.land.count()) + 1;
-  await createMap(map_1, 30, 20, c1);
+  await createMap(betaMap, 26, 30, c1);
 
   // let c2 = (await prisma.land.count()) + 1;
   // await createMap(map_2, 15, 25, c2);
@@ -84,30 +85,50 @@ async function createMap(
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       const r = getRandomType();
-      const data = {
-        x: x,
-        y: y,
-        type: getMapType(map[y][x]),
-        mapId: map1.id,
-        land:
-          map[y][x] > 0
-            ? {
-                create: {
-                  id: map[y][x],
-                  minted: false,
-                  type: r?.type,
-                  imgUrl: r?.img,
-                  damageBonus: damagebinning.nextAction(),
-                },
-              }
-            : undefined,
-      };
-      allData.push(data);
+      await prisma.cell.create({
+        data: {
+          x: x,
+          y: y,
+          type: getMapType(map[y][x]),
+          mapId: map1.id,
+          land:
+            map[y][x] > 0
+              ? {
+                  create: {
+                    id: map[y][x],
+                    minted: false,
+                    type: r?.type,
+                    imgUrl: r?.img,
+                    damageBonus: damagebinning.nextAction(),
+                  },
+                }
+              : undefined,
+        },
+      });
+      // const data = {
+      //   x: x,
+      //   y: y,
+      //   type: getMapType(map[y][x]),
+      //   mapId: map1.id,
+      //   land:
+      //     map[y][x] > 0
+      //       ? {
+      //           create: {
+      //             id: map[y][x],
+      //             minted: false,
+      //             type: r?.type,
+      //             imgUrl: r?.img,
+      //             damageBonus: damagebinning.nextAction(),
+      //           },
+      //         }
+      //       : undefined,
+      // };
+      // allData.push(data);
     }
   }
-  await prisma.cell.createMany({
-    data: allData,
-  });
+  // await prisma.cell.createMany({
+  //   data: allData,
+  // });
 }
 
 function getRandomType() {

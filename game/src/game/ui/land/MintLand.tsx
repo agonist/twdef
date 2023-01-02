@@ -15,7 +15,7 @@ export const MintLand = ({ minted, mintCallback, landId }: LandProps) => {
     functionName: "purchaseCombo",
     args: [BigNumber.from(1), BigNumber.from(landId)],
     overrides: {
-      value: ethers.utils.parseEther("1"),
+      value: ethers.utils.parseEther("0.1"),
     },
     enabled: !minted,
   });

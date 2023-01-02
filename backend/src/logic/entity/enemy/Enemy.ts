@@ -1,16 +1,20 @@
+import { EnemyCfg } from "../../../rooms/commands/StartWaveCmd";
 import { Point } from "../../../tools/Point";
 import { cellSize } from "../../GameLogic";
 import { Entity } from "../Entity";
 
 export abstract class Enemy extends Entity {
-  abstract speed: number;
-  abstract life: number;
-  abstract cash: number;
-  abstract radius: number;
-  abstract type: number;
+  speed: number;
+  life: number;
+  cash: number;
+  radius: number;
+  type: number;
+  probability: number;
+  multiplierEffect: number;
+
   protected damage: number = 10;
   public alive = true;
-  public dieFromWin = false
+  public dieFromWin = false;
   damageTaken: number = 0;
   damageFrom: Map<string, number> = new Map();
 
@@ -25,12 +29,16 @@ export abstract class Enemy extends Entity {
     x: number,
     y: number,
     mult: number,
+    enemyCfg: EnemyCfg,
     pathUpdate: (i: number, j: number) => any,
-    width = cellSize
   ) {
     super(x, y, cellSize);
     this.pathUpdate = pathUpdate;
     this.multiplier = mult;
+    this.life = enemyCfg.life * mult;
+    this.cash = (10 / enemyCfg.probability) * mult;
+    this.probability = enemyCfg.probability;
+    this.speed = enemyCfg.speed;
     this.updatePath();
   }
 
@@ -67,7 +75,7 @@ export abstract class Enemy extends Entity {
       } else {
         //map.homeBase.handleDamage();
         this.alive = false;
-        this.dieFromWin = true
+        this.dieFromWin = true;
       }
     }
   }

@@ -13,7 +13,7 @@ async function main() {
     "0x5FbDB2315678afecb367f032d93F642f64180aa3"
   );
 
-  await landz.mint(1, 1, { value: parseEther("1") });
+  //await landz.mint(1, 1, { value: parseEther("1") });
   // await towerz.mint(1, 1);
 
   await landz.setApprovalForAll(gamez.address, true);
