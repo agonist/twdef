@@ -30,7 +30,7 @@ export abstract class Enemy extends Entity {
     y: number,
     mult: number,
     enemyCfg: EnemyCfg,
-    pathUpdate: (i: number, j: number) => any,
+    pathUpdate: (i: number, j: number) => any
   ) {
     super(x, y, cellSize);
     this.pathUpdate = pathUpdate;
@@ -38,6 +38,7 @@ export abstract class Enemy extends Entity {
     this.life = enemyCfg.life * mult;
     this.cash = (10 / enemyCfg.probability) * mult;
     this.probability = enemyCfg.probability;
+    this.multiplierEffect = enemyCfg.multiplierEffect;
     this.speed = enemyCfg.speed;
     this.updatePath();
   }

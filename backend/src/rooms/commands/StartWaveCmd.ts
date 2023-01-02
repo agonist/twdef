@@ -34,42 +34,42 @@ const gameCfg: GameCfg = {
   enemiesPerWave: 5,
   enemiesStats: [
     {
-      type: 0,
+      type: 0, // simple
       probability: 0.5,
       multiplierEffect: 1,
-      life: 50,
+      life: 100,
       cash: 10,
       speed: 2.5,
     },
     {
-      type: 1,
+      type: 1, // fast
       probability: 0.3,
-      multiplierEffect: 1,
+      multiplierEffect: 1.5,
       life: 100,
       cash: 10,
       speed: 3,
     },
     {
-      type: 2,
+      type: 2, // armored
       probability: 0.3,
-      multiplierEffect: 1,
+      multiplierEffect: 2,
+      life: 250,
+      cash: 10,
+      speed: 2.5,
+    },
+    {
+      type: 3, // healer
+      probability: 0.2,
+      multiplierEffect: 1.2,
       life: 150,
       cash: 10,
       speed: 2.5,
     },
     {
-      type: 3,
-      probability: 0.2,
-      multiplierEffect: 1,
-      life: 50,
-      cash: 10,
-      speed: 2.5,
-    },
-    {
-      type: 4,
+      type: 4, //boss
       probability: 0.01,
-      multiplierEffect: 1,
-      life: 200,
+      multiplierEffect: 10,
+      life: 1000,
       cash: 10,
       speed: 2.5,
     },
@@ -92,17 +92,20 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
     let wave = await waveService.getWaveByMapId(this.room.mapId());
     if (wave == undefined) {
       wave = await waveService.createWave(this.room.mapId());
+      this.state.wave.multiplier = 1;
     }
 
     const waveInterval = gameCfg.waveInterval;
     interval(waveInterval).subscribe(async (x) => {
       this.sub?.unsubscribe();
 
-      const increaseMultiplier = this.room.game.waveManager.update(
-        this.state.wave.multiplier
-      );
+      const multiplier =
+        this.state.wave.multiplier !== undefined
+          ? this.state.wave.multiplier
+          : 1;
+      const newMultiplier = this.room.game.waveManager.update(multiplier);
 
-      wave = await waveService.nextWave(wave, increaseMultiplier);
+      wave = await waveService.nextWave(wave, newMultiplier);
 
       this.generateWave(wave);
 

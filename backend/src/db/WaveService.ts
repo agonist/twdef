@@ -18,12 +18,12 @@ class WaveService {
     return wave;
   }
 
-  async nextWave(wave: Wave, increaseMultiplier: number): Promise<Wave> {
+  async nextWave(wave: Wave, newMultiplier: number): Promise<Wave> {
     return await prisma.wave.update({
       where: { mapId: wave.mapId },
       data: {
         count: wave.count + 1,
-        multiplier: increaseMultiplier,
+        multiplier: newMultiplier,
       },
     });
   }

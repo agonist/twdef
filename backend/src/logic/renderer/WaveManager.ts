@@ -20,6 +20,8 @@ export class WaveManager {
 
   update(currentMultiplier: number) {
     let increaseMultiplier = currentMultiplier;
+    log.info("Update current multiplier: " + increaseMultiplier);
+
     let playerBalanceAdd = new Map<string, number>();
     this.waves.forEach((w, i) => {
       const alive = w.enemies.filter((e) => e.alive);
@@ -58,13 +60,24 @@ export class WaveManager {
           log.info(`${k} gets ${rewardForAddr} tokens`);
         });
 
-        const aliveEnemies = w.enemies.filter((e) => e.dieFromWin).length;
-        if (aliveEnemies > 1 && increaseMultiplier >= 1.01) {
-          increaseMultiplier -= 0.1;
-        }
-        if (aliveEnemies === 0) {
-          increaseMultiplier += 0.1;
-        }
+        const deadEnemies = w.enemies.filter((e) => !e.dieFromWin);
+        const aliveEnemies = w.enemies.filter((e) => e.dieFromWin);
+
+        // takes dead ennemis and increase multiplier
+        deadEnemies.forEach((d) => {
+          increaseMultiplier = increaseMultiplier + d.multiplierEffect;
+          log.info("increase to " + increaseMultiplier);
+        });
+
+        // takes survivor ennemies and decrase multiplier
+        aliveEnemies.forEach((d) => {
+          if (increaseMultiplier - d.multiplierEffect >= 1) {
+            increaseMultiplier = increaseMultiplier - d.multiplierEffect;
+          } else {
+            increaseMultiplier = 1;
+          }
+          log.info("decrease to " + increaseMultiplier);
+        });
       }
     });
 
