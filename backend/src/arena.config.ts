@@ -4,12 +4,17 @@ import { landService } from "./db/LandService";
 import { towerService } from "./db/TowerService";
 import { userService } from "./db/UserService";
 
+export interface TypedRequestBody<T> extends Express.Request {
+  body: T;
+}
 /**
  * Import your Room files
  */
 import { Map1 } from "./rooms/maps/Map_1";
 import { Map2 } from "./rooms/maps/Map_2";
 import { Map3 } from "./rooms/maps/Map_3";
+import { GameCfg, GameConfigProvider } from "./rooms/utils/ConfigProvider";
+
 import { log } from "./tools/logger";
 import { contractUpdates } from "./web3/DefaultSocketProvider";
 
@@ -106,6 +111,12 @@ export default Arena({
 
       res.json({ balance: balance });
     });
+
+    app.post("/godmode", async (req: TypedRequestBody<GameCfg>, res) => {
+      GameConfigProvider.getInstance().setConfig(req.body);
+      res.json(GameConfigProvider.getInstance().getCfonfig());
+    });
+
     /**
      * Bind @colyseus/monitor
      * It is recommended to protect this route with a password.

@@ -1,4 +1,4 @@
-import { EnemyCfg } from "../../../rooms/commands/StartWaveCmd";
+import { EnemyCfg } from "../../../rooms/utils/ConfigProvider";
 import { Point } from "../../../tools/Point";
 import { cellSize } from "../../GameLogic";
 import { Entity } from "../Entity";

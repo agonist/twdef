@@ -1,4 +1,3 @@
-import { rearg } from "lodash";
 import { userService } from "../../db/UserService";
 import { log } from "../../tools/logger";
 import { Enemy } from "../entity/enemy/Enemy";

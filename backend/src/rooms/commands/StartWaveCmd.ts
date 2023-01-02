@@ -13,68 +13,8 @@ import { EnemiesRenderer } from "../../logic/renderer/EnemiesRenderer";
 import { GameRoom } from "../GameRoom";
 import { Enemy } from "../../logic/entity/enemy/Enemy";
 import weightedRandom from "../utils/wightedrandom";
-
-interface GameCfg {
-  waveInterval: number;
-  enemiesPerWave: number;
-  enemiesStats: EnemyCfg[];
-}
-
-export interface EnemyCfg {
-  type: number;
-  probability: number;
-  multiplierEffect: number;
-  life: number;
-  cash: number;
-  speed: number;
-}
-
-const gameCfg: GameCfg = {
-  waveInterval: 5000, //ms
-  enemiesPerWave: 5,
-  enemiesStats: [
-    {
-      type: 0, // simple
-      probability: 0.5,
-      multiplierEffect: 1,
-      life: 100,
-      cash: 10,
-      speed: 2.5,
-    },
-    {
-      type: 1, // fast
-      probability: 0.3,
-      multiplierEffect: 1.5,
-      life: 100,
-      cash: 10,
-      speed: 3,
-    },
-    {
-      type: 2, // armored
-      probability: 0.3,
-      multiplierEffect: 2,
-      life: 250,
-      cash: 10,
-      speed: 2.5,
-    },
-    {
-      type: 3, // healer
-      probability: 0.2,
-      multiplierEffect: 1.2,
-      life: 150,
-      cash: 10,
-      speed: 2.5,
-    },
-    {
-      type: 4, //boss
-      probability: 0.01,
-      multiplierEffect: 10,
-      life: 1000,
-      cash: 10,
-      speed: 2.5,
-    },
-  ],
-};
+import { log } from "../../tools/logger";
+import { GameCfg, GameConfigProvider } from "../utils/ConfigProvider";
 
 export class StartWaveCmd extends Command<GameRoom, {}> {
   sub: Subscription;
@@ -95,8 +35,11 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
       this.state.wave.multiplier = 1;
     }
 
-    const waveInterval = gameCfg.waveInterval;
+    const waveInterval =
+      GameConfigProvider.getInstance().getCfonfig().waveInterval;
     interval(waveInterval).subscribe(async (x) => {
+      const gameCfg = GameConfigProvider.getInstance().getCfonfig();
+
       this.sub?.unsubscribe();
 
       const multiplier =
@@ -107,14 +50,14 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
 
       wave = await waveService.nextWave(wave, newMultiplier);
 
-      this.generateWave(wave);
+      this.generateWave(wave, gameCfg);
 
       this.state.wave.multiplier = wave.multiplier;
       this.state.wave.count = wave.count;
     });
   }
 
-  generateWave(wave: Wave) {
+  generateWave(wave: Wave, gameCfg: GameCfg) {
     const takes = gameCfg.enemiesPerWave;
     let enemies: Enemy[] = [];
 
