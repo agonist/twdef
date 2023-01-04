@@ -1,5 +1,6 @@
 import Arena from "@colyseus/arena";
 import { monitor } from "@colyseus/monitor";
+import { uWebSocketsTransport } from "@colyseus/uwebsockets-transport";
 import { landService } from "./db/LandService";
 import { towerService } from "./db/TowerService";
 import { userService } from "./db/UserService";
@@ -21,13 +22,19 @@ import { contractUpdates } from "./web3/DefaultSocketProvider";
 export default Arena({
   getId: () => "Your Colyseus App",
 
+  initializeTransport: function () {
+    return new uWebSocketsTransport({
+      /* ...options */
+    });
+  },
+
   initializeGameServer: (gameServer) => {
     /**
      * Define your room handlers:
      */
     gameServer.define("map_1", Map1);
-    gameServer.define("map_2", Map2);
-    gameServer.define("map_3", Map3);
+    // gameServer.define("map_2", Map2);
+    // gameServer.define("map_3", Map3);
   },
 
   initializeExpress: (app) => {

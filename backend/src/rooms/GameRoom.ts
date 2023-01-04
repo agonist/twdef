@@ -5,6 +5,7 @@ import { log } from "../tools/logger";
 
 export abstract class GameRoom extends Room<GameState> {
   game = new GameLogic(this);
+  fixedTimeStep = 1000 / 60;
 
   async onCreate(options: any) {
     this.autoDispose = false;
@@ -13,8 +14,15 @@ export abstract class GameRoom extends Room<GameState> {
 
     log.info("Game created");
 
+    let elapsedTime = 0;
     this.setSimulationInterval((deltaTime) => {
-      this.update(deltaTime);
+      elapsedTime += deltaTime;
+      while (elapsedTime >= this.fixedTimeStep) {
+        elapsedTime -= this.fixedTimeStep;
+        this.update(deltaTime);
+
+        // this.fixedTick(this.fixedTimeStep);
+      }
     });
   }
 

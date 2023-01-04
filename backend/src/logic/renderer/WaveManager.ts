@@ -65,7 +65,6 @@ export class WaveManager {
         // takes dead ennemis and increase multiplier
         deadEnemies.forEach((d) => {
           increaseMultiplier = increaseMultiplier + d.multiplierEffect;
-          log.info("increase to " + increaseMultiplier);
         });
 
         // takes survivor ennemies and decrase multiplier
@@ -75,7 +74,6 @@ export class WaveManager {
           } else {
             increaseMultiplier = 1;
           }
-          log.info("decrease to " + increaseMultiplier);
         });
       }
     });

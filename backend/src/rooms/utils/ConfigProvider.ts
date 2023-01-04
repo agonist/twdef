@@ -17,7 +17,7 @@ export class GameConfigProvider {
   gameCg: GameCfg;
   constructor() {
     this.gameCg = {
-      waveInterval: 5000, //ms
+      waveInterval: 30000, //ms
       enemiesPerWave: 5,
       enemiesStats: [
         {

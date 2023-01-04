@@ -1,4 +1,3 @@
-import { PI2 } from "../../../tools/constants";
 import { Bullet } from "./Bullet";
 
 export class BasicBulletMunition extends Bullet {

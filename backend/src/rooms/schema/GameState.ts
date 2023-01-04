@@ -8,26 +8,21 @@ import { Schema, Context, type, ArraySchema } from "@colyseus/schema";
 // 4 => boss
 
 export class EnemyS extends Schema {
-  @type("uint32") x: number;
-  @type("uint32") y: number;
+  @type("uint16") x: number;
+  @type("uint16") y: number;
   @type("uint8") t: number; // type
-  @type("number") life: number;
-  @type("number") speed: number;
-  @type("number") radius: number;
-  @type("number") cash: number;
 }
 
 export class TowerS extends Schema {
-  @type("uint32") id: number;
-  @type("uint32") x: number;
-  @type("uint32") y: number;
+  @type("uint8") id: number;
+  @type("uint16") x: number;
+  @type("uint16") y: number;
   @type("uint8") t: number;
 }
 
 export class BulletS extends Schema {
-  @type("uint32") x: number;
-  @type("uint32") y: number;
-  @type("uint8") t: number;
+  @type("uint16") x: number;
+  @type("uint16") y: number;
 }
 
 export class Wave extends Schema {

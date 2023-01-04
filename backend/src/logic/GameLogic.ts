@@ -1,4 +1,5 @@
 import { Dispatcher } from "@colyseus/command";
+import { Delayed } from "colyseus";
 import { Subscription } from "rxjs";
 import { NewLandMintedCmd } from "../rooms/commands/NewLandMintedCmd";
 import { RestoreStateCmd } from "../rooms/commands/RestoreStateCmd";
@@ -7,6 +8,7 @@ import { TowerStakingCmd } from "../rooms/commands/TowerStakingComand";
 import { TowerUnstakingCmd } from "../rooms/commands/TowerUnstakingComand";
 import { GameRoom } from "../rooms/GameRoom";
 import { Cellz } from "../rooms/schema/GameState";
+import { log } from "../tools/logger";
 import { contractUpdates } from "../web3/DefaultSocketProvider";
 import {
   LandMintedEvent,
@@ -33,6 +35,8 @@ export class GameLogic<R extends GameRoom> {
 
   subscription: Subscription;
   dispatcher: Dispatcher<R>;
+
+  public waveInterval!: Delayed;
 
   constructor(room: R) {
     this.room = room;
@@ -65,7 +69,24 @@ export class GameLogic<R extends GameRoom> {
 
     this.dispatcher.dispatch(new RestoreStateCmd(), { mapId: this.map.mapId });
 
-    this.dispatcher.dispatch(new StartWaveCmd(this.enemiesRenderer, this.map));
+    this.room.clock.start();
+
+    this.waveInterval = this.room.clock.setInterval(() => {
+      const enemiesR = this.enemiesRenderer.enemies.length;
+      const enemiesS = this.room.state.enemies.length;
+
+      const towerR = this.towerRenderer.towers.length;
+      const towerS = this.room.state.towers.length;
+
+      const bulletR = this.bulletRenderer.bullets.length;
+      const bulletS = this.room.state.bullets.length;
+      log.info(
+        `New wave starting => er : ${enemiesR} es : ${enemiesS} tr : ${towerR} ts ${towerS} br : ${bulletR} bs : ${bulletS}`
+      );
+
+      this.dispatcher.dispatch(new StartWaveCmd());
+    }, 30000);
+    this.dispatcher.dispatch(new StartWaveCmd());
   }
 
   update() {

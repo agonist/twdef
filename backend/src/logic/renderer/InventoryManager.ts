@@ -1,9 +1,0 @@
-
-class InventoryManager {
-
-
-    setBalance(){
-        
-    }
-
-}

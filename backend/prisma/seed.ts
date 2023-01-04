@@ -1,4 +1,10 @@
-import { Cell, CellType, LandType, PrismaClient } from "@prisma/client";
+import {
+  Cell,
+  CellType,
+  LandType,
+  PrismaClient,
+  TowerType,
+} from "@prisma/client";
 import {
   genFinalMap,
   makeGrid,
@@ -125,6 +131,41 @@ async function createMap(
       // };
       // allData.push(data);
     }
+  }
+  const count = await prisma.land.count();
+  console.log("We have " + count + " land");
+
+  const towers: any[] = [];
+  for (let i = 1; i < count; i++) {
+    const data = {
+      id: i,
+      damage: 25,
+      speed: 400,
+      level: 1,
+      type: TowerType.FIRE,
+      imgUrl: "",
+    };
+    towers.push(data);
+  }
+
+  await prisma.tower.createMany({ data: towers });
+
+  for (let i = 1; i < count; i++) {
+    const land = await prisma.land.findUnique({
+      where: { id: i },
+      include: { Cell: true },
+    });
+
+    const inGame = await prisma.inGame.create({
+      data: {
+        towerId: i,
+        landId: i,
+        mapId: land!.Cell.mapId,
+        x: land!.Cell.x,
+        y: land!.Cell.y,
+        owner: "0x0000",
+      },
+    });
   }
   // await prisma.cell.createMany({
   //   data: allData,
