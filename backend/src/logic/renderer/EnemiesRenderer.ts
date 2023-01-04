@@ -13,7 +13,9 @@ export class EnemiesRenderer extends EntityRenderer<Enemy> {
   }
 
   public add(entity: Enemy) {
-    this.enemies.push(new EnemyS({ x: entity.x, y: entity.y, t: entity.type }));
+    this.enemies.push(
+      new EnemyS().assign({ x: entity.x, y: entity.y, t: entity.type })
+    );
     this.entities.push(entity);
   }
 
@@ -37,11 +39,13 @@ export class EnemiesRenderer extends EntityRenderer<Enemy> {
 
   update() {
     for (let i = this.entities.length - 1; i >= 0; i--) {
-      this.entities[i].update();
+      //   this.entities[i].update();
       const enemy = this.entities[i];
+      enemy.update();
       if (enemy.alive) {
-        this.enemies[i].x = enemy.x;
-        this.enemies[i].y = enemy.y;
+        const e = this.enemies[i];
+        e.x = enemy.x;
+        e.y = enemy.y;
       } else {
         this.enemies.splice(i, 1);
         this.entities.splice(i, 1);

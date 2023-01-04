@@ -1,4 +1,4 @@
-import { Land, Tower, TowerType } from "@prisma/client";
+import { Tower, TowerType } from "@prisma/client";
 import { TSMT$Bin } from "../tools/binning";
 import { prisma } from "./DbService";
 
@@ -26,12 +26,11 @@ class TowerService {
       { percentage: 10, action: 425 },
     ]);
 
-
-  this.towerType.create([
-    { percentage: 33, action: 1 },
-    { percentage: 33, action: 2 },
-    { percentage: 34, action: 3 },
-  ]);
+    this.towerType.create([
+      { percentage: 33, action: 1 },
+      { percentage: 33, action: 2 },
+      { percentage: 34, action: 3 },
+    ]);
   }
 
   async findTowerById(id: number): Promise<Tower> {
@@ -50,7 +49,7 @@ class TowerService {
         speed: speed,
         level: 1,
         type: rtype.type,
-        imgUrl: rtype.img
+        imgUrl: rtype.img,
       },
     });
     return tower;

@@ -11,23 +11,29 @@ import { Enemy } from "../../logic/entity/enemy/Enemy";
 import weightedRandom from "../utils/wightedrandom";
 import { GameCfg, GameConfigProvider } from "../utils/ConfigProvider";
 import { Delayed } from "colyseus";
+import { log } from "../../tools/logger";
 
 export class StartWaveCmd extends Command<GameRoom, {}> {
-  async execute() {
-    // try to restore the last wave or start from 0 if new map
+  // get the current wave or create the first one
+  public delayedInterval!: Delayed;
+
+  async createOrRestoreWave() {
     let wave = await waveService.getWaveByMapId(this.room.mapId());
-    if (wave == undefined) {
+    if (wave === undefined) {
       wave = await waveService.createWave(this.room.mapId());
       this.state.wave.multiplier = 1;
     }
+    return wave;
+  }
 
-    const waveInterval =
-      GameConfigProvider.getInstance().getCfonfig().waveInterval;
+  async execute() {
+    // try to restore the last wave or start from 0 if new map
+    let wave = await this.createOrRestoreWave();
 
     const gameCfg = GameConfigProvider.getInstance().getCfonfig();
 
-    const multiplier =
-      this.state.wave.multiplier !== undefined ? this.state.wave.multiplier : 1;
+    const multiplier = wave.multiplier;
+
     const newMultiplier = this.room.game.waveManager.update(multiplier);
 
     wave = await waveService.nextWave(wave, newMultiplier);
@@ -39,13 +45,12 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
   }
 
   generateWave(wave: Wave, gameCfg: GameCfg) {
+    this.clock.start();
     const takes = gameCfg.enemiesPerWave;
     let enemies: Enemy[] = [];
 
     let count = 0;
-
-    let delayedInterval!: Delayed;
-    delayedInterval = this.clock.setInterval(() => {
+    this.delayedInterval = this.clock.setInterval(() => {
       let newEnemy: Enemy;
 
       let mult = wave.multiplier;
@@ -100,16 +105,15 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
 
       this.room.game.enemiesRenderer.add(newEnemy);
       enemies.push(newEnemy);
-      if (count + 1 === takes) {
-        this.room.game.waveManager.addWave(wave.count, enemies);
-      }
-
-      count++;
 
       if (count === takes) {
-        console.log("Clearing the interval id after 5 executions");
-        delayedInterval.clear();
+        this.room.game.waveManager.addWave(wave.count, enemies);
       }
+      count++;
     }, 200);
+
+    this.clock.setTimeout(() => {
+      this.delayedInterval.clear();
+    }, 1200);
   }
 }

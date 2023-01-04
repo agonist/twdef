@@ -85,8 +85,12 @@ export class GameLogic<R extends GameRoom> {
       );
 
       this.dispatcher.dispatch(new StartWaveCmd());
-    }, 30000);
+    }, 5000);
     this.dispatcher.dispatch(new StartWaveCmd());
+
+    // this.room.clock.setTimeout(() => {
+    //   this.waveInterval.clear();
+    // }, 180000);
   }
 
   update() {
@@ -140,5 +144,6 @@ export class GameLogic<R extends GameRoom> {
   onDispose() {
     this.dispatcher.stop();
     this.subscription?.unsubscribe();
+    this.waveInterval.clear();
   }
 }

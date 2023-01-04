@@ -23,6 +23,8 @@ export class TowerS extends Schema {
 export class BulletS extends Schema {
   @type("uint16") x: number;
   @type("uint16") y: number;
+
+  
 }
 
 export class Wave extends Schema {

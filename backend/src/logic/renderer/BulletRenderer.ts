@@ -12,17 +12,19 @@ export class BulletRenderer extends EntityRenderer<Bullet> {
   }
 
   public add(entity: Bullet) {
-    this.bullets.push(new BulletS({ x: entity.x, y: entity.y }));
+    this.bullets.push(new BulletS().assign({ x: entity.x, y: entity.y }));
     this.entities.push(entity);
   }
 
   update() {
     for (let i = this.entities.length - 1; i >= 0; i--) {
-      this.entities[i].update();
+      //   this.entities[i].update();
       const bullet = this.entities[i];
+      bullet.update();
       if (bullet.alive) {
-        this.bullets[i].x = bullet.x;
-        this.bullets[i].y = bullet.y;
+        const b = this.bullets[i];
+        b.x = bullet.x;
+        b.y = bullet.y;
       } else {
         this.bullets.splice(i, 1);
         this.entities.splice(i, 1);

@@ -2,8 +2,6 @@ import { Tower } from "../entity/Tower/Tower";
 import { EntityRenderer } from "./EntityRenderer";
 import { ArraySchema } from "@colyseus/schema";
 import { TowerS } from "../../rooms/schema/GameState";
-import { gameService } from "../../db/GamezService";
-import { CanonTower } from "../entity/Tower/CanonTower";
 
 export class TowerRenderer extends EntityRenderer<Tower> {
   towers: ArraySchema<TowerS>;
@@ -16,9 +14,14 @@ export class TowerRenderer extends EntityRenderer<Tower> {
   // type - 0 = fire , 1 = ice , 2 = jungle
   public add(entity: Tower) {
     this.entities.push(entity);
-    
+
     this.towers.push(
-      new TowerS({ x: entity.x, y: entity.y, t: entity.type, id: entity.id })
+      new TowerS().assign({
+        x: entity.x,
+        y: entity.y,
+        t: entity.type,
+        id: entity.id,
+      })
     );
   }
 
@@ -30,7 +33,7 @@ export class TowerRenderer extends EntityRenderer<Tower> {
       this.entities.splice(index, 1);
     }
 
-    const index2 = this.towers.findIndex((object) => {
+    const index2 = this.towers.findIndex((object: TowerS) => {
       return object.id === towerId;
     });
     if (index2 !== -1) {

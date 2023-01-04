@@ -19,16 +19,14 @@ export class WaveManager {
 
   update(currentMultiplier: number) {
     let increaseMultiplier = currentMultiplier;
-    log.info("Update current multiplier: " + increaseMultiplier);
-
     let playerBalanceAdd = new Map<string, number>();
+
     this.waves.forEach((w, i) => {
       const alive = w.enemies.filter((e) => e.alive);
       if (alive.length == 0) {
         w.inProgress = false;
       }
       if (!w.inProgress) {
-        // log.info("Wave #" + w.num + " ended");
         const damageForWave: Map<string, number> = new Map();
         let totalDamage = 0;
         let waveRewards = 0;
@@ -45,10 +43,12 @@ export class WaveManager {
             });
             waveRewards += e.cash;
           });
+
         log.info(
           `Wave #${w.num} ended with ${totalDamage} total dmg and ${waveRewards} token dropped`
         );
-        damageForWave.forEach(async (v, k) => {
+
+        damageForWave.forEach((v, k) => {
           const rewardForAddr = (waveRewards / totalDamage) * v;
           const total = playerBalanceAdd.get(k);
           if (total === undefined) {
@@ -82,8 +82,7 @@ export class WaveManager {
       await userService.updateUserBalance(k, v);
     });
 
-    const res = this.waves.filter((w) => w.inProgress);
-    this.waves = res;
+    this.waves = this.waves.filter((w) => w.inProgress);
     return increaseMultiplier;
   }
 }

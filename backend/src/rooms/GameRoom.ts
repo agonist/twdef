@@ -20,14 +20,13 @@ export abstract class GameRoom extends Room<GameState> {
       while (elapsedTime >= this.fixedTimeStep) {
         elapsedTime -= this.fixedTimeStep;
         this.update(deltaTime);
-
-        // this.fixedTick(this.fixedTimeStep);
       }
     });
   }
 
   update(deltaTime: number) {
     this.game.update();
+    this.state.assign
   }
 
   onJoin(client: Client, options: any) {

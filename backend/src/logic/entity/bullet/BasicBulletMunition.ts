@@ -24,6 +24,8 @@ export class BasicBulletMunition extends Bullet {
       }
     } else {
       this.alive = false;
+      this.target = null
+      this.emitter = null
     }
   }
 

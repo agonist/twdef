@@ -1,6 +1,4 @@
-import { TowerType } from "@prisma/client";
 import { euclideanDistanceSquared } from "../../../tools/helpers";
-import { cellSize } from "../../GameLogic";
 import { EnemiesRenderer } from "../../renderer/EnemiesRenderer";
 import { Enemy } from "../enemy/Enemy";
 import { Entity } from "../Entity";
@@ -17,6 +15,8 @@ export abstract class Tower extends Entity {
   protected canShoot: boolean = true;
   public traversable = false;
   abstract target: Enemy | undefined;
+
+  cellSize = 40;
 
   abstract colors: {
     primary: string;
@@ -59,8 +59,8 @@ export abstract class Tower extends Entity {
     } else if (
       this.target &&
       euclideanDistanceSquared(
-        this.x + cellSize / 2,
-        this.y + cellSize / 2,
+        this.x + this.cellSize / 2,
+        this.y + this.cellSize / 2,
         this.target.x,
         this.target.y
       ) <
@@ -79,8 +79,8 @@ export abstract class Tower extends Entity {
     } else {
       // No target or target no more in range
       this.target = this.enemyRenderer.getClosestPointInRadius(
-        this.x + cellSize / 2,
-        this.y + cellSize / 2,
+        this.x + this.cellSize / 2,
+        this.y + this.cellSize / 2,
         this.aimRadius
       );
       this.targetInRange = false;

@@ -7,6 +7,7 @@ export class UserService {
   }
 
   async updateUserBalance(address: string, balance: number) {
+    // prisma.user.updateMany({data:{address: address, balance: balance}})
     await prisma.user.upsert({
       where: { address: address },
       update: { 
