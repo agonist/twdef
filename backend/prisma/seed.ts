@@ -137,12 +137,17 @@ async function createMap(
 
   const towers: any[] = [];
   for (let i = 1; i < count; i++) {
+    const r = Math.random();
+    let t: TowerType = TowerType.FIRE;
+    if (r > 0.3) t = TowerType.ICE;
+    if (r > 0.6) t = TowerType.JUNGLE;
+
     const data = {
       id: i,
       damage: 25,
       speed: 400,
       level: 1,
-      type: TowerType.FIRE,
+      type: t,
       imgUrl: "",
     };
     towers.push(data);

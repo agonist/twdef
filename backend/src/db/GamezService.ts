@@ -41,6 +41,10 @@ class GamezService {
   async updateLandToMinted(id: number) {
     await prisma.land.update({ where: { id: id }, data: { minted: true } });
   }
+
+  async stakedCount(mapId: number) {
+    return await prisma.inGame.count({where:{mapId: mapId}})
+  }
 }
 
 export const gameService = new GamezService();

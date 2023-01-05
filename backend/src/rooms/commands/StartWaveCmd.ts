@@ -12,6 +12,7 @@ import weightedRandom from "../utils/wightedrandom";
 import { GameCfg, GameConfigProvider } from "../utils/ConfigProvider";
 import { Delayed } from "colyseus";
 import { log } from "../../tools/logger";
+import { gameService } from "../../db/GamezService";
 
 export class StartWaveCmd extends Command<GameRoom, {}> {
   // get the current wave or create the first one
@@ -19,7 +20,8 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
 
   async createOrRestoreWave() {
     let wave = await waveService.getWaveByMapId(this.room.mapId());
-    if (wave === undefined) {
+    console.log(wave);
+    if (wave === null || wave === undefined) {
       wave = await waveService.createWave(this.room.mapId());
       this.state.wave.multiplier = 1;
     }
@@ -33,8 +35,14 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
     const gameCfg = GameConfigProvider.getInstance().getCfonfig();
 
     const multiplier = wave.multiplier;
+    const stakedCount = await gameService.stakedCount(this.room.mapId());
 
-    const newMultiplier = this.room.game.waveManager.update(multiplier);
+    const multReducer = stakedCount / this.room.landCount();
+    log.info(multReducer);
+    const newMultiplier = this.room.game.waveManager.update(
+      multiplier,
+      multReducer
+    );
 
     wave = await waveService.nextWave(wave, newMultiplier);
 
@@ -106,7 +114,9 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
       this.room.game.enemiesRenderer.add(newEnemy);
       enemies.push(newEnemy);
 
-      if (count === takes) {
+      log.info("c " + count + " t " + takes);
+
+      if (count + 1 === takes) {
         this.room.game.waveManager.addWave(wave.count, enemies);
       }
       count++;

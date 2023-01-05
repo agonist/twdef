@@ -26,7 +26,6 @@ export abstract class GameRoom extends Room<GameState> {
 
   update(deltaTime: number) {
     this.game.update();
-    this.state.assign
   }
 
   onJoin(client: Client, options: any) {
@@ -43,4 +42,6 @@ export abstract class GameRoom extends Room<GameState> {
   }
 
   abstract mapId(): number;
+
+  abstract landCount(): number
 }

@@ -17,7 +17,7 @@ export class WaveManager {
     this.waves.push({ num: num, enemies: enemies, inProgress: true });
   }
 
-  update(currentMultiplier: number) {
+  update(currentMultiplier: number, multReducer: number) {
     let increaseMultiplier = currentMultiplier;
     let playerBalanceAdd = new Map<string, number>();
 
@@ -64,13 +64,16 @@ export class WaveManager {
 
         // takes dead ennemis and increase multiplier
         deadEnemies.forEach((d) => {
-          increaseMultiplier = increaseMultiplier + d.multiplierEffect;
+          increaseMultiplier =
+            increaseMultiplier + d.multiplierEffect * multReducer;
+          log.info(increaseMultiplier + d.multiplierEffect * multReducer);
         });
 
         // takes survivor ennemies and decrase multiplier
         aliveEnemies.forEach((d) => {
-          if (increaseMultiplier - d.multiplierEffect >= 1) {
-            increaseMultiplier = increaseMultiplier - d.multiplierEffect;
+          if (increaseMultiplier - d.multiplierEffect * multReducer >= 1) {
+            increaseMultiplier =
+              increaseMultiplier - d.multiplierEffect * multReducer;
           } else {
             increaseMultiplier = 1;
           }
