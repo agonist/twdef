@@ -111,70 +111,48 @@ async function createMap(
               : undefined,
         },
       });
-      // const data = {
-      //   x: x,
-      //   y: y,
-      //   type: getMapType(map[y][x]),
-      //   mapId: map1.id,
-      //   land:
-      //     map[y][x] > 0
-      //       ? {
-      //           create: {
-      //             id: map[y][x],
-      //             minted: false,
-      //             type: r?.type,
-      //             imgUrl: r?.img,
-      //             damageBonus: damagebinning.nextAction(),
-      //           },
-      //         }
-      //       : undefined,
-      // };
-      // allData.push(data);
     }
   }
-  const count = await prisma.land.count();
-  console.log("We have " + count + " land");
+  // const count = await prisma.land.count();
+  // console.log("We have " + count + " land");
 
-  const towers: any[] = [];
-  for (let i = 1; i < count; i++) {
-    const r = Math.random();
-    let t: TowerType = TowerType.FIRE;
-    if (r > 0.3) t = TowerType.ICE;
-    if (r > 0.6) t = TowerType.JUNGLE;
+  // const towers: any[] = [];
+  // for (let i = 1; i < count; i++) {
+  //   const r = Math.random();
+  //   let t: TowerType = TowerType.FIRE;
+  //   if (r > 0.3) t = TowerType.ICE;
+  //   if (r > 0.6) t = TowerType.JUNGLE;
 
-    const data = {
-      id: i,
-      damage: 25,
-      speed: 400,
-      level: 1,
-      type: t,
-      imgUrl: "",
-    };
-    towers.push(data);
-  }
+  //   const data = {
+  //     id: i,
+  //     damage: 25,
+  //     speed: 400,
+  //     level: 1,
+  //     type: t,
+  //     imgUrl: "",
+  //   };
+  //   towers.push(data);
+  // }
 
-  await prisma.tower.createMany({ data: towers });
+  // await prisma.tower.createMany({ data: towers });
 
-  for (let i = 1; i < count; i++) {
-    const land = await prisma.land.findUnique({
-      where: { id: i },
-      include: { Cell: true },
-    });
+  // for (let i = 1; i < count; i++) {
+  //   const land = await prisma.land.findUnique({
+  //     where: { id: i },
+  //     include: { Cell: true },
+  //   });
 
-    const inGame = await prisma.inGame.create({
-      data: {
-        towerId: i,
-        landId: i,
-        mapId: land!.Cell.mapId,
-        x: land!.Cell.x,
-        y: land!.Cell.y,
-        owner: "0x0000",
-      },
-    });
-  }
-  // await prisma.cell.createMany({
-  //   data: allData,
-  // });
+  //   const inGame = await prisma.inGame.create({
+  //     data: {
+  //       towerId: i,
+  //       landId: i,
+  //       mapId: land!.Cell.mapId,
+  //       x: land!.Cell.x,
+  //       y: land!.Cell.y,
+  //       owner: "0x0000",
+  //     },
+  //   });
+  // }
 }
 
 function getRandomType() {

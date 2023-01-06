@@ -56,7 +56,6 @@ export class WaveManager {
           } else {
             playerBalanceAdd.set(k, total + rewardForAddr);
           }
-          log.info(`${k} gets ${rewardForAddr} tokens`);
         });
 
         const deadEnemies = w.enemies.filter((e) => !e.dieFromWin);

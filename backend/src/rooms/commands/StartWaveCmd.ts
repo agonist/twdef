@@ -20,7 +20,6 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
 
   async createOrRestoreWave() {
     let wave = await waveService.getWaveByMapId(this.room.mapId());
-    console.log(wave);
     if (wave === null || wave === undefined) {
       wave = await waveService.createWave(this.room.mapId());
       this.state.wave.multiplier = 1;
@@ -38,7 +37,6 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
     const stakedCount = await gameService.stakedCount(this.room.mapId());
 
     const multReducer = stakedCount / this.room.landCount();
-    log.info(multReducer);
     const newMultiplier = this.room.game.waveManager.update(
       multiplier,
       multReducer

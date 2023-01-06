@@ -1,5 +1,6 @@
 import { ethers } from "hardhat";
 import {
+  betaMap,
   makeGrid,
   makeGridFromFileMap,
   map_1,
@@ -36,10 +37,10 @@ async function main() {
 
   const lands: { x: number; y: number; id: number; minted: boolean }[] = [];
 
-  let map1 = makeGridFromFileMap(map_1, 30, 20, 1);
+  let map1 = makeGridFromFileMap(betaMap, 26, 30, 1);
 
-  for (let y = 0; y < 20; y += 1) {
-    for (let x = 0; x < 30; x += 1) {
+  for (let y = 0; y < 30; y += 1) {
+    for (let x = 0; x < 26; x += 1) {
       if (map1[y][x] > 0) {
         lands.push({ x: x, y: y, id: map1[y][x], minted: false });
       }
