@@ -1,9 +1,10 @@
+import { AlchemyWebSocketProvider } from "alchemy-sdk";
 import { Subject } from "rxjs";
 
 export interface WebSocketProvider {
   listenAll: () => void;
-  listenGamezEvents: () => void;
-  listenLandzEvent: () => void;
+  listenGamezEvents: (provider: AlchemyWebSocketProvider) => void;
+  listenLandzEvent: (provider: AlchemyWebSocketProvider) => void;
 
   contractUpdatesSubject: () => Subject<UpdateEvent>;
 }

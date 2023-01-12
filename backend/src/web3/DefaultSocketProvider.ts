@@ -1,4 +1,10 @@
-import { ethers, BigNumber, logger, Contract } from "ethers";
+import {
+  Alchemy,
+  AlchemyWebSocketProvider,
+  Contract,
+  Network,
+} from "alchemy-sdk";
+import { ethers, BigNumber } from "ethers";
 import { Subject } from "rxjs";
 import { gameService } from "../db/GamezService";
 import { landService } from "../db/LandService";
@@ -17,6 +23,11 @@ export class DefaultSocketProvider implements WebSocketProvider {
     "wss://polygon-mumbai.g.alchemy.com/v2/7DeCsPjsUaCniL1QbcRLrqHOMQ7lpw5-"
   );
 
+  alchemy = new Alchemy({
+    apiKey: "7DeCsPjsUaCniL1QbcRLrqHOMQ7lpw5-",
+    network: Network.MATIC_MUMBAI,
+  });
+
   updateSubject: Subject<UpdateEvent> = new Subject();
 
   gamezAbi = [
@@ -32,18 +43,27 @@ export class DefaultSocketProvider implements WebSocketProvider {
     "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
   ];
 
-  listenAll() {
+  async listenAll() {
     log.info("Listen to contract events");
-    this.listenLandzEvent();
-    this.listenTowerEvents();
-    this.listenGamezEvents();
+
+    const provider = await this.alchemy.config.getWebSocketProvider();
+
+    this.listenLandzEvent(provider);
+    this.listenTowerEvents(provider);
+    this.listenGamezEvents(provider);
+
+    let contract = new Contract(
+      ethers.utils.getAddress(process.env.GAMEZ_CONTRACT),
+      this.gamezAbi,
+      provider
+    );
   }
 
-  listenGamezEvents() {
+  listenGamezEvents(provider: AlchemyWebSocketProvider) {
     let contract = new Contract(
-      process.env.GAMEZ_CONTRACT,
+      ethers.utils.getAddress(process.env.GAMEZ_CONTRACT),
       this.gamezAbi,
-      this.provider
+      provider
     );
 
     contract.on("Staking", async (from, landId, towerId, e) => {
@@ -108,11 +128,11 @@ export class DefaultSocketProvider implements WebSocketProvider {
     });
   }
 
-  listenLandzEvent() {
+  listenLandzEvent(provider: AlchemyWebSocketProvider) {
     let contract = new Contract(
-      process.env.LANDZ_CONTRACT,
+      ethers.utils.getAddress(process.env.LANDZ_CONTRACT),
       this.landzAbi,
-      this.provider
+      provider
     );
 
     const mintFilter = contract.filters.Transfer(
@@ -138,11 +158,11 @@ export class DefaultSocketProvider implements WebSocketProvider {
     });
   }
 
-  listenTowerEvents() {
+  listenTowerEvents(provider: AlchemyWebSocketProvider) {
     let contract = new Contract(
-      process.env.TOWERZ_CONTRACT,
+      ethers.utils.getAddress(process.env.TOWERZ_CONTRACT),
       this.towerzAbi,
-      this.provider
+      provider
     );
 
     const mintFilter = contract.filters.Transfer(

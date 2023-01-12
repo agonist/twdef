@@ -35,7 +35,7 @@ export default Arena({
     // gameServer.define("map_3", Map3);
   },
 
-  initializeExpress: (app) => {
+  initializeExpress: async (app) => {
     /**
      * Bind your custom express routes here:
      */
@@ -129,7 +129,7 @@ export default Arena({
      */
     app.use("/colyseus", monitor());
 
-    contractUpdates.listenAll();
+    await contractUpdates.listenAll();
   },
 
   beforeListen: () => {
