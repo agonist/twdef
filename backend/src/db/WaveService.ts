@@ -1,5 +1,4 @@
 import { Wave } from "@prisma/client";
-import { map } from "lodash";
 import prisma from "./DbService";
 
 class WaveService {

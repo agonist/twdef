@@ -1,4 +1,3 @@
-import { isError } from "lodash";
 import Image from "next/image";
 import { useQuery, useQueryClient } from "react-query";
 import { fetchLandInfo } from "../../api/api";

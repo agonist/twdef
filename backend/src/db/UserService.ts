@@ -1,4 +1,3 @@
-import { add } from "lodash";
 import prisma from "./DbService";
 
 export class UserService {
