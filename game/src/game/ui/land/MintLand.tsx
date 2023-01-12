@@ -1,5 +1,9 @@
 import { BigNumber, ethers } from "ethers";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
 import { Contracts } from "../../../web3/Contracts";
 import { LandProps } from "./LandProps";
 import { toast } from "react-toastify";
@@ -20,8 +24,12 @@ export const MintLand = ({ minted, mintCallback, landId }: LandProps) => {
     enabled: !minted,
   });
 
-  const { data, isLoading, isSuccess, write } = useContractWrite({
+  const { data, write } = useContractWrite({
     ...config,
+  });
+
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
     onSuccess(data) {
       mintCallback?.();
       addInLandsBalance(landId);

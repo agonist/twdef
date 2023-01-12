@@ -1,5 +1,9 @@
 import { toast } from "react-toastify";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
 import { GamezAbi } from "../../../abi/Gamez";
 import { Contracts } from "../../../web3/Contracts";
 import { log } from "../../helpers/logger";
@@ -21,12 +25,16 @@ export const UnstackLandAndTower = ({
     args: [landId, towerId],
   });
 
-  const { data, isLoading, isSuccess, write } = useContractWrite({
+  const { data, write } = useContractWrite({
     ...config,
+  });
+
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
     onSuccess(data) {
       unstake(landId, towerId);
       successCallback?.();
-      toast.success("Unstaked successfully 🥳");
+      toast.success("Staked successfully 🥳");
     },
     onError(data) {
       log.error(data);

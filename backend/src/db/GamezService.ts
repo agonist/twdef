@@ -1,5 +1,5 @@
 import { InGame, Land, Tower } from "@prisma/client";
-import { prisma } from "./DbService";
+import prisma from "./DbService";
 import { landService } from "./LandService";
 
 class GamezService {

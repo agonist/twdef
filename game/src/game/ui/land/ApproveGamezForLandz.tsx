@@ -1,5 +1,9 @@
 import { toast } from "react-toastify";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
 import { LandAbi } from "../../../abi/Land";
 import { Contracts } from "../../../web3/Contracts";
 import { userState } from "../../state/user-state";
@@ -15,8 +19,12 @@ export const ApproveGamezForLandz = () => {
     args: [Contracts.GAMEZ, true],
   });
 
-  const { data, isLoading, isSuccess, write } = useContractWrite({
+  const { data, write } = useContractWrite({
     ...config,
+  });
+
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
     onSuccess(data) {
       setLandzApproved(true);
       toast.success("Land approved successfully 🥳");

@@ -1,5 +1,5 @@
 import { Land, LandType } from "@prisma/client";
-import { prisma } from "./DbService";
+import prisma from "./DbService";
 
 class LandService {
   async findLandById(id: number, includeCell: boolean = false): Promise<Land> {

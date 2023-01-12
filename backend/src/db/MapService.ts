@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { prisma } from "./DbService";
+import prisma from "./DbService";
 
 class MapService {
   async loadMapById(id: number) {

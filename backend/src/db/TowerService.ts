@@ -1,6 +1,6 @@
 import { Tower, TowerType } from "@prisma/client";
 import { TSMT$Bin } from "../tools/binning";
-import { prisma } from "./DbService";
+import prisma from "./DbService";
 
 class TowerService {
   damagebinning: TSMT$Bin = new TSMT$Bin();
@@ -34,6 +34,7 @@ class TowerService {
   }
 
   async findTowerById(id: number): Promise<Tower> {
+    if (!Number.isInteger(id)) return
     return await prisma.tower.findUnique({ where: { id: id } });
   }
 

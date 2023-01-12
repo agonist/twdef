@@ -1,6 +1,6 @@
 import { Wave } from "@prisma/client";
 import { map } from "lodash";
-import { prisma } from "./DbService";
+import prisma from "./DbService";
 
 class WaveService {
   async createWave(mapId: number): Promise<Wave> {

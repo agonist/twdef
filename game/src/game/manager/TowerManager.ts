@@ -72,6 +72,8 @@ export class TowerManger {
             break;
           }
         }
+        entity.visible = false;
+        entity.active = false;
       };
 
       //this.towers.push(entity)

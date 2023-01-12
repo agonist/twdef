@@ -35,7 +35,7 @@ function getCellType(x: number, y: number): CellType {
 
 const defautlBg = 0x050838;
 const landColor = 0x163d54;
-const rockColor = 0x03051f;
+const rockColor = 0x000000;
 
 export class WorldManager {
   tilemap = new Map<number, Shape>();
@@ -49,9 +49,9 @@ export class WorldManager {
   ) {
     var graphics = scene.add.graphics({
       lineStyle: {
-        width: 0.2,
+        width: 0.5,
         color: 0xffffff,
-        alpha: 0.2,
+        alpha: 1,
       },
     });
 
@@ -75,8 +75,8 @@ export class WorldManager {
       .forEachTileXY((tileXY, board) => {
         const land = lands[tileXY.y][tileXY.x];
 
-        const points = board.getGridPoints(tileXY.x, tileXY.y, true);
-        // graphics.strokePoints(points, false);
+        // graphics.strokeRect(tileXY.x * 40 - 20, tileXY.y * 40 - 20, 40, 40);
+
         let gridElem: Shape;
         if (land.t === 0) {
           // path
@@ -96,7 +96,7 @@ export class WorldManager {
             tileXY.y,
             0,
             0xff0000,
-            0.5
+            0.7
           );
         } else if (land.t === 2) {
           // base
@@ -106,7 +106,7 @@ export class WorldManager {
             tileXY.y,
             0,
             0x00dd00,
-            0.5
+            0.7
           );
         } else if (land.t === 3) {
           // wall
@@ -116,7 +116,7 @@ export class WorldManager {
             tileXY.y,
             0,
             rockColor,
-            1
+            0.7
           );
         } else {
           let defaultLand = landColor;
@@ -131,9 +131,12 @@ export class WorldManager {
             tileXY.y,
             0,
             defaultLand,
-            1
+            0.7
           );
           this.tilemap.set(land.id, gridElem);
+
+          const points = board.getGridPoints(tileXY.x, tileXY.y, true);
+          graphics.strokePoints(points, true);
         }
       });
 
@@ -152,17 +155,21 @@ export class WorldManager {
       .on("gameobjectover", function (pointer: any, gameObject: Shape) {
         switch (getCellType(gameObject.x, gameObject.y)) {
           case CellType.LAND:
-            // gameObject.setFillStyle(defaultLand, 0.3);
+            gameObject.setStrokeStyle(1, 0xffffff, 1);
             break;
         }
       })
       .on("gameobjectout", function (pointer: any, gameObject: Shape) {
-        // console.log("game out");
+        console.log("game out");
         switch (getCellType(gameObject.x, gameObject.y)) {
           case CellType.LAND:
-            // gameObject.setFillStyle(defaultLand, 0.2);
+            gameObject.setStrokeStyle(0, 0xffffff, 0);
             break;
         }
+      })
+      .on("board.pointerout", function (pointer: any, gameObject: Shape) {
+        console.log("pointer out");
+        gameObject.setStrokeStyle(0, 0xffffff, 0);
       })
       .on("tile1tap", function (tap: any, tileXY: TileXYType) {
         gameState.getState().selectLand(tileXY.x, tileXY.y);

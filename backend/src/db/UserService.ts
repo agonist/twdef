@@ -1,5 +1,5 @@
 import { add } from "lodash";
-import { prisma } from "./DbService";
+import prisma from "./DbService";
 
 export class UserService {
   async findUserByAddress(address: string) {
