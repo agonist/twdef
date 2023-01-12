@@ -27,7 +27,7 @@ export class MainScene extends Phaser.Scene {
   private waveManager?: WaveManager;
 
   // client = new Client("ws://updeon.colyseus.de");
-  client = new Client("ws://localhost:2567");
+  client = new Client(process.env.NEXT_PUBLIC_WS);
 
   room!: Room<GameState>;
 

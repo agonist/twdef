@@ -12,7 +12,7 @@ contract ShopV1 {
   ILandz public landsContract;
   ITowerz public towersContract;
 
-  uint256 landPrice = 0.1 ether;
+  uint256 landPrice = 0.001 ether;
 
   error ValueIncorrect();
 

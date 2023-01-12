@@ -1,5 +1,4 @@
-import { Network, Alchemy, Contract, AlchemySubscription } from "alchemy-sdk";
-import { ethers, BigNumber, logger } from "ethers";
+import { ethers, BigNumber, logger, Contract } from "ethers";
 import { Subject } from "rxjs";
 import { gameService } from "../db/GamezService";
 import { landService } from "../db/LandService";
@@ -14,15 +13,9 @@ import {
 } from "./Web3SocketProvider";
 
 export class DefaultSocketProvider implements WebSocketProvider {
-  settings = {
-    apiKey: "7DeCsPjsUaCniL1QbcRLrqHOMQ7lpw5-", // Replace with your Alchemy API Key.
-    network: Network.MATIC_MUMBAI, // Replace with your network.
-    URL: "http://127.0.0.1:8545/",
-  };
-
-  alchemy = new Alchemy(this.settings);
-
-  provider = new ethers.providers.WebSocketProvider("ws://127.0.0.1:8545/");
+  provider = new ethers.providers.WebSocketProvider(
+    "wss://polygon-mumbai.g.alchemy.com/v2/7DeCsPjsUaCniL1QbcRLrqHOMQ7lpw5-"
+  );
 
   updateSubject: Subject<UpdateEvent> = new Subject();
 
@@ -54,7 +47,6 @@ export class DefaultSocketProvider implements WebSocketProvider {
     );
 
     contract.on("Staking", async (from, landId, towerId, e) => {
-      
       try {
         const tower = BigNumber.from(towerId).toNumber();
         const land = BigNumber.from(landId).toNumber();

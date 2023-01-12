@@ -31,7 +31,7 @@
     "test": "npx hardhat test",
     "test:coverage": "hardhat coverage",
     "deploy": " npx hardhat run scripts/local/deploy.ts --network localhost",
-    "deploy:testnet": "npx hardhat run scripts/testnet/deploy.ts --network mumbai",
+    "deploy:testnet": "npx hardhat run scripts/testnet/deploy_beta.ts --network mumbai",
     "deploy:mainnet": "npx hardhat run scripts/mainnet/deploy.ts --network polygon"
   }
 }

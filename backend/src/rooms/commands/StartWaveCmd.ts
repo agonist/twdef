@@ -112,7 +112,6 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
       this.room.game.enemiesRenderer.add(newEnemy);
       enemies.push(newEnemy);
 
-      log.info("c " + count + " t " + takes);
 
       if (count + 1 === takes) {
         this.room.game.waveManager.addWave(wave.count, enemies);

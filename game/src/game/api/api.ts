@@ -3,10 +3,10 @@ import { LandData } from "../ui/land/LandContent";
 import { TowerData } from "../ui/tower/MyTowerItem";
 
 export interface Player {
-  balance: number
+  balance: number;
 }
 
-const BASE_URL = "http://localhost:2567";
+const BASE_URL = process.env.NEXT_PUBLIC_API;
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -16,8 +16,8 @@ const apiClient = axios.create({
 });
 
 export async function fetchLandInfo(id: number) {
-  const res =  await apiClient.get<LandData>("/metadata/land/" + id);
-  return res.data
+  const res = await apiClient.get<LandData>("/metadata/land/" + id);
+  return res.data;
 }
 export async function fetchTowerInfo(id: number) {
   const res = await apiClient.get<TowerData>("/metadata/tower/" + id);
@@ -25,6 +25,6 @@ export async function fetchTowerInfo(id: number) {
 }
 
 export async function fetchPlayerBalance(address: string) {
-  const res = await apiClient.get<Player>("/player/balance/" + address)
-  return res.data
+  const res = await apiClient.get<Player>("/player/balance/" + address);
+  return res.data;
 }

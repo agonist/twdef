@@ -12,8 +12,6 @@ export interface TypedRequestBody<T> extends Express.Request {
  * Import your Room files
  */
 import { Map1 } from "./rooms/maps/Map_1";
-import { Map2 } from "./rooms/maps/Map_2";
-import { Map3 } from "./rooms/maps/Map_3";
 import { GameCfg, GameConfigProvider } from "./rooms/utils/ConfigProvider";
 
 import { log } from "./tools/logger";

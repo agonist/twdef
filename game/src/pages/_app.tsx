@@ -9,16 +9,15 @@ import {
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { mainnet, hardhat, polygon, optimism } from "wagmi/chains";
-import { alchemyProvider } from "wagmi/providers/alchemy";
+import { hardhat, polygonMumbai } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 export const { chains, provider } = configureChains(
-  [hardhat],
-  [alchemyProvider({ apiKey: process.env.ALCHEMY_ID! }), publicProvider()]
+  [hardhat, polygonMumbai],
+  [publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({

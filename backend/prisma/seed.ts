@@ -91,6 +91,7 @@ async function createMap(
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       const r = getRandomType();
+
       await prisma.cell.create({
         data: {
           x: x,
@@ -113,6 +114,7 @@ async function createMap(
       });
     }
   }
+  
   // const count = await prisma.land.count();
   // console.log("We have " + count + " land");
 
