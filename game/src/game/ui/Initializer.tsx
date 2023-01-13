@@ -62,6 +62,7 @@ export const Initializer = () => {
       user.setTowersBalance(towersIds);
       user.setStakedLandsTowersBalance(stackedLandsIds, stackedTowersIds);
 
+      
       const landzApproved = data[3];
       const towerzApproved = data[4];
 
