@@ -10,7 +10,6 @@ import { WorldManager } from "../manager/WorldManager";
 import { TowerManger } from "../manager/TowerManager";
 import { BulletManager } from "../manager/BulletManager";
 import { Cellz } from "../../schema/Cellz";
-import { userState } from "../state/user-state";
 import { WaveManager } from "../manager/WaveManager";
 
 export const cellSize = 40;
@@ -42,6 +41,15 @@ export class MainScene extends Phaser.Scene {
     if (this.map === undefined) {
       this.map = "map_1";
     }
+  }
+
+  preload() {
+    this.load.scenePlugin(
+      "rexboardplugin",
+      "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexboardplugin.min.js",
+      "rexBoard",
+      "rexBoard"
+    );
   }
 
   async create() {

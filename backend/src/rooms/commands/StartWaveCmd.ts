@@ -1,6 +1,6 @@
 import { Command } from "@colyseus/command";
 import { Wave } from "@prisma/client";
-import { waveService } from "../../db/WaveService";
+import waveService from "../../db/WaveService";
 import { ArmoredEnemy } from "../../logic/entity/enemy/ArmoredEnemy";
 import { BossEnemy } from "../../logic/entity/enemy/BossEnemy";
 import { FastEnemy } from "../../logic/entity/enemy/FastEnemy";
@@ -11,8 +11,7 @@ import { Enemy } from "../../logic/entity/enemy/Enemy";
 import weightedRandom from "../utils/wightedrandom";
 import { GameCfg, GameConfigProvider } from "../utils/ConfigProvider";
 import { Delayed } from "colyseus";
-import { log } from "../../tools/logger";
-import { gameService } from "../../db/GamezService";
+import gameService from "../../db/GamezService";
 
 export class StartWaveCmd extends Command<GameRoom, {}> {
   // get the current wave or create the first one
@@ -111,7 +110,6 @@ export class StartWaveCmd extends Command<GameRoom, {}> {
 
       this.room.game.enemiesRenderer.add(newEnemy);
       enemies.push(newEnemy);
-
 
       if (count + 1 === takes) {
         this.room.game.waveManager.addWave(wave.count, enemies);

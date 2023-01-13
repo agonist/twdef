@@ -10,4 +10,5 @@ class MapService {
   }
 }
 
-export const mapService = new MapService();
+const mapService = new MapService();
+export default mapService;

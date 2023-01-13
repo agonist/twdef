@@ -89,4 +89,5 @@ class TowerService {
   }
 }
 
-export const towerService = new TowerService();
+const towerService = new TowerService();
+export default towerService;

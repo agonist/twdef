@@ -6,9 +6,9 @@ import {
 } from "alchemy-sdk";
 import { ethers, BigNumber } from "ethers";
 import { Subject } from "rxjs";
-import { gameService } from "../db/GamezService";
-import { landService } from "../db/LandService";
-import { towerService } from "../db/TowerService";
+import gameService from "../db/GamezService";
+import landService from "../db/LandService";
+import towerService from "../db/TowerService";
 import { log } from "../tools/logger";
 import {
   LandMintedEvent,

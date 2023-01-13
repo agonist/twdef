@@ -26,4 +26,5 @@ class LandService {
   }
 }
 
-export const landService = new LandService();
+const landService = new LandService();
+export default landService;

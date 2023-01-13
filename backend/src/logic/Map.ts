@@ -1,4 +1,4 @@
-import { mapService } from "../db/MapService";
+import mapService from "../db/MapService";
 import { easyAStar } from "../tools/astar";
 import { Point } from "../tools/Point";
 import { cellSize } from "./GameLogic";

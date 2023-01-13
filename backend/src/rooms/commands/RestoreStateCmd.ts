@@ -1,5 +1,5 @@
 import { Command } from "@colyseus/command";
-import { gameService } from "../../db/GamezService";
+import gameService  from "../../db/GamezService";
 import { CanonTower } from "../../logic/entity/Tower/CanonTower";
 import { cellSize } from "../../logic/GameLogic";
 import { getTowerType } from "../../tools/helpers";

@@ -1,13 +1,14 @@
 import { InGame, Land, Tower } from "@prisma/client";
 import prisma from "./DbService";
-import { landService } from "./LandService";
 
 class GamezService {
   async findGameByLandId(landId: number): Promise<InGame> {
     return await prisma.inGame.findUnique({ where: { landId: landId } });
   }
 
-  async findGameByMapId(mapId: number): Promise<(InGame & {tower: Tower, land: Land})[]> {
+  async findGameByMapId(
+    mapId: number
+  ): Promise<(InGame & { tower: Tower; land: Land })[]> {
     return await prisma.inGame.findMany({
       where: { mapId },
       include: { tower: true, land: true },
@@ -27,7 +28,7 @@ class GamezService {
         mapId: land.Cell.mapId,
         x: land.Cell.x,
         y: land.Cell.y,
-        owner: from
+        owner: from,
       },
     });
 
@@ -43,8 +44,9 @@ class GamezService {
   }
 
   async stakedCount(mapId: number) {
-    return await prisma.inGame.count({where:{mapId: mapId}})
+    return await prisma.inGame.count({ where: { mapId: mapId } });
   }
 }
 
-export const gameService = new GamezService();
+const gameService = new GamezService();
+export default gameService;

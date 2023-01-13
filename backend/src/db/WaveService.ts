@@ -28,4 +28,5 @@ class WaveService {
   }
 }
 
-export const waveService = new WaveService();
+const waveService = new WaveService();
+export default waveService;

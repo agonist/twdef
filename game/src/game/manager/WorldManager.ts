@@ -149,6 +149,8 @@ export class WorldManager {
         switch (getCellType(gameObject.x, gameObject.y)) {
           case CellType.LAND:
             // gameObject.setFillStyle(defaultLand, 0.3);
+            gameObject.setStrokeStyle(1, 0xffffff, 1);
+
             break;
         }
       })
@@ -160,15 +162,6 @@ export class WorldManager {
         }
       })
       .on("gameobjectout", function (pointer: any, gameObject: Shape) {
-        console.log("game out");
-        switch (getCellType(gameObject.x, gameObject.y)) {
-          case CellType.LAND:
-            gameObject.setStrokeStyle(0, 0xffffff, 0);
-            break;
-        }
-      })
-      .on("board.pointerout", function (pointer: any, gameObject: Shape) {
-        console.log("pointer out");
         gameObject.setStrokeStyle(0, 0xffffff, 0);
       })
       .on("tile1tap", function (tap: any, tileXY: TileXYType) {
