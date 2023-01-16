@@ -19,9 +19,9 @@ import {
 } from "./Web3SocketProvider";
 
 export class DefaultSocketProvider implements WebSocketProvider {
-  provider = new ethers.providers.WebSocketProvider(
-    "wss://polygon-mumbai.g.alchemy.com/v2/7DeCsPjsUaCniL1QbcRLrqHOMQ7lpw5-"
-  );
+  // provider = new ethers.providers.WebSocketProvider(
+  //   "wss://polygon-mumbai.g.alchemy.com/v2/7DeCsPjsUaCniL1QbcRLrqHOMQ7lpw5-"
+  // );
 
   alchemy = new Alchemy({
     apiKey: "7DeCsPjsUaCniL1QbcRLrqHOMQ7lpw5-",
@@ -51,12 +51,6 @@ export class DefaultSocketProvider implements WebSocketProvider {
     this.listenLandzEvent(provider);
     this.listenTowerEvents(provider);
     this.listenGamezEvents(provider);
-
-    let contract = new Contract(
-      ethers.utils.getAddress(process.env.GAMEZ_CONTRACT),
-      this.gamezAbi,
-      provider
-    );
   }
 
   listenGamezEvents(provider: AlchemyWebSocketProvider) {

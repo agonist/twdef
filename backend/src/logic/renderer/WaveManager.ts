@@ -44,10 +44,6 @@ export class WaveManager {
             waveRewards += e.cash;
           });
 
-        log.info(
-          `Wave #${w.num} ended with ${totalDamage} total dmg and ${waveRewards} token dropped`
-        );
-
         damageForWave.forEach((v, k) => {
           const rewardForAddr = (waveRewards / totalDamage) * v;
           const total = playerBalanceAdd.get(k);

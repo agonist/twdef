@@ -80,10 +80,7 @@ export class GameLogic<R extends GameRoom> {
 
       const bulletR = this.bulletRenderer.bullets.length;
       const bulletS = this.room.state.bullets.length;
-      log.info(
-        `New wave starting => er : ${enemiesR} es : ${enemiesS} tr : ${towerR} ts ${towerS} br : ${bulletR} bs : ${bulletS}`
-      );
-
+   
       this.dispatcher.dispatch(new StartWaveCmd());
     }, 30000);
     this.dispatcher.dispatch(new StartWaveCmd());
