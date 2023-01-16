@@ -58,6 +58,8 @@ model InGame {
    x      Int
    y      Int
    owner String
+
+   @@index([mapId])
 }
 
 model Tower {
@@ -76,6 +78,11 @@ model Wave {
   multiplier Float
   map Map @relation(fields: [mapId], references: [id])
   mapId Int @unique
+}
+
+model Event {
+    id Int @id @default(autoincrement())
+    lastBlock Int @default(1)
 }
 
 enum LandType {

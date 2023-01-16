@@ -54,6 +54,7 @@ CREATE TABLE `InGame` (
 
     UNIQUE INDEX `InGame_towerId_key`(`towerId`),
     UNIQUE INDEX `InGame_landId_key`(`landId`),
+    INDEX `InGame_mapId_idx`(`mapId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -78,5 +79,13 @@ CREATE TABLE `Wave` (
     `mapId` INTEGER NOT NULL,
 
     UNIQUE INDEX `Wave_mapId_key`(`mapId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Event` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `lastBlock` INTEGER NOT NULL DEFAULT 1,
+
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

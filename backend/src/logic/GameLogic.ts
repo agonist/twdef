@@ -71,16 +71,9 @@ export class GameLogic<R extends GameRoom> {
 
     this.room.clock.start();
 
-    this.waveInterval = this.room.clock.setInterval(() => {
-      const enemiesR = this.enemiesRenderer.enemies.length;
-      const enemiesS = this.room.state.enemies.length;
+    this.waveInterval = this.room.clock.setInterval(async () => {
+      await contractUpdates.eventFallback();
 
-      const towerR = this.towerRenderer.towers.length;
-      const towerS = this.room.state.towers.length;
-
-      const bulletR = this.bulletRenderer.bullets.length;
-      const bulletS = this.room.state.bullets.length;
-   
       this.dispatcher.dispatch(new StartWaveCmd());
     }, 30000);
     this.dispatcher.dispatch(new StartWaveCmd());

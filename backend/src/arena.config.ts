@@ -50,7 +50,6 @@ export default Arena({
     app.use("/player/balance/:address", async (req, res) => {
       const address = req.params.address;
       const user = await userService.findUserByAddress(address);
-      log.info(user);
       let balance = 0;
       if (user !== null) balance = user.balance;
 

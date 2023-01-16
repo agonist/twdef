@@ -5,7 +5,9 @@ import {
   Network,
 } from "alchemy-sdk";
 import { ethers, BigNumber } from "ethers";
+import { min } from "lodash";
 import { Subject } from "rxjs";
+import eventService from "../db/EventService";
 import gameService from "../db/GamezService";
 import landService from "../db/LandService";
 import towerService from "../db/TowerService";
@@ -19,13 +21,10 @@ import {
 } from "./Web3SocketProvider";
 
 export class DefaultSocketProvider implements WebSocketProvider {
-  // provider = new ethers.providers.WebSocketProvider(
-  //   "wss://polygon-mumbai.g.alchemy.com/v2/7DeCsPjsUaCniL1QbcRLrqHOMQ7lpw5-"
-  // );
-
   alchemy = new Alchemy({
     apiKey: "7DeCsPjsUaCniL1QbcRLrqHOMQ7lpw5-",
     network: Network.MATIC_MUMBAI,
+    url: "http://127.0.0.1:8545/",
   });
 
   updateSubject: Subject<UpdateEvent> = new Subject();
@@ -43,139 +42,244 @@ export class DefaultSocketProvider implements WebSocketProvider {
     "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
   ];
 
+  provider: ethers.providers.WebSocketProvider;
+  landContract: Contract;
+  towerContract: Contract;
+  gamezContract: Contract;
+
+  // Basically the init.
   async listenAll() {
     log.info("Listen to contract events");
 
-    const provider = await this.alchemy.config.getWebSocketProvider();
+    if (process.env.NODE_ENV === "development") {
+      this.provider = new ethers.providers.WebSocketProvider(
+        "ws://127.0.0.1:8545"
+      );
+    } else {
+      this.provider = await this.alchemy.config.getWebSocketProvider();
+    }
 
-    this.listenLandzEvent(provider);
-    this.listenTowerEvents(provider);
-    this.listenGamezEvents(provider);
-  }
-
-  listenGamezEvents(provider: AlchemyWebSocketProvider) {
-    let contract = new Contract(
-      ethers.utils.getAddress(process.env.GAMEZ_CONTRACT),
-      this.gamezAbi,
-      provider
+    this.landContract = new Contract(
+      ethers.utils.getAddress(process.env.LANDZ_CONTRACT),
+      this.landzAbi,
+      this.provider
     );
 
-    contract.on("Staking", async (from, landId, towerId, e) => {
-      try {
+    this.towerContract = new Contract(
+      ethers.utils.getAddress(process.env.TOWERZ_CONTRACT),
+      this.towerzAbi,
+      this.provider
+    );
+
+    this.gamezContract = new Contract(
+      ethers.utils.getAddress(process.env.GAMEZ_CONTRACT),
+      this.gamezAbi,
+      this.provider
+    );
+
+    // this.listenLandzEvent();
+    // this.listenTowerEvents();
+    // this.listenGamezEvents();
+    // await this.eventFallback();
+  }
+
+  // event coming from game contract
+  listenGamezEvents() {
+    this.gamezContract.on(
+      this.gamezContract.filters.Staking(),
+      async (from, landId, towerId, e) => {
         const tower = BigNumber.from(towerId).toNumber();
         const land = BigNumber.from(landId).toNumber();
         log.info(from + " stacking land#" + land + " tower#" + tower);
-
-        const inGame = await gameService.create(tower, land, from);
-
-        let stack: TowerStakingEvent = {
-          name: "TowerStakingEvent",
-          towerId: inGame.towerId,
-          landId: inGame.landId,
-          mapId: inGame.mapId,
-          from: from,
-        };
-        log.info(
-          "Dispatch TowerStakingEvent " +
-            " land#" +
-            stack.landId +
-            " tower#" +
-            stack.towerId +
-            " map#" +
-            stack.mapId
-        );
-        this.updateSubject.next(stack);
-      } catch (e) {
-        log.error(e);
+        await this.staked(from, land, tower);
+        await this.updateLastBlock(e.blockNumber);
       }
-    });
+    );
 
-    contract.on("Unstaking", async (from, landId, towerId, e) => {
-      try {
+    this.gamezContract.on(
+      this.gamezContract.filters.Unstaking(),
+      async (from, landId, towerId, e) => {
         const tower = BigNumber.from(towerId).toNumber();
         const land = BigNumber.from(landId).toNumber();
         log.info(from + " Unstacking Land#" + land + " with Tower#" + tower);
-
-        const inGame = await gameService.findGameByLandId(land);
-
-        await gameService.remove(tower, land);
-
-        let unstack: TowerUnstakingEvent = {
-          name: "TowerUnstakingEvent",
-          towerId: tower,
-          landId: land,
-          mapId: inGame.mapId,
-        };
-        log.info(
-          "Dispatch TowerUnstakingEvent " +
-            " land#" +
-            unstack.landId +
-            " tower#" +
-            unstack.towerId +
-            " map#" +
-            unstack.mapId
-        );
-        this.updateSubject.next(unstack);
-      } catch (e) {
-        log.error(e);
+        await this.unstaked(from, land, tower);
+        await this.updateLastBlock(e.blockNumber);
       }
-    });
+    );
   }
 
-  listenLandzEvent(provider: AlchemyWebSocketProvider) {
-    let contract = new Contract(
-      ethers.utils.getAddress(process.env.LANDZ_CONTRACT),
-      this.landzAbi,
-      provider
-    );
-
-    const mintFilter = contract.filters.Transfer(
+  // vent from land contract
+  async listenLandzEvent() {
+    const mintFilter = this.landContract.filters.Transfer(
       "0x0000000000000000000000000000000000000000"
     );
 
-    // used to listen when a land is minted. state is updated in the db and spread to clients
-    contract.on(mintFilter, async (from, to, tokenId, e) => {
-      try {
-        const landId = BigNumber.from(tokenId).toNumber();
-        log.info("New Land minted: #" + landId + " to " + to);
-        await landService.updateLandToMinted(landId);
-
-        let landMinted: LandMintedEvent = {
-          tokenId: landId,
-          name: "LandMintedEvent",
-        };
-        log.info("Dispatch LandMintedEvent land#" + landMinted.tokenId);
-        this.updateSubject.next(landMinted);
-      } catch (e) {
-        console.error(e);
-      }
+    this.landContract.on(mintFilter, async (from, to, tokenId, e) => {
+      const landId = BigNumber.from(tokenId).toNumber();
+      log.info("New Land minted: #" + landId + " to " + to);
+      log.info(e);
+      await this.newLandMinted(landId);
+      await this.updateLastBlock(e.blockNumber);
     });
   }
 
-  listenTowerEvents(provider: AlchemyWebSocketProvider) {
-    let contract = new Contract(
-      ethers.utils.getAddress(process.env.TOWERZ_CONTRACT),
-      this.towerzAbi,
-      provider
-    );
-
-    const mintFilter = contract.filters.Transfer(
+  // event from tower contract
+  listenTowerEvents() {
+    const mintFilter = this.towerContract.filters.Transfer(
       "0x0000000000000000000000000000000000000000"
     );
 
-    contract.on(mintFilter, async (from, to, tokenId, e) => {
-      try {
-        const towerId = BigNumber.from(tokenId).toNumber();
-        log.info("New Tower minted: #" + towerId + " to " + to);
-        const tower = await towerService.createTower(towerId, 1);
-        log.info(
-          "Tower added to db #" + tower.id + " dmg " + tower.damage,
-          +" speed " + tower.speed
-        );
-      } catch (e) {
-        console.error(e);
-      }
+    this.towerContract.on(mintFilter, async (from, to, tokenId, e) => {
+      const towerId = BigNumber.from(tokenId).toNumber();
+      log.info("New Tower minted: #" + towerId + " to " + to);
+      await this.newTowerMinted(towerId);
+      await this.updateLastBlock(e.blockNumber);
     });
+  }
+
+  async eventFallback() {
+    const lastUpdated = (await eventService.getLastBlockEvent()) + 1;
+    const lastBlock = await this.alchemy.core.getBlockNumber();
+    if (lastUpdated === lastBlock || lastUpdated > lastBlock) return;
+
+    log.info(
+      "trying to restore event from " + lastUpdated + " to " + lastBlock
+    );
+
+    //  LAND
+    const mintFilter = this.landContract.filters.Transfer(
+      "0x0000000000000000000000000000000000000000"
+    );
+    // const lastBlockUpdated = 0; //get last value stored in db
+    const logs = await this.alchemy.core.getLogs({
+      fromBlock: lastUpdated,
+      toBlock: lastBlock,
+      address: ethers.utils.getAddress(process.env.LANDZ_CONTRACT),
+      topics: mintFilter.topics,
+    });
+    log.info(logs.length + " Lands events to restore");
+
+    logs.forEach(async (l) => {
+      const parsed = this.landContract.interface.parseLog(l);
+      const id = BigNumber.from(parsed.args[2]).toNumber();
+      await this.newLandMinted(id);
+    });
+    // TOWER
+    const mintFilterTower = this.towerContract.filters.Transfer(
+      "0x0000000000000000000000000000000000000000"
+    );
+    // const lastBlockUpdated = 0; //get last value stored in db
+    const logsTower = await this.alchemy.core.getLogs({
+      fromBlock: lastUpdated,
+      toBlock: lastBlock,
+      address: ethers.utils.getAddress(process.env.TOWERZ_CONTRACT),
+      topics: mintFilterTower.topics,
+    });
+    log.info(logsTower.length + " Tower events to restore");
+
+    logsTower.forEach(async (l) => {
+      const parsed = this.towerContract.interface.parseLog(l);
+      const id = BigNumber.from(parsed.args[2]).toNumber();
+      await this.newTowerMinted(id);
+    });
+
+    //  STAKING
+    const s = this.gamezContract.filters.Staking();
+    const logsStaking = await this.alchemy.core.getLogs({
+      fromBlock: lastUpdated,
+      toBlock: lastBlock,
+      address: ethers.utils.getAddress(process.env.GAMEZ_CONTRACT),
+      topics: s.topics,
+    });
+    log.info(logsStaking.length + " Stacking events to restore");
+
+    logsStaking.forEach(async (l) => {
+      const parsed = this.gamezContract.interface.parseLog(l);
+      const from = parsed.args[0];
+      const landId = BigNumber.from(parsed.args[1]).toNumber();
+      const towerId = BigNumber.from(parsed.args[2]).toNumber();
+      await this.staked(from, towerId, landId);
+    });
+
+    //  UNSTAKING
+    const logsUnstaking = await this.alchemy.core.getLogs({
+      fromBlock: lastBlock,
+      toBlock: lastBlock,
+      address: ethers.utils.getAddress(process.env.GAMEZ_CONTRACT),
+      topics: this.gamezContract.filters.Unstaking().topics,
+    });
+    log.info(logsUnstaking.length + " Unstacking events to restore");
+
+    logsUnstaking.forEach(async (l) => {
+      const parsed = this.gamezContract.interface.parseLog(l);
+      const from = parsed.args[0];
+      const landId = BigNumber.from(parsed.args[1]).toNumber();
+      const towerId = BigNumber.from(parsed.args[2]).toNumber();
+      await this.unstaked(from, towerId, landId);
+    });
+    await this.updateLastBlock(lastBlock);
+  }
+
+  async newLandMinted(landId: number) {
+    try {
+      await landService.updateLandToMinted(landId);
+
+      let landMinted: LandMintedEvent = {
+        tokenId: landId,
+        name: "LandMintedEvent",
+      };
+      this.updateSubject.next(landMinted);
+    } catch (e) {
+      log.error(e);
+    }
+  }
+
+  async newTowerMinted(towerId: number) {
+    try {
+      await towerService.createTower(towerId, 1);
+    } catch (e) {
+      log.error(e);
+    }
+  }
+
+  async staked(from: string, landId: number, towerId: number) {
+    try {
+      const inGame = await gameService.create(towerId, landId, from);
+
+      let stack: TowerStakingEvent = {
+        name: "TowerStakingEvent",
+        towerId: inGame.towerId,
+        landId: inGame.landId,
+        mapId: inGame.mapId,
+        from: from,
+      };
+
+      this.updateSubject.next(stack);
+    } catch (e) {
+      log.error(e);
+    }
+  }
+
+  async unstaked(from: string, landId: number, towerId: number) {
+    try {
+      const inGame = await gameService.findGameByLandId(landId);
+
+      await gameService.remove(towerId, landId);
+
+      let unstack: TowerUnstakingEvent = {
+        name: "TowerUnstakingEvent",
+        towerId: towerId,
+        landId: landId,
+        mapId: inGame.mapId,
+      };
+      this.updateSubject.next(unstack);
+    } catch (e) {
+      log.error(e);
+    }
+  }
+
+  async updateLastBlock(block: number) {
+    await eventService.updateLastBlockEvent(block);
   }
 
   contractUpdatesSubject(): Subject<UpdateEvent> {

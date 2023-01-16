@@ -16,7 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 export const { chains, provider } = configureChains(
-  [polygonMumbai],
+  [hardhat, polygonMumbai],
   [publicProvider()]
 );
 

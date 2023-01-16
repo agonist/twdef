@@ -114,7 +114,8 @@ async function createMap(
       });
     }
   }
-  
+
+  await prisma.event.create({ data: { id: 1 } });
   // const count = await prisma.land.count();
   // console.log("We have " + count + " land");
 
