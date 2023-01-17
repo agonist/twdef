@@ -21,18 +21,19 @@ class GamezService {
       include: { Cell: true },
     });
 
-    const inGame = await prisma.inGame.create({
-      data: {
-        towerId: towerId,
-        landId: landId,
-        mapId: land.Cell.mapId,
-        x: land.Cell.x,
-        y: land.Cell.y,
-        owner: from,
-      },
-    });
-
-    return inGame;
+    try {
+      const inGame = await prisma.inGame.create({
+        data: {
+          towerId: towerId,
+          landId: landId,
+          mapId: land.Cell.mapId,
+          x: land.Cell.x,
+          y: land.Cell.y,
+          owner: from,
+        },
+      });
+      return inGame;
+    } catch (e) {}
   }
 
   async remove(towerId: number, landId: number) {

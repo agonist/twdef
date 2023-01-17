@@ -6,17 +6,13 @@ import { LandAbi } from "../../../abi/Land";
 import { Contracts } from "../../../web3/Contracts";
 import { fetchLandInfo } from "../../api/api";
 import { userState } from "../../state/user-state";
+import { gameState } from "../../state/game-state";
 import { ApproveOr } from "../ApproveOr";
 import { StackedLandTower } from "../stack/StackedLandTower";
-import { StackLandAndTower } from "../stack/StackLandAndTower";
-import { UnstackLandAndTower } from "../stack/UnstackLandAndTower";
 import { MyTowers } from "../tower/MyTower";
-import { ConnectWalletOr } from "../wallet/ConnectWalletOr";
 import { BuyLandItem } from "./BuyLandItem";
 import { LandBonusDamage } from "./LandBonusDamage";
-import { LandProps } from "./LandProps";
 import { LandTitle } from "./LandTitle";
-import { MintLand } from "./MintLand";
 
 export interface LandData {
   id: number;
@@ -54,6 +50,7 @@ export function emojiForLandType(land: LandData) {
 export const LandContent = ({ landId }: LandId) => {
   const { address } = useAccount();
   const user = userState();
+  const selectedLandId = gameState(s => s.currentLandId);
 
   const { data, isError, isLoading, isSuccess, refetch } = useContractReads({
     contracts: [
@@ -70,6 +67,7 @@ export const LandContent = ({ landId }: LandId) => {
         args: [BigNumber.from(landId)],
       },
     ],
+    enabled: landId === selectedLandId,
     onSuccess(data) {
       console.log("Success", data);
     },

@@ -21,12 +21,7 @@ import {
 } from "./Web3SocketProvider";
 
 export class DefaultSocketProvider implements WebSocketProvider {
-  
-  alchemy = new Alchemy({
-    apiKey: "7DeCsPjsUaCniL1QbcRLrqHOMQ7lpw5-",
-    network: Network.MATIC_MUMBAI,
-    url: "http://127.0.0.1:8545/",
-  });
+  alchemy: Alchemy;
 
   updateSubject: Subject<UpdateEvent> = new Subject();
 
@@ -51,12 +46,26 @@ export class DefaultSocketProvider implements WebSocketProvider {
   // Basically the init.
   async listenAll() {
     log.info("Listen to contract events");
+    log.info("Landz => " + ethers.utils.getAddress(process.env.LANDZ_CONTRACT));
+    log.info(
+      "Towerz => " + ethers.utils.getAddress(process.env.TOWERZ_CONTRACT)
+    );
+    log.info("GAME => " + ethers.utils.getAddress(process.env.GAMEZ_CONTRACT));
 
     if (process.env.NODE_ENV === "development") {
+      this.alchemy = new Alchemy({
+        apiKey: "7DeCsPjsUaCniL1QbcRLrqHOMQ7lpw5-",
+        network: Network.MATIC_MUMBAI,
+        url: "http://127.0.0.1:8545/",
+      });
       this.provider = new ethers.providers.WebSocketProvider(
         "ws://127.0.0.1:8545"
       );
     } else {
+      this.alchemy = new Alchemy({
+        apiKey: "7DeCsPjsUaCniL1QbcRLrqHOMQ7lpw5-",
+        network: Network.MATIC_MUMBAI,
+      });
       this.provider = await this.alchemy.config.getWebSocketProvider();
     }
 
@@ -118,7 +127,6 @@ export class DefaultSocketProvider implements WebSocketProvider {
     this.landContract.on(mintFilter, async (from, to, tokenId, e) => {
       const landId = BigNumber.from(tokenId).toNumber();
       log.info("New Land minted: #" + landId + " to " + to);
-      log.info(e);
       await this.newLandMinted(landId);
       await this.updateLastBlock(e.blockNumber);
     });

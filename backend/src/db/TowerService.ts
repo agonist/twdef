@@ -45,17 +45,21 @@ class TowerService {
     const rtype = this.getRandomType();
 
     log.info(`creating tower in db with dmg: ${damage}  speed: ${speed}`);
-    const tower = await prisma.tower.create({
-      data: {
-        id: id,
-        damage: damage,
-        speed: speed,
-        level: 1,
-        type: rtype.type,
-        imgUrl: rtype.img,
-      },
-    });
-    return tower;
+    try {
+      const tower = await prisma.tower.create({
+        data: {
+          id: id,
+          damage: damage,
+          speed: speed,
+          level: 1,
+          type: rtype.type,
+          imgUrl: rtype.img,
+        },
+      });
+      return tower;
+    } catch (e) {
+      log.error(e)
+    }
   }
 
   getDammage() {
