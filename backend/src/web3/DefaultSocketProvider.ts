@@ -21,6 +21,7 @@ import {
 } from "./Web3SocketProvider";
 
 export class DefaultSocketProvider implements WebSocketProvider {
+  
   alchemy = new Alchemy({
     apiKey: "7DeCsPjsUaCniL1QbcRLrqHOMQ7lpw5-",
     network: Network.MATIC_MUMBAI,
@@ -77,9 +78,9 @@ export class DefaultSocketProvider implements WebSocketProvider {
       this.provider
     );
 
-    // this.listenLandzEvent();
-    // this.listenTowerEvents();
-    // this.listenGamezEvents();
+    this.listenLandzEvent();
+    this.listenTowerEvents();
+    this.listenGamezEvents();
     // await this.eventFallback();
   }
 
@@ -198,12 +199,12 @@ export class DefaultSocketProvider implements WebSocketProvider {
       const from = parsed.args[0];
       const landId = BigNumber.from(parsed.args[1]).toNumber();
       const towerId = BigNumber.from(parsed.args[2]).toNumber();
-      await this.staked(from, towerId, landId);
+      await this.staked(from, landId, towerId);
     });
 
     //  UNSTAKING
     const logsUnstaking = await this.alchemy.core.getLogs({
-      fromBlock: lastBlock,
+      fromBlock: lastUpdated,
       toBlock: lastBlock,
       address: ethers.utils.getAddress(process.env.GAMEZ_CONTRACT),
       topics: this.gamezContract.filters.Unstaking().topics,
@@ -215,7 +216,7 @@ export class DefaultSocketProvider implements WebSocketProvider {
       const from = parsed.args[0];
       const landId = BigNumber.from(parsed.args[1]).toNumber();
       const towerId = BigNumber.from(parsed.args[2]).toNumber();
-      await this.unstaked(from, towerId, landId);
+      await this.unstaked(from, landId, towerId);
     });
     await this.updateLastBlock(lastBlock);
   }

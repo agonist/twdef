@@ -1,5 +1,6 @@
 import { Tower, TowerType } from "@prisma/client";
 import { TSMT$Bin } from "../tools/binning";
+import { log } from "../tools/logger";
 import prisma from "./DbService";
 
 class TowerService {
@@ -34,7 +35,7 @@ class TowerService {
   }
 
   async findTowerById(id: number): Promise<Tower> {
-    if (!Number.isInteger(id)) return
+    if (!Number.isInteger(id)) return;
     return await prisma.tower.findUnique({ where: { id: id } });
   }
 
@@ -43,6 +44,7 @@ class TowerService {
     const speed = this.getSpeed();
     const rtype = this.getRandomType();
 
+    log.info(`creating tower in db with dmg: ${damage}  speed: ${speed}`);
     const tower = await prisma.tower.create({
       data: {
         id: id,

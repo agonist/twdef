@@ -14,14 +14,14 @@ export class TowerStakingCmd extends Command<
   { landId: number; towerId: number; owner: string }
 > {
   async execute({ landId, towerId, owner } = this.payload) {
-    log.info("Exec TowerStakingCmd land#" + landId + " tower#" + towerId);
-
     const towerRender = this.room.game.towerRenderer;
     const bulletRenderer = this.room.game.bulletRenderer;
     const enemiesRenderer = this.room.game.enemiesRenderer;
 
     const land = await landService.findLandByIdwithCell(landId);
     const tower = await towerService.findTowerById(towerId);
+
+    log.info("Exec TowerStakingCmd land#" + landId + " tower#" + towerId + ` land dmg ${land.damageBonus}  tower dmg: ${tower.damage}`);
 
     const towerDamage = land.damageBonus + tower.damage;
 
