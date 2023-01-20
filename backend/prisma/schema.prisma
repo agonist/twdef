@@ -14,6 +14,15 @@ datasource db {
 model User {
     address String @id @unique
     balance Float @default(0)
+    auth AuthDetails?
+}
+
+model AuthDetails {
+  id Int @id @unique @default(autoincrement())
+  nonce String
+  timestamp Int
+  user User @relation(fields: [userId], references: [address])
+  userId String @unique
 }
 
 model Map {
@@ -34,6 +43,8 @@ model Cell {
   map    Map      @relation(fields: [mapId], references: [id])
   mapId  Int
   land   Land?
+
+  @@index([mapId])
 }
 
 model Land {
@@ -70,6 +81,7 @@ model Tower {
   type TowerType
   inGame InGame?
   imgUrl String?
+  nextUpgradeCost Int?
 }
 
 model Wave {

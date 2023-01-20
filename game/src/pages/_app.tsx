@@ -16,7 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 export const { chains, provider } = configureChains(
-  [polygonMumbai],
+  [hardhat],
   [publicProvider()]
 );
 
@@ -42,7 +42,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           chains={chains}
           theme={darkTheme({
             accentColor: "#a24cc2",
-            borderRadius: "none",
+            borderRadius: "medium",
           })}
         >
           <html data-theme="synthwave"></html>

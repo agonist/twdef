@@ -5,7 +5,10 @@ import { SidePanel } from "./ui/side-panel";
 import { gameState } from "./state/game-state";
 import Image from "next/image";
 import { PlayerBalance } from "./ui/user/PlayerBalance";
-import { useAccount } from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
+import { ConnectWalletOr } from "./ui/wallet/ConnectWalletOr";
+import { add } from "lodash";
+import { isLoggedInJWT } from "./helpers/uils";
 
 // Game Root component
 const PhaserGame = () => {
@@ -13,6 +16,11 @@ const PhaserGame = () => {
   const game = useGame(gameConfig, parentEl);
   const g = gameState();
   const { isConnected, address } = useAccount();
+  const { disconnect } = useDisconnect({
+    onSuccess(data) {
+      console.log("Success", data);
+    },
+  });
 
   useEffect(() => {
     if (game !== undefined) {
@@ -36,7 +44,38 @@ const PhaserGame = () => {
             x{g.currentMultiplier.toFixed(2)}
           </div>
         </button>
-        {isConnected ? <PlayerBalance address={address!} /> : <></>}
+        {isConnected && isLoggedInJWT() ? (
+          <PlayerBalance address={address!} />
+        ) : (
+          <></>
+        )}
+
+        <ConnectWalletOr>
+          <div className="dropdown">
+            <button className="btn btn-sm gap-2 ml-4 text-pinkz" tabIndex={0}>
+              ACC
+              <div className="badge badge-secondary">
+                {address?.slice(0, 4)}...
+                {address?.slice(address.length - 4, address.length)}
+              </div>
+            </button>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("JWT");
+                    disconnect();
+                  }}
+                >
+                  logout
+                </button>
+              </li>
+            </ul>
+          </div>
+        </ConnectWalletOr>
 
         {/*        
         <button onClick={() => g.prevMap(game!)}>⬅️</button>

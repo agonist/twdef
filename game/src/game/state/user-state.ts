@@ -1,3 +1,5 @@
+import { Provider } from "@wagmi/core";
+import { Address } from "wagmi";
 import create from "zustand";
 import { devtools } from "zustand/middleware";
 import { subscribeWithSelector } from "zustand/middleware";
@@ -19,6 +21,7 @@ interface UserState {
   setTowerzApproved: (towerz: boolean) => void;
   setContractApproved: (landz: boolean, towerz: boolean) => void;
   getAllLandsBalance: () => number[];
+  signin: (address: string, provider: Provider) => void;
 }
 
 export const userState = create<UserState>()(
@@ -29,6 +32,10 @@ export const userState = create<UserState>()(
       stakedLandTowerByIds: new Map(),
       landzToGamezApproved: false,
       towerzToGamezApproved: false,
+
+      signin(address: string, provider: Provider) {
+          
+      },
 
       setLandsBalance(balance: number[]) {
         set({ landsBalanceByIds: balance });

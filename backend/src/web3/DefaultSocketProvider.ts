@@ -5,7 +5,6 @@ import {
   Network,
 } from "alchemy-sdk";
 import { ethers, BigNumber } from "ethers";
-import { min } from "lodash";
 import { Subject } from "rxjs";
 import eventService from "../db/EventService";
 import gameService from "../db/GamezService";

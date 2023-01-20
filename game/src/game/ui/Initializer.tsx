@@ -1,16 +1,34 @@
 import { BigNumber } from "ethers";
 import { useEffect } from "react";
+import { useQuery, useQueryClient } from "react-query";
 import { useAccount, useContractReads } from "wagmi";
 import { GamezAbi } from "../../abi/Gamez";
 import { LandAbi } from "../../abi/Land";
 import { TowerzAbi } from "../../abi/Towerz";
 import { Contracts } from "../../web3/Contracts";
+import { fetchUser, User } from "../api/api";
+import { log } from "../helpers/logger";
 import { userState } from "../state/user-state";
 
 export const Initializer = () => {
   const { address } = useAccount();
 
   const user = userState();
+
+  const queryClient = useQueryClient();
+  const { data: userRes, isLoading: loading } = useQuery<User, Error>(
+    ["user"],
+    () => fetchUser(),
+    {
+      onSuccess(data) {
+        console.log("ON SUCCESSS");
+      },
+      onError(err) {
+        console.log("ON ERROR UER");
+        console.log(err);
+      },
+    }
+  );
 
   const { data, isError, isLoading, isSuccess, refetch } = useContractReads({
     contracts: [
@@ -62,7 +80,6 @@ export const Initializer = () => {
       user.setTowersBalance(towersIds);
       user.setStakedLandsTowersBalance(stackedLandsIds, stackedTowersIds);
 
-      
       const landzApproved = data[3];
       const towerzApproved = data[4];
 

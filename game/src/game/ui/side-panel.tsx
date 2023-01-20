@@ -1,4 +1,5 @@
 import { useAccount } from "wagmi";
+import { isLoggedInJWT } from "../helpers/uils";
 import { gameState } from "../state/game-state";
 import { uiState } from "../state/ui-state";
 import { Initializer } from "./Initializer";
@@ -14,7 +15,7 @@ export const SidePanel = () => {
 
   return (
     <div className="w-3/12 bg-dbg overflow-y-auto ">
-      {isConnected ? <Initializer /> : <></>}
+      {isConnected && isLoggedInJWT() ? <Initializer /> : <></>}
       <div className="flex flex-col items-center space-y-3 py-4">
         <div className="tabs tabs-boxed bg-neutral">
           <a

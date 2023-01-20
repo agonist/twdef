@@ -39,6 +39,35 @@ class TowerService {
     return await prisma.tower.findUnique({ where: { id: id } });
   }
 
+  async upgradeTower(id: number) {
+    const tower = await this.findTowerById(id)
+
+    /// check if sender == tower owner
+    /// check if balance is enough to upgrade
+
+    const upgradePrice = this.calculateTowerUpgradeCost(tower.level)
+
+    await prisma.tower.update({where: {id: id}, data: {
+      level: tower.level + 1,
+      nextUpgradeCost: this.calculateTowerUpgradeCost(tower.level + 1)
+    }})
+  }
+
+  calculateTowerUpgradeCost(level: number) {
+        const precision = 100; // 2 decimals
+        const priceIncreaseFactore =
+          Math.floor(
+            Math.random() * (2 * precision - 1 * precision) + 1 * precision
+          ) /
+          (1 * precision);
+
+        const basePrice = 1000;
+        const currentLevel = level;
+        const price = basePrice * currentLevel * priceIncreaseFactore;
+        const finalPrice = Math.round(price);
+        return finalPrice
+  }
+
   async createTower(id: number, type: number): Promise<Tower> {
     const damage = this.getDammage();
     const speed = this.getSpeed();
@@ -54,11 +83,12 @@ class TowerService {
           level: 1,
           type: rtype.type,
           imgUrl: rtype.img,
+          nextUpgradeCost: this.calculateTowerUpgradeCost(1)
         },
       });
       return tower;
     } catch (e) {
-      log.error(e)
+      log.error(e);
     }
   }
 

@@ -1,7 +1,10 @@
 import Arena from "@colyseus/arena";
 import { monitor } from "@colyseus/monitor";
 import { uWebSocketsTransport } from "@colyseus/uwebsockets-transport";
+import authController from "./api/auth-controller";
 import metadataController from "./api/metadata-controller";
+import towerController from "./api/tower-controller";
+import userController from "./api/user-controller";
 import landService from "./db/LandService";
 import towerService from "./db/TowerService";
 import userService from "./db/UserService";
@@ -42,7 +45,10 @@ export default Arena({
      */
 
     metadataController(app);
-    
+    towerController(app);
+    authController(app);
+    userController(app);
+
     app.get("/", (req, res) => {
       res.send("It's time to kick ass and chew bubblegum!");
     });

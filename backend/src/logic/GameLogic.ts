@@ -77,10 +77,6 @@ export class GameLogic<R extends GameRoom> {
       this.dispatcher.dispatch(new StartWaveCmd());
     }, 30000);
     this.dispatcher.dispatch(new StartWaveCmd());
-
-    // this.room.clock.setTimeout(() => {
-    //   this.waveInterval.clear();
-    // }, 180000);
   }
 
   update() {
